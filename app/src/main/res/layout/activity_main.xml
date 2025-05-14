@@ -31,6 +31,7 @@
         />
 
     <com.google.android.material.button.MaterialButton
+        android:id="@+id/test"
         app:cornerRadius="20dp"
         app:backgroundTint="@color/white"
         app:rippleColor="@color/light_gray"
