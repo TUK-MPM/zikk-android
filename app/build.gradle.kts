@@ -43,6 +43,10 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
+    implementation(libs.retrofit) // Retrofit
+    implementation(libs.converter.gson)  // Gson Converter
+    implementation(libs.okhttp)  // OkHttp
+    implementation(libs.gson) // GSon
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
