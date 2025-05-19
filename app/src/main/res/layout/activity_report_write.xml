@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -18,11 +19,11 @@
         <!-- Menu Icon -->
         <ImageButton
             android:id="@+id/menuButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:background="@null"
-            android:padding="8dp"
-            android:src="@drawable/ic_meun"
+            android:padding="12dp"
+            android:src="@drawable/ic_menu"
             android:contentDescription="메뉴" />
 
         <!-- Search Bar -->
@@ -54,14 +55,15 @@
         </LinearLayout>
 
         <!-- Profile Icon -->
-        <ImageButton
-            android:id="@+id/profileButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@null"
-            android:padding="8dp"
-            android:src="@drawable/ic_profile"
-            android:contentDescription="프로필" />
+            <ImageButton
+                android:id="@+id/profileButton"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="@null"
+                android:padding="12dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_profile"
+                android:contentDescription="프로필" />
     </LinearLayout>
 
     <!-- Form Content -->
@@ -80,7 +82,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="신고하기"
+                android:text="신고위치"
                 android:textColor="#000000"
                 android:textSize="18sp"
                 android:textStyle="bold" />
@@ -117,7 +119,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
-                android:text="사진첨부"
+                android:text="사진촬영"
                 android:textColor="#000000"
                 android:textSize="18sp"
                 android:textStyle="bold" />
@@ -154,14 +156,6 @@
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:text="하나만 선택해 주세요"
-                android:textColor="#AAAAAA"
-                android:textSize="12sp" />
-
             <RadioGroup
                 android:id="@+id/violationTypeGroup"
                 android:layout_width="match_parent"
@@ -172,7 +166,7 @@
                     android:id="@+id/violationType1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="잘못된독"
+                    android:text="점자블록"
                     android:textSize="16sp" />
 
                 <RadioButton
@@ -180,7 +174,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:checked="true"
-                    android:text="교통법 내부"
+                    android:text="교통섬 내부"
                     android:textSize="16sp" />
 
                 <RadioButton
@@ -212,9 +206,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:text="필수항목입니다. 신고 확인용으로만 사용됩니다"
+                android:text="휴대폰번호로 신고 현황을 조회할 수 있어요"
                 android:textColor="#AAAAAA"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                android:drawableStart="@drawable/ic_info"
+                android:drawablePadding="4dp"/>
 
             <EditText
                 android:id="@+id/phoneNumberEdit"
@@ -223,6 +219,7 @@
                 android:layout_marginTop="8dp"
                 android:background="#EEEEEE"
                 android:inputType="phone"
+                android:hint="전화번호 입력"
                 android:importantForAutofill="no" />
 
             <!-- 개인정보 활용 동의 -->

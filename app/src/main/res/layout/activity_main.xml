@@ -46,7 +46,9 @@
         android:textAlignment="textStart"
         android:textColor="@color/text_gray" />
 
+    <!-- 2025.05.19 ID 추가 -->
     <com.google.android.material.button.MaterialButton
+        android:id="@+id/report"
         app:cornerRadius="20dp"
         app:backgroundTint="@color/white"
         app:rippleColor="@color/light_gray"

@@ -1,5 +1,6 @@
 package com.example.zikk
 
+import android.content.Intent
 import android.os.Bundle
 import android.telecom.Call
 import android.util.Log
@@ -33,6 +34,12 @@ class MainActivity : AppCompatActivity() {
         binding.test.setOnClickListener {
             getTodos()
         }
+
+        binding.report.setOnClickListener{
+            var intent = Intent(applicationContext, ReportWriteActivity::class.java)
+            startActivity(intent)
+        }
+
     }
 
     private fun getTodos() {
