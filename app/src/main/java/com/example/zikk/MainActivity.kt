@@ -2,7 +2,6 @@ package com.example.zikk
 
 import android.content.Intent
 import android.os.Bundle
-import android.telecom.Call
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -12,12 +11,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import com.example.zikk.databinding.ActivityMainBinding
 import com.example.zikk.network.RetrofitClient
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import okhttp3.Dispatcher
-import okhttp3.Response
-import javax.security.auth.callback.Callback
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
