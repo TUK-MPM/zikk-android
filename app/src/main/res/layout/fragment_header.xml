@@ -3,8 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="60dp"
-    android:paddingVertical="10dp"
+    android:layout_height="match_parent"
+    android:paddingVertical="15dp"
     android:background="@color/blue">
 
     <ImageButton
@@ -19,7 +19,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:tint="@color/white" />
 
-    <EditText
+    <AutoCompleteTextView
         android:id="@+id/search"
         android:textSize="12sp"
         android:hint="검색어를 입력하세요"
