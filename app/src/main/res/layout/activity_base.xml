@@ -1,0 +1,16 @@
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/drawerLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <FrameLayout
+        android:id="@+id/baseContent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <FrameLayout
+        android:id="@+id/drawerContainer"
+        android:layout_gravity="start"
+        android:layout_width="280dp"
+        android:layout_height="match_parent"
+        android:background="@android:color/white" />
+</androidx.drawerlayout.widget.DrawerLayout>
