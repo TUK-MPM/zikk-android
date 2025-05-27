@@ -3,6 +3,7 @@ package com.example.zikk
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.widget.Button
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.core.view.ViewCompat
@@ -24,7 +25,13 @@ class MainActivity : BaseActivity() {
             insets
         }
 
-    }
+        val btnReoprt = findViewById<Button>(R.id.report)
+        // 신고 작성 화면 넘어가기
+        btnReoprt.setOnClickListener{
+            var intent = Intent(applicationContext, ReportWriteActivity::class.java)
+            startActivity(intent)
+        }
+        }
 
     private fun getTodos() {
         lifecycleScope.launch {

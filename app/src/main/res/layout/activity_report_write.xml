@@ -8,63 +8,12 @@
     android:background="#FFFFFF"
     tools:context=".MainActivity">
 
-    <!-- Top Blue Bar -->
-    <LinearLayout
+    <fragment
+        android:id="@+id/headerFragment"
+        android:name="com.example.zikk.ui.HeaderFragment"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="#0066FF"
-        android:orientation="horizontal"
-        android:gravity="center_vertical">
-
-        <!-- Menu Icon -->
-        <ImageButton
-            android:id="@+id/menuButton"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:background="@null"
-            android:padding="12dp"
-            android:src="@drawable/ic_menu"
-            android:contentDescription="메뉴" />
-
-        <!-- Search Bar -->
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="40dp"
-            android:layout_weight="1"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:background="@android:color/white"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:paddingStart="16dp"
-            android:paddingEnd="8dp">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="검색어를 입력하세요"
-                android:textColor="#AAAAAA"
-                android:textSize="16sp" />
-
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_search"
-                android:contentDescription="검색" />
-        </LinearLayout>
-
-        <!-- Profile Icon -->
-            <ImageButton
-                android:id="@+id/profileButton"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:background="@null"
-                android:padding="12dp"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_profile"
-                android:contentDescription="프로필" />
-    </LinearLayout>
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp" />
 
     <!-- Form Content -->
     <ScrollView
@@ -209,7 +158,6 @@
                 android:text="휴대폰번호로 신고 현황을 조회할 수 있어요"
                 android:textColor="#AAAAAA"
                 android:textSize="12sp"
-                android:drawableStart="@drawable/ic_info"
                 android:drawablePadding="4dp"/>
 
             <EditText
