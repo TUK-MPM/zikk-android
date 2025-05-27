@@ -8,13 +8,12 @@ import androidx.core.view.WindowInsetsCompat
 import com.example.zikk.databinding.ActivityMainBinding
 import com.example.zikk.databinding.ActivityReportWriteBinding
 
-class ReportWriteActivity : AppCompatActivity() {
+class ReportWriteActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        val binding = ActivityReportWriteBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        setContentView(R.layout.activity_report_write)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)

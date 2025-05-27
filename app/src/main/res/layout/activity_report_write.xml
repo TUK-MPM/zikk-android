@@ -1,260 +1,321 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#FFFFFF"
-    tools:context=".MainActivity">
+    android:background="#F5F5F5"
+    android:id="@+id/main">
 
-    <!-- Top Blue Bar -->
-    <LinearLayout
+    <!-- Status Bar Area -->
+    <fragment
+        android:id="@+id/headerFragment"
+        android:name="com.example.zikk.ui.HeaderFragment"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="#0066FF"
-        android:orientation="horizontal"
-        android:gravity="center_vertical">
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp" />
 
-        <!-- Menu Icon -->
-        <ImageButton
-            android:id="@+id/menuButton"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:background="@null"
-            android:padding="12dp"
-            android:src="@drawable/ic_menu"
-            android:contentDescription="메뉴" />
-
-        <!-- Search Bar -->
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="40dp"
-            android:layout_weight="1"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:background="@android:color/white"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:paddingStart="16dp"
-            android:paddingEnd="8dp">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="검색어를 입력하세요"
-                android:textColor="#AAAAAA"
-                android:textSize="16sp" />
-
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_search"
-                android:contentDescription="검색" />
-        </LinearLayout>
-
-        <!-- Profile Icon -->
-            <ImageButton
-                android:id="@+id/profileButton"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:background="@null"
-                android:padding="12dp"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_profile"
-                android:contentDescription="프로필" />
-    </LinearLayout>
-
-    <!-- Form Content -->
-    <ScrollView
+    <!-- Main Content Container -->
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_margin="16dp"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="4dp">
 
-        <LinearLayout
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
-
-            <!-- 신고하기 섹션 -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="신고위치"
-                android:textColor="#000000"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+            android:layout_height="match_parent">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:orientation="horizontal">
+                android:orientation="vertical"
+                android:padding="24dp">
 
-                <EditText
-                    android:id="@+id/reportTitleEdit"
-                    android:layout_width="0dp"
-                    android:layout_height="48dp"
-                    android:layout_weight="1"
-                    android:background="#EEEEEE"
-                    android:hint="신고 제목 입력"
-                    android:inputType="text"
-                    android:importantForAutofill="no" />
+                <!-- Header with Back Button -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="24dp">
 
-                <Button
-                    android:id="@+id/searchButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="48dp"
-                    android:layout_marginStart="8dp"
-                    android:background="#EEEEEE"
-                    android:text="위치 가져오기"
-                    android:textColor="#444444"
-                    android:textSize="14sp" />
-            </LinearLayout>
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_btn_back" />
 
-            <!-- 사진첨부 섹션 -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:text="사진촬영"
-                android:textColor="#000000"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="신고 작성 페이지"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:textColor="#333333"
+                        android:gravity="center" />
+                </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:orientation="horizontal">
+                <!-- Phone Number Input Section -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginBottom="24dp">
 
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="8dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="휴대폰 번호를 입력해주세요!"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:textColor="#333333"
+                            android:layout_marginEnd="24dp"/>
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/phone_number_help_frame" />
+                    </LinearLayout>
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:hint="010-0000-0000"
+                        android:background="@drawable/gray_fram"
+                        android:paddingHorizontal="16dp"
+                        android:textSize="14sp"
+                        android:inputType="phone" />
+                </LinearLayout>
+
+                <!-- Divider Line -->
                 <View
-                    android:id="@+id/imagePlace1"
-                    android:layout_width="0dp"
-                    android:layout_height="130dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_weight="1"
-                    android:background="#EEEEEE" />
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#E0E0E0"
+                    android:layout_marginBottom="24dp" />
 
+                <!-- Location Input Section -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginBottom="24dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="위치를 입력주세요!"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="#333333"
+                        android:layout_marginBottom="8dp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <EditText
+                            android:layout_width="0dp"
+                            android:layout_height="48dp"
+                            android:layout_weight="20"
+                            android:hint="수동으로 입력하기"
+                            android:background="@drawable/report_location_info"
+                            android:paddingHorizontal="16dp"
+                            android:textSize="14sp"
+                            android:layout_marginEnd="5dp" />
+
+                        <Button
+                            android:layout_width="wrap_content"
+                            android:layout_height="48dp"
+                            android:layout_weight="1"
+                            android:text="위치 가져오기"
+                            android:backgroundTint="#FFD9D9D9"
+                            android:textColor="#333333"
+                            android:textSize="15sp"
+                            android:paddingHorizontal="14dp" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- Divider Line -->
                 <View
-                    android:id="@+id/imagePlace2"
-                    android:layout_width="0dp"
-                    android:layout_height="130dp"
-                    android:layout_weight="1"
-                    android:background="#EEEEEE" />
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#E0E0E0"
+                    android:layout_marginBottom="24dp" />
+
+                <!-- Photo Upload Section -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginBottom="24dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="신고할 장소의 사진을 촬영해주세요!"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="#333333"
+                        android:layout_marginBottom="8dp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="100dp"
+                        android:background="@drawable/gray_fram"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:paddingHorizontal="16dp">
+
+                        <ImageView
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
+                            android:src="@drawable/report_picture_add"
+                            android:scaleType="centerCrop" />
+
+                        <ImageView
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
+                            android:layout_marginStart="16dp"
+                            android:src="@drawable/report_picture_add" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- Divider Line -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#E0E0E0"
+                    android:layout_marginBottom="24dp" />
+
+                <!-- Report Reason Section -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginBottom="24dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="16dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="어디에 불법 주차되어 있나요?"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:textColor="#333333" />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/parking_help" />
+                    </LinearLayout>
+
+                    <RadioGroup
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <RadioButton
+                            android:id="@+id/radio_crosswalk"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="횡단보도"
+                            android:textSize="14sp"
+                            android:paddingVertical="8dp" />
+
+                        <RadioButton
+                            android:id="@+id/radio_intersection"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="교통섬 내부"
+                            android:textSize="14sp"
+                            android:paddingVertical="8dp"
+                            android:checked="true" />
+
+                        <RadioButton
+                            android:id="@+id/radio_bus_stop"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="버스구역"
+                            android:textSize="14sp"
+                            android:paddingVertical="8dp" />
+
+                        <RadioButton
+                            android:id="@+id/radio_safety_zone"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="안전 사항 외 보도"
+                            android:textSize="14sp"
+                            android:paddingVertical="8dp" />
+
+                        <RadioButton
+                            android:id="@+id/radio_others"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="기타"
+                            android:textSize="14sp"
+                            android:paddingVertical="8dp" />
+                    </RadioGroup>
+                </LinearLayout>
+
+                <!-- Personal Info Agreement -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="24dp">
+
+                    <CheckBox
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="개인 정보 활용 동의"
+                        android:textSize="14sp"
+                        android:textColor="#666666" />
+                </LinearLayout>
+
+                <!-- Submit Button -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center">
+
+                    <Button
+                        android:id="@+id/btn_submit"
+                        android:layout_width="wrap_content"
+                        android:layout_height="48dp"
+                        android:text="신고하기"
+                        android:textColor="@android:color/white"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:backgroundTint="@color/blue" />
+                </LinearLayout>
+
             </LinearLayout>
-
-            <!-- 위반유형 섹션 -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:text="위반유형"
-                android:textColor="#000000"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-            <RadioGroup
-                android:id="@+id/violationTypeGroup"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp">
-
-                <RadioButton
-                    android:id="@+id/violationType1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="점자블록"
-                    android:textSize="16sp" />
-
-                <RadioButton
-                    android:id="@+id/violationType2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:checked="true"
-                    android:text="교통섬 내부"
-                    android:textSize="16sp" />
-
-                <RadioButton
-                    android:id="@+id/violationType3"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="보호구역"
-                    android:textSize="16sp" />
-
-                <RadioButton
-                    android:id="@+id/violationType4"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="상기 사항 외 보도"
-                    android:textSize="16sp" />
-            </RadioGroup>
-
-            <!-- 휴대폰번호 -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:text="휴대폰번호"
-                android:textColor="#000000"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:text="휴대폰번호로 신고 현황을 조회할 수 있어요"
-                android:textColor="#AAAAAA"
-                android:textSize="12sp"
-                android:drawableStart="@drawable/ic_info"
-                android:drawablePadding="4dp"/>
-
-            <EditText
-                android:id="@+id/phoneNumberEdit"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_marginTop="8dp"
-                android:background="#EEEEEE"
-                android:inputType="phone"
-                android:hint="전화번호 입력"
-                android:importantForAutofill="no" />
-
-            <!-- 개인정보 활용 동의 -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <CheckBox
-                    android:id="@+id/privacyCheckbox"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="개인 정보 활용 동의"
-                    android:textColor="#000000"
-                    android:textSize="16sp" />
-            </LinearLayout>
-
-            <!-- 신고하기 버튼 -->
-            <Button
-                android:id="@+id/submitButton"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_marginTop="24dp"
-                android:layout_marginBottom="24dp"
-                android:background="#0066FF"
-                android:text="신고하기"
-                android:textColor="#FFFFFF"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-        </LinearLayout>
-    </ScrollView>
+        </ScrollView>
+    </androidx.cardview.widget.CardView>
 </LinearLayout>
