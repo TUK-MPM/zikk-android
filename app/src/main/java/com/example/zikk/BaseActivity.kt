@@ -2,17 +2,39 @@ package com.example.zikk
 
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.viewbinding.ViewBinding
+import com.example.zikk.databinding.ActivityBaseBinding
 
 abstract class BaseActivity : AppCompatActivity() {
 
     lateinit var drawerLayout: DrawerLayout
+    private lateinit var baseBinding: ActivityBaseBinding // binding for base layout
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.d("DrawerDebug", "BaseActivity onCreate called")
+    }
+
+    fun <T : ViewBinding> setContentViewWithBinding(
+        bindingInflater: (layoutInflater: android.view.LayoutInflater) -> T
+    ): T {
+        baseBinding = ActivityBaseBinding.inflate(layoutInflater)
+        val contentBinding = bindingInflater.invoke(layoutInflater)
+
+        // contentBinding의 root를 baseContent에 붙이기
+        baseBinding.baseContent.addView(contentBinding.root)
+
+        // drawer 레이아웃 초기화
+        super.setContentView(baseBinding.root)
+        drawerLayout = baseBinding.drawerLayout
+        setupDrawer()
+
+        return contentBinding
     }
 
     override fun setContentView(layoutResID: Int) {
