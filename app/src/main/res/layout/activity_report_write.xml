@@ -84,7 +84,6 @@
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="4dp"
                             android:src="@drawable/phone_number_help_frame" />
                     </LinearLayout>
 
@@ -165,7 +164,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="신고할 장소의 사진을 첨부해주세요!"
+                        android:text="신고할 장소의 사진을 촬영해주세요!"
                         android:textSize="16sp"
                         android:textStyle="bold"
                         android:textColor="#333333"
@@ -223,12 +222,10 @@
                             android:textStyle="bold"
                             android:textColor="#333333" />
 
-                        <TextView
+                        <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="아래 항목에서 선택해주세요"
-                            android:textSize="12sp"
-                            android:textColor="#999999" />
+                            android:src="@drawable/parking_help" />
                     </LinearLayout>
 
                     <RadioGroup
