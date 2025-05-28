@@ -1,13 +1,17 @@
 package com.example.zikk
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.WindowManager
 import android.widget.Button
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.zikk.adapter.NoticeAdapter
@@ -42,9 +46,18 @@ class MainActivity : BaseActivity() {
         }
 
         enableEdgeToEdge()
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            val systemBarsInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            val displayCutoutInsets = insets.getInsets(WindowInsetsCompat.Type.displayCutout())
+
+            // 안전한 패딩 계산
+            val safePaddingTop = maxOf(systemBarsInsets.top, displayCutoutInsets.top)
+            val safePaddingBottom = maxOf(systemBarsInsets.bottom, displayCutoutInsets.bottom)
+            val safePaddingLeft = maxOf(systemBarsInsets.left, displayCutoutInsets.left)
+            val safePaddingRight = maxOf(systemBarsInsets.right, displayCutoutInsets.right)
+            v.setPadding(safePaddingLeft, safePaddingTop, safePaddingRight, safePaddingBottom)
             insets
         }
 
@@ -59,6 +72,7 @@ class MainActivity : BaseActivity() {
             var intent = Intent(applicationContext, ReportListActivity::class.java)
             startActivity(intent)
         }
+
 
     }
 
@@ -89,4 +103,5 @@ class MainActivity : BaseActivity() {
             }
         }
     }
+
 }
