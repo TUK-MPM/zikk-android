@@ -11,8 +11,8 @@ import com.example.zikk.model.Notice
 
 class NoticeAdapter(private var notices: List<Notice>, private val onItemClick: (Notice) -> Unit): RecyclerView.Adapter<NoticeAdapter.NoticeViewHolder> () {
     inner class NoticeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val titleTextView: TextView = itemView.findViewById(R.id.item_notice_title)
-        val dateTextView: TextView = itemView.findViewById(R.id.item_notice_date)
+        val titleTextView: TextView = itemView.findViewById(R.id.tv_notice_title)
+        val dateTextView: TextView = itemView.findViewById(R.id.tv_notice_created_at)
 
         fun bind(notice: Notice) {
             titleTextView.text = notice.title

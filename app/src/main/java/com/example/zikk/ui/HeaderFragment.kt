@@ -28,12 +28,12 @@ class HeaderFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val menuButton = view.findViewById<ImageButton>(R.id.menuBtn)
-        val searchEditText = view.findViewById<AutoCompleteTextView>(R.id.search)
+        val menuButton = view.findViewById<ImageButton>(R.id.btn_menu)
+        val searchEditText = view.findViewById<AutoCompleteTextView>(R.id.actv_search)
 
         menuButton.setOnClickListener {
             // Activity에서 DrawerLayout 찾기
-            val drawerLayout = requireActivity().findViewById<DrawerLayout>(R.id.drawerLayout)
+            val drawerLayout = requireActivity().findViewById<DrawerLayout>(R.id.dl_container)
             drawerLayout.openDrawer(GravityCompat.START)
         }
 

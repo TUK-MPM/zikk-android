@@ -7,12 +7,12 @@
     android:focusable="true"
     android:padding="16dp">
     <TextView
-        android:id="@+id/item_notice_title"
+        android:id="@+id/tv_notice_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAlignment="textStart"/>
     <TextView
-        android:id="@+id/item_notice_date"
+        android:id="@+id/tv_notice_created_at"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAlignment="textStart"/>
