@@ -47,6 +47,19 @@ class MainActivity : BaseActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+        // 신고 작성 화면 불러오기
+        binding.reportBtn.setOnClickListener{
+            var intent = Intent(applicationContext, ReportWriteActivity::class.java)
+            startActivity(intent)
+        }
+
+        // 신고 조회 화면 불러오기
+        binding.reportQueryBtn.setOnClickListener{
+            var intent = Intent(applicationContext, ReportListActivity::class.java)
+            startActivity(intent)
+        }
+
     }
 
     private fun getTodos() {
