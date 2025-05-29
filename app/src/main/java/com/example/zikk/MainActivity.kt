@@ -61,6 +61,13 @@ class MainActivity : BaseActivity() {
             insets
         }
 
+
+        // 공지 화면 불러오기
+        binding.guideBtn.setOnClickListener{
+            var intent = Intent(applicationContext, ReportGuide::class.java)
+            startActivity(intent)
+        }
+
         // 신고 작성 화면 불러오기
         binding.reportBtn.setOnClickListener{
             var intent = Intent(applicationContext, ReportWriteActivity::class.java)
@@ -72,7 +79,6 @@ class MainActivity : BaseActivity() {
             var intent = Intent(applicationContext, ReportListActivity::class.java)
             startActivity(intent)
         }
-
 
     }
 

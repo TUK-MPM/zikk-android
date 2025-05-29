@@ -5,16 +5,15 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.example.zikk.databinding.ActivityMainBinding
+import com.example.zikk.databinding.ActivityReportGuideBinding
 import com.example.zikk.databinding.ActivityReportListBinding
-import com.example.zikk.databinding.ActivityReportWriteBinding
 
-class ReportWriteActivity : BaseActivity() {
-    private lateinit var binding: ActivityReportWriteBinding
+class ReportGuide : BaseActivity() {
+    private lateinit var binding: ActivityReportGuideBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = setContentViewWithBinding(ActivityReportWriteBinding::inflate)
+        binding = setContentViewWithBinding(ActivityReportGuideBinding::inflate)
 
         enableEdgeToEdge()
 
