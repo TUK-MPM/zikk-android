@@ -17,6 +17,12 @@
         android:theme="@style/Theme.Zikk"
         tools:targetApi="31">
         <activity
+            android:name=".NoticeActivity"
+            android:exported="false" />
+        <activity
+            android:name=".NoticeWriteActivity"
+            android:exported="false" />
+        <activity
             android:name=".AdminReportActivity"
             android:exported="false" />
         <activity
@@ -39,7 +45,6 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

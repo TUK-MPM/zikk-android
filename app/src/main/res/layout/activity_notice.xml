@@ -90,7 +90,7 @@
                         android:layout_gravity="right"
                         android:layout_marginRight="10dp"
                         android:layout_marginTop="10dp"
-                        android:background="@drawable/round_box_medium"/>
+                        android:background="@drawable/round_box_large"/>
 
 
                     <!-- 버튼 하나 -->
