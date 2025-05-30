@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".MainActivity"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+<LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:orientation="vertical"
+            android:background="@color/white">
+<!--주석-->
+    <fragment
+        android:id="@+id/headerFragment"
+        android:name="com.example.zikk.ui.HeaderFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp" />
+
+
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="50dp"
+                android:background="@drawable/round_box"
+                app:cardCornerRadius="30dp"
+                app:cardElevation="10dp">
+
+                <!--버튼 하나-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clipChildren="false"
+                    android:clipToPadding="false"
+                    android:orientation="vertical">
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"> <!-- 겹치고 싶은 애들 묶음 -->
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="21dp"
+                            android:drawableLeft="@drawable/baseline_arrow_back_ios_30" /> <!--더두꺼우면좋을듯-->
+
+                        <TextView
+                            android:id="@+id/textView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="15dp"
+                            android:shadowColor="#80000000"
+                            android:shadowDx="1"
+                            android:shadowDy="1"
+                            android:shadowRadius="1"
+                            android:text="공지사항"
+                            android:textAlignment="center"
+                            android:textSize="28sp"
+                            android:textStyle="bold" />
+                    </FrameLayout>
+
+                    <AutoCompleteTextView
+                        android:id="@+id/search"
+                        android:textSize="15sp"
+                        android:hint="제목 검색"
+                        android:layout_gravity="center"
+                        android:layout_width="300dp"
+                        android:layout_height="wrap_content"
+                        android:minHeight="48dp"
+                        android:layout_marginTop="40dp"
+                        android:paddingVertical="8dp"
+                        android:paddingStart="15dp"
+                        android:paddingEnd="15dp"
+                        android:maxLines="1"
+                        android:inputType="text"
+                        android:drawableTint="@color/text_gray"
+                        android:background="@drawable/round_box"
+                        android:drawableEnd="@drawable/baseline_search_24" />
+
+                    <Spinner
+                        android:id="@+id/mySpinner"
+                        android:layout_width="100dp"
+                        android:layout_height="25dp"
+                        android:layout_gravity="right"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/round_box_medium"/>
+
+
+                    <!-- 버튼 하나 -->
+                    <LinearLayout
+                        android:id="@+id/customButton2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="20dp"
+                        android:layout_marginVertical="5dp"
+                        android:orientation="horizontal"
+                        android:padding="16dp"
+                        android:background="@drawable/round_box_medium"
+                        android:gravity="center_vertical"
+                        android:clickable="true"
+                        android:focusable="true">
+
+                        <!-- 텍스트 두 개 세로로 정렬 -->
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/topText"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="공지사항1"
+                                android:textSize="16sp"
+                                android:textColor="#000000"
+                                android:textStyle="bold"/>
+
+                            <TextView
+                                android:id="@+id/bottomText"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="2025-05-27 11:06"
+                                android:textSize="12sp"
+                                android:textColor="#000000"/>
+                        </LinearLayout>
+
+                        <!-- 오른쪽에 아이콘 -->
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/baseline_chevron_right_24"
+                            android:contentDescription="next" />
+                    </LinearLayout>
+
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center"
+                        android:padding="16dp"
+                        android:layout_alignParentBottom="true">
+
+                        <!-- 이전 버튼, 크기 바꾸기 -->
+                        <ImageButton
+                            android:id="@+id/prevButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:src="@drawable/baseline_arrow_back_ios_24"
+                            android:contentDescription="이전" />
+
+                        <!-- 이전 페이지 표시 -->
+                        <TextView
+                            android:id="@+id/priorpageText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="1 2 3 "
+                            android:textSize="20sp" />
+                        <!-- 현재 페이지 표시 -->
+                        <TextView
+                            android:id="@+id/pageText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="4"
+                            android:textStyle="bold"
+                            android:textSize="20sp" />
+                        <!-- 다음 페이지 표시 -->
+                        <TextView
+                            android:id="@+id/nextpageText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=" ... 20"
+                            android:textSize="20sp" />
+
+                        <!-- 다음 버튼 -->
+                        <ImageButton
+                            android:id="@+id/nextButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:src="@drawable/baseline_arrow_forward_ios_24"
+                            android:contentDescription="다음" />
+                    </LinearLayout>
+                    </RelativeLayout>
+
+
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+</LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>

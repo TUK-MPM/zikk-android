@@ -21,6 +21,10 @@
             android:exported="false" />
         <activity
             android:name=".AdminMainActivity"
+            android:name=".AdminReportActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ReportDetailActivity"
             android:exported="false" />
         <activity
             android:name=".ReportGuide"
