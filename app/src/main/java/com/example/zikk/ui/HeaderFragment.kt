@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.ImageButton
+import android.widget.Toast
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.example.zikk.R
@@ -28,13 +29,19 @@ class HeaderFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val menuButton = view.findViewById<ImageButton>(R.id.menuBtn)
-        val searchEditText = view.findViewById<AutoCompleteTextView>(R.id.search)
+        val menuButton = view.findViewById<ImageButton>(R.id.btn_menu)
+        val searchEditText = view.findViewById<AutoCompleteTextView>(R.id.actv_search)
+        val userButton = view.findViewById<ImageButton>(R.id.btn_user)
+
 
         menuButton.setOnClickListener {
             // Activity에서 DrawerLayout 찾기
-            val drawerLayout = requireActivity().findViewById<DrawerLayout>(R.id.drawerLayout)
+            val drawerLayout = requireActivity().findViewById<DrawerLayout>(R.id.dl_container)
             drawerLayout.openDrawer(GravityCompat.START)
+        }
+
+        userButton.setOnClickListener {
+            showPhoneInputDialog()
         }
 
         // 예시 자동완성 리스트
@@ -47,6 +54,23 @@ class HeaderFragment : Fragment() {
 // 글자 입력 시 자동완성 리스트 보이게 함
         searchEditText.threshold = 1 // 1자 이상 입력하면 자동완성 보임
 
+    }
+
+    private fun showPhoneInputDialog() {
+        // 이미 다이얼로그가 표시되어 있는지 확인
+        val existingDialog = parentFragmentManager.findFragmentByTag("PhoneInputDialog")
+        if (existingDialog != null) return
+
+        val dialog = PhoneDialogFragment.newInstance { phoneNumber ->
+            handlePhoneNumberInput(phoneNumber.toString())
+        }
+
+        dialog.show(parentFragmentManager, "PhoneInputDialog")
+    }
+
+    private fun handlePhoneNumberInput(phoneNumber: String) {
+        // 전화번호 입력 완료 처리
+        Toast.makeText(requireContext(), "연락처 등록: $phoneNumber", Toast.LENGTH_SHORT).show()
     }
 
 }
