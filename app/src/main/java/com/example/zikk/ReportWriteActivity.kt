@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.widget.ImageView
 import androidx.appcompat.app.AlertDialog
 import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -31,15 +32,25 @@ class ReportWriteActivity : BaseActivity() {
         binding = setContentViewWithBinding(ActivityReportWriteBinding::inflate)
 
         // 권한 요청
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_MEDIA_IMAGES), 1)
+        val permission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            Manifest.permission.READ_MEDIA_IMAGES
         } else {
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), 1)
+            Manifest.permission.READ_EXTERNAL_STORAGE
         }
+        permissionLauncher.launch(permission)
 
         // 버튼 클릭 시 사진 선택 실행
         binding.btnPickImage.setOnClickListener {
             imagePickerLauncher.launch("image/*")
+        }
+    }
+
+
+    private val permissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (!isGranted) {
+            Toast.makeText(this, "사진 접근 권한이 필요합니다.", Toast.LENGTH_SHORT).show()
         }
     }
 
