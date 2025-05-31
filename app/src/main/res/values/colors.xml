@@ -11,4 +11,5 @@
     <color name="background_gray">#FFE9E9E9</color>
     <color name="qusetion_yellow">#FFF176</color>
     <color name="qusetion_blue">#D6E3FF</color>
+    <color name="qusetion_red">#FF4C4C</color>
 </resources>
