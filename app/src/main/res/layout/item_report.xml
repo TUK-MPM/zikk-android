@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/reportItemRoot"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:layout_marginBottom="8dp"
+    android:elevation="1dp"
+    android:scrollbars="none">
+
+    <TextView
+        android:id="@+id/txtTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="신고 위치"
+        android:textSize="14sp"
+        android:textColor="#333333" />
+
+    <TextView
+        android:id="@+id/txtStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="신고 상태"
+        android:textSize="14sp"
+        android:textColor="#333333"
+        android:layout_marginTop="4dp" />
+
+    <TextView
+        android:id="@+id/txtDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="신고 시간"
+        android:textSize="14sp"
+        android:textColor="#333333"
+        android:layout_marginTop="4dp" />
+
+    <!-- 상태에 따라 표시되는 화살표 -->
+    <ImageView
+        android:id="@+id/imageArrow"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:src="@drawable/baseline_chevron_right_24"
+        android:layout_gravity="center_vertical|end"
+        android:layout_marginTop="-60dp"
+        android:visibility="visible" />
+</LinearLayout>
