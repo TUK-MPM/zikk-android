@@ -1,5 +1,6 @@
 package com.example.zikk
 
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
@@ -64,6 +65,11 @@ class ReportListActivity : BaseActivity() {
         // 페이지 1부터 로딩 시작
         loadPage(1)
     }
+
+
+
+
+
 // 추후 api 나오면 연동
 /*    private fun loadPage(page: Int) {
         lifecycleScope.launch {
@@ -104,13 +110,20 @@ class ReportListActivity : BaseActivity() {
         val toIndex = minOf(fromIndex + pageSize, testList.size)
         val pageList = testList.subList(fromIndex, toIndex)
 
-        binding.reportRecyclerView.adapter = ReportAdapter(pageList) {
-            Toast.makeText(this, "클릭: ${it.reportId}", Toast.LENGTH_SHORT).show()
+        // 🔹 어댑터 설정 (한 번만!)
+        binding.reportRecyclerView.adapter = ReportAdapter(pageList) { report ->
+            Toast.makeText(this, "신고 선택됨: ${report.reportId}", Toast.LENGTH_SHORT).show()
+            // 신고 상세 화면으로 넘어감. (ID 넘겨줌)
+            val intent = Intent(this, ReportDetailActivity::class.java)
+            intent.putExtra("reportId", report.reportId)
+            startActivity(intent)
         }
 
+        // 🔹 페이지네이션 재설정
         val totalPages = (testList.size + pageSize - 1) / pageSize
         setupPagination(totalPages, page)
     }
+
 
     // 페이지 네이션 함수
     private fun setupPagination(totalPages: Int, currentPage: Int) {

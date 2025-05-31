@@ -109,6 +109,7 @@
                             android:orientation="horizontal">
 
                             <EditText
+                                android:id="@+id/et_phone_num"
                                 android:layout_width="match_parent"
                                 android:layout_height="48dp"
                                 android:hint="010-0000-0000"
@@ -159,6 +160,7 @@
                             app:cardElevation="0dp">
 
                             <EditText
+                                android:id="@+id/et_locate"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:hint="수동으로 입력하기"
@@ -274,7 +276,7 @@
                         android:orientation="vertical">
 
                         <RadioButton
-                            android:id="@+id/radio_crosswalk"
+                            android:id="@+id/rb_crosswalk"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="점자블록"
@@ -282,7 +284,7 @@
                             android:paddingVertical="8dp" />
 
                         <RadioButton
-                            android:id="@+id/radio_intersection"
+                            android:id="@+id/rb_intersection"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="교통섬 내부"
@@ -291,7 +293,7 @@
                             android:checked="true" />
 
                         <RadioButton
-                            android:id="@+id/radio_bus_stop"
+                            android:id="@+id/rb_bus_stop"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="보호 구역"
@@ -299,7 +301,7 @@
                             android:paddingVertical="8dp" />
 
                         <RadioButton
-                            android:id="@+id/radio_safety_zone"
+                            android:id="@+id/rb_safety_zone"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="상기 사항 외 보도"
@@ -307,7 +309,7 @@
                             android:paddingVertical="8dp" />
 
                         <RadioButton
-                            android:id="@+id/radio_others"
+                            android:id="@+id/rb_others"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="기타"

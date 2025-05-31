@@ -47,6 +47,9 @@ dependencies {
     implementation(libs.converter.gson)  // Gson Converter
     implementation(libs.okhttp)  // OkHttp
     implementation(libs.gson) // GSon
+
+    implementation(libs.coil)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

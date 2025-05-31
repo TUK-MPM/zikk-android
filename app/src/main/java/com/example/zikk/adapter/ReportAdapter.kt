@@ -28,9 +28,11 @@ class ReportAdapter(
                 else -> Color.WHITE
             }
             binding.reportItemRoot.setBackgroundColor(bgColor)
-
             // 🔹 화살표 표시 조건
             binding.imageArrow.visibility = if (report.status == "REJECTED") View.GONE else View.VISIBLE
+            binding.root.setOnClickListener{
+                onItemClick(report)
+            }
         }
     }
 
