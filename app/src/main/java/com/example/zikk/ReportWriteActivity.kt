@@ -37,8 +37,6 @@ class ReportWriteActivity : BaseActivity() {
             insets
         }
 
-
-
         // 권한 요청
         val permission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             Manifest.permission.READ_MEDIA_IMAGES
@@ -46,6 +44,11 @@ class ReportWriteActivity : BaseActivity() {
             Manifest.permission.READ_EXTERNAL_STORAGE
         }
         permissionLauncher.launch(permission)
+
+        // 뒤로가기 버튼
+        binding.ivBack.setOnClickListener {
+            finish()
+        }
 
         // 버튼 클릭 시 사진 선택 실행
         binding.btnPickImage.setOnClickListener {

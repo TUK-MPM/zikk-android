@@ -47,6 +47,7 @@ class ReportAdapter(
 
     override fun getItemCount(): Int = items.size
 
+    // 여기 표시해 주는 거 추가 해줘야 함
     private fun convertWhere(where: String): String = when (where) {
         "DOT_BLOCK" -> "점자블록"
         "PROTECTED_ZONE" -> "보호구역"
@@ -54,7 +55,7 @@ class ReportAdapter(
     }
 
     private fun convertStatus(status: String): String = when (status) {
-        "PROCESSING" -> "검토중"
+        "PROCESSING" -> "처리중"
         "COMPLETED" -> "완료"
         "REJECTED" -> "반려"
         else -> "미정"

@@ -10,6 +10,13 @@ interface ApiService {
     @GET("todos")
     suspend fun getTodos(): Response<List<Todo>>
 
-    @GET("reports")
-    suspend fun getReports(@Query("page") page: Int): Response<ReportResponse>
+    @GET("api/report")
+    suspend fun getReports(
+        @Query("page") page: Int,
+        @Query("size") size: Int,
+        @Query("keyword") keyword: String? = null,
+        @Query("status") status: String? = null,     // 예: "COMPLETED"
+        @Query("sortType") sortType: String? = null  // 예: "LATEST", "STATUS"
+    ): Response<ReportResponse>
+
 }

@@ -1,9 +1,11 @@
 package com.example.zikk
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.ImageView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.zikk.databinding.ActivityReportDetailBinding
@@ -31,8 +33,25 @@ class ReportDetailActivity : BaseActivity() {
         }
 
         // ID 확인
+        Log.d("DEBUG", "ReportDetailActivity 실행됨")
         val reportId = intent.getStringExtra("reportId")
+        val status = intent.getStringExtra("status") ?: "처리중"
+        Log.d("DEBUG", "reportId = $reportId, status = $status")
 
+        // 버튼 처리 (테스트)
+        val statusKor = when (status) {
+            "COMPLETED" -> "완료"
+            "REJECTED" -> "반려"
+            else -> "처리중"
+        }
+
+        if (statusKor == "완료" || statusKor == "반려") {
+            Log.d("ReportDetail", "status = $status")
+            binding.btnSubmit.apply {
+                isEnabled = false
+                setBackgroundColor(ContextCompat.getColor(context, R.color.deap_gray))
+            }
+        }
 
         // 🔹 임시 데이터
         val phoneNumber = "010-1234-5678"

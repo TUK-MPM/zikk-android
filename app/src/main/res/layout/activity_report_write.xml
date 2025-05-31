@@ -35,29 +35,36 @@
                 android:padding="24dp">
 
                 <!-- 메인 제목과 뒤로가기 버튼 -->
-                <LinearLayout
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:layout_marginBottom="24dp">
-
-                    <ImageView
-                        android:id="@+id/iv_back"
-                        android:layout_width="16dp"
-                        android:layout_height="26dp"
-                        android:src="@drawable/ic_btn_back" />
+                    android:padding="16dp">
 
                     <TextView
-                        android:layout_width="0dp"
+                        android:id="@+id/iv_back"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="신고 세부 내역"
+                        android:drawableLeft="@drawable/baseline_arrow_back_ios_30"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:background="?attr/selectableItemBackground"
+                        android:padding="8dp"
+                        android:text=" "
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="신고 작성 페이지"
                         android:textSize="28sp"
                         android:textStyle="bold"
-                        android:textColor="@color/black"
-                        android:gravity="center" />
-                </LinearLayout>
+                        android:shadowColor="#80000000"
+                        android:shadowDx="1"
+                        android:shadowDy="1"
+                        android:shadowRadius="1"
+                        android:layout_centerInParent="true" />
+                </RelativeLayout>
 
                 <!-- 폰 번호 입력 -->
                 <LinearLayout

@@ -6,24 +6,23 @@ import android.graphics.Typeface
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
+import android.widget.PopupWindow
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.zikk.adapter.ReportAdapter
 import com.example.zikk.databinding.ActivityReportListBinding
 import com.example.zikk.model.Report
-import com.example.zikk.network.RetrofitClient
-import kotlinx.coroutines.launch
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import kotlin.math.max
 import kotlin.math.min
 
 class ReportListActivity : BaseActivity() {
-    // 임시 더비 데이터
-    private  val testList = listOf(
+
+    private val testList = listOf(
         Report("rep_20250526_001", "DOT_BLOCK", "PROCESSING", "2025-05-26T15:30:00"),
         Report("rep_20250525_002", "PROTECTED_ZONE", "COMPLETED", "2025-05-25T11:20:00"),
         Report("rep_20250524_003", "DOT_BLOCK", "REJECTED", "2025-05-24T14:10:00"),
@@ -47,7 +46,14 @@ class ReportListActivity : BaseActivity() {
     )
 
     private lateinit var binding: ActivityReportListBinding
+    // 현재 보고 있는 페이지 번호 (페이지네이션용)
     private var currentPage = 1
+    // 필터 및 정렬이 적용된 실제 출력용 리스트
+    private var displayedList: List<Report> = testList
+    // 현재 필터링 상태 (null이면 전체 보기)
+    private var currentFilter: String? = null
+    // 현재 정렬 상태 (true면 최신순, false면 오래된순)
+    private var currentSortDescending: Boolean = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,120 +65,146 @@ class ReportListActivity : BaseActivity() {
             insets
         }
 
-        // RecyclerView 설정
         binding.reportRecyclerView.layoutManager = LinearLayoutManager(this)
-
-        // 페이지 1부터 로딩 시작
         loadPage(1)
+
+        binding.ivBack.setOnClickListener { finish() }
+        binding.btnFilter.setOnClickListener { showCustomPopup(it) }
+        binding.btnSortStatus.setOnClickListener { showSortPopup(it) }
     }
 
-
-
-
-
-// 추후 api 나오면 연동
-/*    private fun loadPage(page: Int) {
-        lifecycleScope.launch {
-            try {
-                val response = RetrofitClient.apiService.getReports(page)
-                if (response.isSuccessful) {
-                    val body = response.body()
-                    val reportList = body?.content ?: emptyList()
-                    val totalPages = body?.totalPages ?: 1
-                    currentPage = page
-
-                    // 빈 목록 처리
-                    if (reportList.isEmpty()) {
-                        binding.reportRecyclerView.visibility = View.GONE
-                        Toast.makeText(this@ReportListActivity, "신고가 없습니다", Toast.LENGTH_SHORT).show()
-                    } else {
-                        binding.reportRecyclerView.visibility = View.VISIBLE
-                        binding.reportRecyclerView.adapter = ReportAdapter(reportList) { report ->
-                            Toast.makeText(this@ReportListActivity, "Report ID: ${report.reportId}", Toast.LENGTH_SHORT).show()
-                        }
-                    }
-
-                    setupPagination(totalPages, currentPage)
-                } else {
-                    Toast.makeText(this@ReportListActivity, "불러오기 실패: ${response.code()}", Toast.LENGTH_SHORT).show()
-                }
-            } catch (e: Exception) {
-                Toast.makeText(this@ReportListActivity, "네트워크 오류 발생", Toast.LENGTH_SHORT).show()
-            }
-        }
-    }*/
-
-
-    //화면 불러오기
+    // 현재 페이지에 해당하는 리스트만 RecyclerView에 바인딩하고 페이지네이션 구성
     private fun loadPage(page: Int) {
         val pageSize = 5
         val fromIndex = (page - 1) * pageSize
-        val toIndex = minOf(fromIndex + pageSize, testList.size)
-        val pageList = testList.subList(fromIndex, toIndex)
+        val toIndex = minOf(fromIndex + pageSize, displayedList.size)
+        val pageList = displayedList.subList(fromIndex, toIndex)
 
-        // 🔹 어댑터 설정 (한 번만!)
         binding.reportRecyclerView.adapter = ReportAdapter(pageList) { report ->
-            Toast.makeText(this, "신고 선택됨: ${report.reportId}", Toast.LENGTH_SHORT).show()
-            // 신고 상세 화면으로 넘어감. (ID 넘겨줌)
             val intent = Intent(this, ReportDetailActivity::class.java)
             intent.putExtra("reportId", report.reportId)
+            intent.putExtra("status", report.status)
             startActivity(intent)
         }
 
-        // 🔹 페이지네이션 재설정
-        val totalPages = (testList.size + pageSize - 1) / pageSize
+        val totalPages = (displayedList.size + pageSize - 1) / pageSize
         setupPagination(totalPages, page)
     }
 
+    // 날짜 기준으로 오름차순 또는 내림차순 정렬한 후 1페이지부터 다시 표시
+    private fun sortReportsByDate(descending: Boolean) {
+        val formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME
+        displayedList = if (descending) {
+            displayedList.sortedByDescending { LocalDateTime.parse(it.createdAt, formatter) }
+        } else {
+            displayedList.sortedBy { LocalDateTime.parse(it.createdAt, formatter) }
+        }
+        loadPage(1)
+    }
 
-    // 페이지 네이션 함수
+    // 현재 필터와 정렬 상태를 기준으로 리스트를 갱신한 후 1페이지부터 다시 표시
+    private fun applyFilterAndSort() {
+        displayedList = testList.filter { currentFilter == null || it.status == currentFilter }
+            .let { filtered ->
+                val formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME
+                if (currentSortDescending) {
+                    filtered.sortedByDescending { LocalDateTime.parse(it.createdAt, formatter) }
+                } else {
+                    filtered.sortedBy { LocalDateTime.parse(it.createdAt, formatter) }
+                }
+            }
+        loadPage(1)
+    }
+    // "전체 보기", "승인만 보기", "처리중만 보기", "반려만 보기" 팝업 구성 및 클릭 처리
+    private fun showSortPopup(anchor: View) {
+        val popupView = layoutInflater.inflate(R.layout.sort_popup_filter, null)
+        val popupWindow = PopupWindow(popupView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true)
+
+        popupView.findViewById<TextView>(R.id.item_latest).setOnClickListener {
+            currentSortDescending = true
+            binding.btnSortStatus.text = "최신순으로 나열"
+            applyFilterAndSort()
+            popupWindow.dismiss()
+        }
+
+        popupView.findViewById<TextView>(R.id.item_oldest).setOnClickListener {
+            currentSortDescending = false
+            binding.btnSortStatus.text = "오래된 순으로 나열"
+            applyFilterAndSort()
+            popupWindow.dismiss()
+        }
+
+        popupWindow.elevation = 8f
+        popupWindow.showAsDropDown(anchor, 0, 0)
+    }
+    // "최신순", "오래된 순" 정렬 팝업 구성 및 클릭 처리
+    private fun showCustomPopup(anchor: View) {
+        val popupView = layoutInflater.inflate(R.layout.state_popup_filter, null)
+        val popupWindow = PopupWindow(popupView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true)
+
+        popupView.findViewById<TextView>(R.id.item_all).setOnClickListener {
+            currentFilter = null
+            binding.btnFilter.text = "전체 보기"
+            applyFilterAndSort()
+            popupWindow.dismiss()
+        }
+
+        popupView.findViewById<TextView>(R.id.item_completed).setOnClickListener {
+            currentFilter = "COMPLETED"
+            binding.btnFilter.text = "승인만 보기"
+            applyFilterAndSort()
+            popupWindow.dismiss()
+        }
+
+        popupView.findViewById<TextView>(R.id.item_processing).setOnClickListener {
+            currentFilter = "PROCESSING"
+            binding.btnFilter.text = "처리중만 보기"
+            applyFilterAndSort()
+            popupWindow.dismiss()
+        }
+
+        popupView.findViewById<TextView>(R.id.item_rejected).setOnClickListener {
+            currentFilter = "REJECTED"
+            binding.btnFilter.text = "반려만 보기"
+            applyFilterAndSort()
+            popupWindow.dismiss()
+        }
+
+        popupWindow.elevation = 8f
+        popupWindow.showAsDropDown(anchor, 0, 0)
+    }
+    // 페이지네이션 버튼 생성 및 이전/다음 페이지 이동 버튼 처리
     private fun setupPagination(totalPages: Int, currentPage: Int) {
         val layout = binding.paginationLayout
         layout.removeAllViews()
 
-        // ← 버튼
-        val prev = createPageButton("<") {
+        layout.addView(createPageButton("<") {
             if (currentPage > 1) loadPage(currentPage - 1)
-        }
-        layout.addView(prev)
+        })
 
-        // 페이지 번호
-        val maxVisiblePages = 5
         val startPage = max(1, currentPage - 2)
         val endPage = min(totalPages, currentPage + 2)
 
         if (startPage > 1) {
             layout.addView(createPageButton("1") { loadPage(1) })
-            if (startPage > 2) {
-                layout.addView(createDots())
-            }
+            if (startPage > 2) layout.addView(createDots())
         }
 
         for (i in startPage..endPage) {
-            layout.addView(createPageButton(i.toString(), i == currentPage) {
-                loadPage(i)
-            })
+            layout.addView(createPageButton(i.toString(), i == currentPage) { loadPage(i) })
         }
 
         if (endPage < totalPages) {
-            if (endPage < totalPages - 1) {
-                layout.addView(createDots())
-            }
+            if (endPage < totalPages - 1) layout.addView(createDots())
             layout.addView(createPageButton(totalPages.toString()) { loadPage(totalPages) })
         }
 
-        // → 버튼
-        val next = createPageButton(">") {
+        layout.addView(createPageButton(">") {
             if (currentPage < totalPages) loadPage(currentPage + 1)
-        }
-        layout.addView(next)
+        })
     }
-
-    private fun createPageButton(
-        text: String,
-        isCurrent: Boolean = false,
-        onClick: () -> Unit
-    ): TextView {
+    // 페이지 버튼(숫자 또는 '<' 또는 '>') 생성 함수
+    private fun createPageButton(text: String, isCurrent: Boolean = false, onClick: () -> Unit): TextView {
         return TextView(this).apply {
             this.text = text
             textSize = 16f
@@ -183,7 +215,7 @@ class ReportListActivity : BaseActivity() {
             setTypeface(null, if (isCurrent) Typeface.BOLD else Typeface.NORMAL)
         }
     }
-
+    // 페이지네이션 중 생략(...) 표시용 텍스트뷰 생성
     private fun createDots(): TextView {
         return TextView(this).apply {
             text = "..."
@@ -192,5 +224,4 @@ class ReportListActivity : BaseActivity() {
             setTextColor(Color.GRAY)
         }
     }
-
 }
