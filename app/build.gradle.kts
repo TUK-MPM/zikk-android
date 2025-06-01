@@ -48,7 +48,10 @@ dependencies {
     implementation(libs.okhttp)  // OkHttp
     implementation(libs.gson) // GSon
 
-    implementation(libs.coil)
+    implementation(libs.coil) // 이미지 로딩
+    implementation(libs.kotlinx.coroutines.core) // 코루틴
+    implementation(libs.kotlinx.coroutines.android) // 코루틴
+    implementation(libs.playservices.location) // 위치 서비스
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
