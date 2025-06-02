@@ -45,6 +45,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"> <!-- 겹치고 싶은 애들 묶음 -->
                     <TextView
+                        android:id="@+id/back"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="21dp"
@@ -63,7 +64,6 @@
                         android:textColor="@color/black"/>
                 </FrameLayout>
 
-
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -78,8 +78,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="30dp"
                     android:layout_marginBottom="5dp"
-                    android:text="2025-05-31 11:00"
-                    android:textColor="@color/black">
+                    android:textColor="@color/black"
+                    android:text="2025-05-31 11:00">
                 </TextView>
                 <View
                     android:layout_width="match_parent"
@@ -93,17 +93,16 @@
                     android:layout_marginTop="5dp"
                     android:layout_marginHorizontal="30dp"
                     android:text="보다 안정적인 정부24 운영을 위한 시스템 점검을 진행합니다.
-점검 시간 중 정부24 서비스를 이용할 수 없으니 아래 일정을 확인해 주시기 바랍니다.
+            점검 시간 중 정부24 서비스를 이용할 수 없으니 아래 일정을 확인해 주시기 바랍니다.
 
-○ 점검 일시 : 2025. 5. 16. (금) 19:30 ~ 2025. 5. 17. (토) 14:00 (총 18시간 30분)
-○ 점검 사유 : 정보시스템 오프라인 점검
-○ 점검 대상 : 정부24 주요 시스템
-○ 서비스영향도 : 점검기간 중 정부24 서비스 이용 불가
+            ○ 점검 일시 : 2025. 5. 16. (금) 19:30 ~ 2025. 5. 17. (토) 14:00 (총 18시간 30분)
+            ○ 점검 사유 : 정보시스템 오프라인 점검
+            ○ 점검 대상 : 정부24 주요 시스템
+            ○ 서비스영향도 : 점검기간 중 정부24 서비스 이용 불가
 
-※ 작업 진행 상황에 따라 시간이 변동될 수 있습니다."
+            ※ 작업 진행 상황에 따라 시간이 변동될 수 있습니다."
                     android:textColor="@color/black">
                 </TextView>
-
 
                 <RelativeLayout
                     android:layout_width="wrap_content"
@@ -118,17 +117,20 @@
 
                         <!-- 이전 버튼 -->
                         <Button
+                            android:id="@+id/btnBack"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="목록으로"
                             android:backgroundTint="@color/deap_gray"/>
                         <Button
+                            android:id="@+id/btnDelete"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginHorizontal="10dp"
                             android:text="삭제하기"
                             android:backgroundTint="@color/qusetion_red"/>
                         <Button
+                            android:id="@+id/btnEdit"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="수정하기"

@@ -45,6 +45,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"> <!-- 겹치고 싶은 애들 묶음 -->
                         <TextView
+                            android:id="@+id/back"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_margin="21dp"
@@ -135,6 +136,7 @@
 
                         <!-- 오른쪽에 아이콘 -->
                         <ImageView
+                            android:id="@+id/btnNoticeContext"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:src="@drawable/baseline_chevron_right_24"

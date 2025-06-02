@@ -45,6 +45,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"> <!-- 겹치고 싶은 애들 묶음 -->
                     <TextView
+                        android:id="@+id/back"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="21dp"
@@ -118,6 +119,7 @@
 
                         <!-- 이전 버튼 -->
                         <Button
+                            android:id="@+id/btnBack"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="목록으로"
