@@ -25,7 +25,7 @@ object PaginationUtils {
         return if (fromIndex in 0 until list.size) list.subList(fromIndex, toIndex) else emptyList()
     }
 
-    // 전체 페이지 수 계산 (올림 처리)
+    // 전체 페이지 수 계산 (올림 처리) -> 팝업 상태에 따라 계속 변경되기 때문
     fun getTotalPages(listSize: Int, pageSize: Int): Int {
         return (listSize + pageSize - 1) / pageSize
     }

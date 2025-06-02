@@ -8,3 +8,4 @@ data class ReportResponse(
     val isFirst: Boolean,
     val isLast: Boolean
 )
+
