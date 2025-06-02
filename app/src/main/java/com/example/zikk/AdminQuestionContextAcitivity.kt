@@ -1,5 +1,6 @@
 package com.example.zikk
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -9,33 +10,34 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.zikk.databinding.ActivityAdminQuestionContextAcitivityBinding
+import com.example.zikk.databinding.ActivityQuestionContextBinding
 
 class AdminQuestionContextAcitivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_admin_question_context_acitivity)
+        //setContentView(R.layout.activity_admin_question_context_acitivity)
+        val binding = ActivityAdminQuestionContextAcitivityBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        val editText = findViewById<EditText>(R.id.edtAnswer)
-        val button = findViewById<Button>(R.id.btnDelete)
-
-// 초기 상태
-        button.text = "삭제하기"
-
-// 텍스트 변경 감지 리스너 달기
-        editText.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if (s.isNullOrBlank()) {
-                    button.text = "삭제하기"
-                } else {
-                    button.text = "수정하기"
-                }
-            }
-
-            override fun afterTextChanged(s: Editable?) {}
-        })
+        binding.back.setOnClickListener {
+            val intent = Intent(this, QuestionListActivity::class.java)
+            startActivity(intent)
+        }
+        binding.btnBack.setOnClickListener {
+            val intent = Intent(this, QuestionListActivity::class.java)
+            startActivity(intent)
+        }
+        binding.btnDelete.setOnClickListener {
+            val intent = Intent(this, QuestionListActivity::class.java)
+            startActivity(intent)
+        } // 삭제되는 기능 넣어야 함
+        binding.btnComplete.setOnClickListener {
+            val intent = Intent(this, QuestionListActivity::class.java)
+            startActivity(intent)
+        } // 내용 옮기는 기능 넣어야 함
+        
 
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->

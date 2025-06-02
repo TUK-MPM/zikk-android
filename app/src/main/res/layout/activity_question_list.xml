@@ -39,6 +39,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"> <!-- 겹치고 싶은 애들 묶음 -->
                     <TextView
+                        android:id="@+id/back"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="21dp"
@@ -119,6 +120,7 @@
                         android:background="@drawable/round_box_large"
                         android:backgroundTint="@color/background_gray" />
                     <Button
+                        android:id="@+id/btnWrite"
                         android:layout_width="85dp"
                         android:layout_height="25dp"
                         android:layout_marginRight="20dp"
@@ -176,9 +178,9 @@
 
                     <!-- 오른쪽에 아이콘 -->
                     <ImageView
+                        android:id="@+id/btnQuestionContext"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:contentDescription="next"
                         android:src="@drawable/baseline_chevron_right_24" />
                 </LinearLayout>
 
