@@ -8,7 +8,6 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.zikk.databinding.ActivityNoticeBinding
 import com.example.zikk.databinding.ActivityNoticeContextBinding
-import com.example.zikk.model.Notice
 
 class NoticeContextActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

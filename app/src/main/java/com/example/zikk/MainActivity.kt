@@ -1,17 +1,12 @@
 package com.example.zikk
 
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.view.WindowManager
-import android.widget.Button
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.core.view.ViewCompat
-import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.zikk.adapter.NoticeAdapter
@@ -28,17 +23,19 @@ class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = setContentViewWithBinding(ActivityMainBinding::inflate)
+//
 
         val noticeList = listOf(
-            Notice(1, "공지사항 1", "내용 1입니다.", "2020-01-01 12:00:00"),
-            Notice(2, "공지사항 2", "내용 2입니다.", "2020-01-01 12:00:00"),
-            Notice(3, "공지사항 3", "내용 3입니다.", "2020-01-01 12:00:00")
+            Notice(1, "Test 1", "This is a test", "2020-01-01 12:00:00"),
+            Notice(2, "Test 2", "This is a test", "2020-01-01 12:00:00"),
+            Notice(3, "Test 3", "This is a test", "2020-01-01 12:00:00")
         )
-
         noticeAdapter = NoticeAdapter(noticeList) { notice ->
             Toast.makeText(this@MainActivity, "${notice.title} 클릭됨", Toast.LENGTH_SHORT).show()
             Log.d("NoticeClick", "Clicked: ${notice.notiId}")
         }
+
+
 
         binding.rvNoticeList.apply {
             layoutManager = LinearLayoutManager(this@MainActivity)
