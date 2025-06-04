@@ -3,16 +3,13 @@ package com.example.zikk
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.view.ViewGroup
-import android.widget.PopupWindow
-import android.widget.TextView
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.zikk.adapter.ReportAdapter
 import com.example.zikk.databinding.ActivityReportListBinding
 import com.example.zikk.model.Report
-import com.example.zikk.model.ReportResponse
+import com.example.zikk.model.response.ReportResponse
 import com.example.zikk.util.PaginationUiUtils
 import com.example.zikk.util.PaginationUtils
 import com.example.zikk.util.PopupUtils
