@@ -1,4 +1,6 @@
-package com.example.zikk.model
+package com.example.zikk.model.response
+
+import com.example.zikk.model.Report
 
 data class ReportResponse(
     val content: List<Report>,
