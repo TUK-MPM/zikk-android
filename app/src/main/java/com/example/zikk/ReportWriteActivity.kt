@@ -2,7 +2,6 @@ package com.example.zikk
 
 import android.Manifest
 import android.location.Geocoder
-import android.location.Location
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -15,12 +14,19 @@ import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.appcompat.app.AlertDialog
 import com.example.zikk.databinding.ActivityReportWriteBinding
+import com.example.zikk.enum.IllegalParkingLocation
+import com.example.zikk.model.request.ReportRequest
+import com.example.zikk.network.RetrofitClient
 import com.google.android.gms.location.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.Locale
 
 class ReportWriteActivity : BaseActivity() {
@@ -31,10 +37,14 @@ class ReportWriteActivity : BaseActivity() {
     private lateinit var locationCallback: LocationCallback
 
     private val LOCATION_PERMISSION_REQUEST_CODE = 1001
+    private val imageUriList = mutableListOf<Uri>() // 선택된 이미지 리스트
 
     // 사진 선택 런처
     private val imagePickerLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
-        uri?.let { addImageToLayout(it) }
+        uri?.let {
+            imageUriList.add(it)
+            addImageToLayout(it)
+        }
     }
 
     // 사진 권한 요청 런처
@@ -49,7 +59,6 @@ class ReportWriteActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = setContentViewWithBinding(ActivityReportWriteBinding::inflate)
-
         enableEdgeToEdge()
 
         // 시스템 바 여백 처리
@@ -62,7 +71,7 @@ class ReportWriteActivity : BaseActivity() {
         // 위치 서비스 초기화
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
-        // 사진 권한 요청
+        // 안드로이드 버전에 따라 적절한 권한 요청
         val permission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             Manifest.permission.READ_MEDIA_IMAGES
         } else {
@@ -70,43 +79,17 @@ class ReportWriteActivity : BaseActivity() {
         }
         permissionLauncher.launch(permission)
 
-        // 뒤로가기 버튼
-        binding.ivBack.setOnClickListener {
-            finish()
-        }
-
-        // 사진 추가 버튼
-        binding.btnPickImage.setOnClickListener {
-            imagePickerLauncher.launch("image/*")
-        }
-
-        // 위치 가져오기 버튼
-        binding.btnLocateGet.setOnClickListener {
-            getCurrentLocation()
-        }
+        // 버튼 리스너 설정
+        binding.ivBack.setOnClickListener { finish() }
+        binding.btnPickImage.setOnClickListener { imagePickerLauncher.launch("image/*") }
+        binding.btnLocateGet.setOnClickListener { getCurrentLocation() }
+        binding.btnSubmit.setOnClickListener { submitReport() }
     }
 
-    // 위치 권한 요청 결과 처리
-    override fun onRequestPermissionsResult(
-        requestCode: Int, permissions: Array<out String>, grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE &&
-            grantResults.isNotEmpty() &&
-            grantResults[0] == android.content.pm.PackageManager.PERMISSION_GRANTED
-        ) {
-            getCurrentLocation()
-        } else {
-            Toast.makeText(this, "위치 권한이 필요합니다.", Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    // 위치 요청 및 주소 변환
+    // 현재 위치 받아오기 및 주소로 변환
     private fun getCurrentLocation() {
-        if (ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) != android.content.pm.PackageManager.PERMISSION_GRANTED
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) !=
+            android.content.pm.PackageManager.PERMISSION_GRANTED
         ) {
             ActivityCompat.requestPermissions(
                 this,
@@ -116,85 +99,127 @@ class ReportWriteActivity : BaseActivity() {
             return
         }
 
-        // 단 한 번만 위치 요청
-        locationRequest = LocationRequest.create().apply {
-            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-            interval = 1000
-            numUpdates = 1
-        }
+        locationRequest = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 1000).setMaxUpdates(1).build()
 
-        // 위치 결과 콜백 정의
         locationCallback = object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult) {
-                val location = locationResult.lastLocation
-                if (location != null) {
-                    val lat = location.latitude
-                    val lon = location.longitude
+                val location = locationResult.lastLocation ?: return
+                val address = try {
+                    val geocoder = Geocoder(this@ReportWriteActivity, Locale.getDefault())
+                    val addresses = geocoder.getFromLocation(location.latitude, location.longitude, 1)
+                    addresses?.getOrNull(0)?.getAddressLine(0)
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    null
+                } ?: "주소를 변환할 수 없습니다."
 
-                    val coordText = "위도: $lat, 경도: $lon"
-
-                    val address = try {
-                        val geocoder = Geocoder(this@ReportWriteActivity, Locale.getDefault())
-                        val addresses = geocoder.getFromLocation(lat, lon, 1)
-                        if (!addresses.isNullOrEmpty()) {
-                            addresses[0].getAddressLine(0)
-                        } else {
-                            null
-                        }
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                        null
-                    }
-
-                    val resultText = address ?: "주소를 변환할 수 없습니다."
-                    binding.etLocateWrite.setText(resultText)
-
-                    // 콜백 해제
-                    fusedLocationClient.removeLocationUpdates(this)
-                } else {
-                    Toast.makeText(this@ReportWriteActivity, "위치를 가져올 수 없습니다.", Toast.LENGTH_SHORT).show()
-                }
+                binding.etLocateWrite.setText(address)
+                fusedLocationClient.removeLocationUpdates(this)
             }
         }
 
-        // 위치 요청 시작
-        fusedLocationClient.requestLocationUpdates(
-            locationRequest,
-            locationCallback,
-            Looper.getMainLooper()
-        )
+        fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper())
     }
 
-    // 선택한 이미지 추가
+    // 선택한 이미지를 레이아웃에 추가
     private fun addImageToLayout(uri: Uri) {
         val imageView = ImageView(this).apply {
-            layoutParams = LinearLayout.LayoutParams(61.dp, 65.dp).apply {
-                marginEnd = 10.dp
-            }
+            layoutParams = LinearLayout.LayoutParams(61.dp, 65.dp).apply { marginEnd = 10.dp }
             setImageURI(uri)
             scaleType = ImageView.ScaleType.CENTER_CROP
-
             setOnClickListener {
                 AlertDialog.Builder(this@ReportWriteActivity)
                     .setTitle("사진 삭제")
                     .setMessage("이 사진을 삭제하시겠습니까?")
                     .setPositiveButton("삭제") { _, _ ->
+                        imageUriList.remove(uri)
                         binding.photoContainer.removeView(this)
                     }
                     .setNegativeButton("취소", null)
                     .show()
             }
         }
-
         val index = binding.photoContainer.indexOfChild(binding.btnPickImage)
         binding.photoContainer.addView(imageView, index)
+    }
+
+    // 신고 정보 전송
+    private fun submitReport() {
+        // 1. 휴대폰 번호 검사
+        val phone = binding.etPhone.text.toString().trim()
+        if (phone.isEmpty()) {
+            Toast.makeText(this, "휴대폰 번호를 입력해주세요.", Toast.LENGTH_SHORT).show()
+            return
+        }
+        if (!phone.matches(Regex("^01[016789]-?\\d{3,4}-?\\d{4}$"))) {
+            Toast.makeText(this, "유효한 휴대폰 번호 형식이 아닙니다.", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        // 2. 위치 텍스트 검사
+        val address = binding.etLocateWrite.text.toString().trim()
+        if (address.isEmpty()) {
+            Toast.makeText(this, "위치를 입력하거나 위치 가져오기를 눌러주세요.", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        // 3. 불법 주차 위치 유형 선택 검사
+        val selectedType = when (binding.radioGroup.checkedRadioButtonId) {
+            R.id.radio_crosswalk -> IllegalParkingLocation.DOT_BLOCK.name
+            R.id.radio_intersection -> IllegalParkingLocation.TRAFFIC_ISLAND.name
+            R.id.radio_bus_stop -> IllegalParkingLocation.PROTECTED_ZONE.name
+            R.id.radio_safety_zone -> IllegalParkingLocation.WALKWAY_OTHER.name
+            R.id.radio_others -> IllegalParkingLocation.OTHER.name
+            else -> null
+        }
+
+        if (selectedType == null) {
+            Toast.makeText(this, "불법 주차 위치 유형을 선택해주세요.", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        // 4. 개인정보 동의 체크 여부
+        if (!binding.cbAgree.isChecked) {
+            Toast.makeText(this, "개인정보 활용에 동의해야 신고가 가능합니다.", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        // 5. (선택) 최소 1장의 이미지가 필요하다면 검사
+        if (imageUriList.isEmpty()) {
+            Toast.makeText(this, "사진을 1장 이상 첨부해주세요.", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        // ======================
+        // 유효성 검사 통과 후 전송
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val imageUrls = listOf<String>() // TODO: presigned URL 업로드 후 실제 URL 리스트로 대체
+
+                val request = ReportRequest(phone, address, selectedType, imageUrls)
+                val response = RetrofitClient.apiService.sendLocation(request)
+
+                withContext(Dispatchers.Main) {
+                    if (response.isSuccessful) {
+                        Toast.makeText(this@ReportWriteActivity, "신고가 접수되었습니다.", Toast.LENGTH_SHORT).show()
+                        finish()
+                    } else {
+                        Toast.makeText(this@ReportWriteActivity, "신고 실패: ${response.code()}", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(this@ReportWriteActivity, "에러: ${e.message}", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
     }
 
     // dp 단위 변환 확장 함수
     private val Int.dp: Int
         get() = (this * resources.displayMetrics.density).toInt()
 
-    // 화면 다른 화면 터치시 키보드 사라짐
+    // 화면 터치 시 키보드 숨김 처리
     override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
         if (currentFocus != null) {
             val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
@@ -203,5 +228,4 @@ class ReportWriteActivity : BaseActivity() {
         }
         return super.dispatchTouchEvent(ev)
     }
-
 }

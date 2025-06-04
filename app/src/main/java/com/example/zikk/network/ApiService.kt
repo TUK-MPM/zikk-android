@@ -1,6 +1,6 @@
 package com.example.zikk.network
 
-import com.example.zikk.model.request.LocationRequest
+import com.example.zikk.model.request.ReportRequest
 import com.example.zikk.model.request.LoginRequest
 import com.example.zikk.model.response.LoginResponse
 import com.example.zikk.model.Report
@@ -26,7 +26,7 @@ interface ApiService {
     // 신고 작성
     @POST("report")
     suspend fun sendLocation(
-        @Body location: LocationRequest
+        @Body location: ReportRequest
     ): Response<Unit> // 또는 Response<CustomResponse> 사용 가능
 
     // 메인페이지 처리 사례 조회

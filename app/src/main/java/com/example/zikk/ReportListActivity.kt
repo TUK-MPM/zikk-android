@@ -3,6 +3,7 @@ package com.example.zikk
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -10,96 +11,114 @@ import com.example.zikk.adapter.ReportAdapter
 import com.example.zikk.databinding.ActivityReportListBinding
 import com.example.zikk.model.Report
 import com.example.zikk.model.response.ReportResponse
+import com.example.zikk.network.RetrofitClient
 import com.example.zikk.util.PaginationUiUtils
 import com.example.zikk.util.PaginationUtils
 import com.example.zikk.util.PopupUtils
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class ReportListActivity : BaseActivity() {
 
-    val testList = ReportResponse(
-        content = listOf(
-            Report("rep_20250601_001", "DOT_BLOCK", "PROCESSING", "2025-06-01T10:30:00"),
-            Report("rep_20250601_002", "PROTECTED_ZONE", "COMPLETED", "2025-06-01T09:15:00"),
-            Report("rep_20250531_003", "DOT_BLOCK", "REJECTED", "2025-05-31T16:45:00"),
-            Report("rep_20250530_004", "PROTECTED_ZONE", "PROCESSING", "2025-05-30T08:20:00"),
-            Report("rep_20250529_005", "DOT_BLOCK", "COMPLETED", "2025-05-29T14:00:00"),
-            Report("rep_20250528_006", "PROTECTED_ZONE", "REJECTED", "2025-05-28T13:10:00"),
-            Report("rep_20250527_007", "DOT_BLOCK", "PROCESSING", "2025-05-27T12:25:00"),
-            Report("rep_20250526_008", "PROTECTED_ZONE", "COMPLETED", "2025-05-26T11:40:00"),
-            Report("rep_20250525_009", "DOT_BLOCK", "REJECTED", "2025-05-25T17:55:00"),
-            Report("rep_20250524_010", "PROTECTED_ZONE", "PROCESSING", "2025-05-24T07:45:00"),
-            Report("rep_20250523_011", "DOT_BLOCK", "COMPLETED", "2025-05-23T15:10:00"),
-            Report("rep_20250522_012", "PROTECTED_ZONE", "REJECTED", "2025-05-22T08:30:00"),
-            Report("rep_20250521_013", "DOT_BLOCK", "PROCESSING", "2025-05-21T16:15:00"),
-            Report("rep_20250520_014", "PROTECTED_ZONE", "COMPLETED", "2025-05-20T10:00:00"),
-            Report("rep_20250519_015", "DOT_BLOCK", "REJECTED", "2025-05-19T09:50:00"),
-            Report("rep_20250518_016", "PROTECTED_ZONE", "PROCESSING", "2025-05-18T14:35:00"),
-            Report("rep_20250517_017", "DOT_BLOCK", "COMPLETED", "2025-05-17T11:25:00"),
-            Report("rep_20250516_018", "PROTECTED_ZONE", "REJECTED", "2025-05-16T13:45:00"),
-            Report("rep_20250515_019", "DOT_BLOCK", "PROCESSING", "2025-05-15T12:00:00"),
-            Report("rep_20250514_020", "PROTECTED_ZONE", "COMPLETED", "2025-05-14T08:10:00")
-        ),
-        totalPages = 4,
-        hasNext = true,
-        hasPrevious = false,
-        isFirst = true,
-        isLast = false
-    )
-
-    private lateinit var binding: ActivityReportListBinding
-    private var currentPage = 1     // 현재 페이지 번호
-    private var displayedList: List<Report> = testList.content // 필터링 및 정렬된 결과 리스트
-    private var currentFilter: String? = null
-    private var currentSortDescending: Boolean = true
+    private lateinit var binding: ActivityReportListBinding  // ViewBinding 객체
+    private var currentPage = 1                              // 현재 페이지 번호
+    private var displayedList: List<Report> = emptyList()    // 필터 및 정렬된 리스트
+    private var currentFilter: String? = null                // 현재 선택된 상태 필터
+    private var currentSortDescending: Boolean = true        // 정렬 순서: true = 최신순
+    private val pageSize = 5                                 // 한 페이지에 보여줄 아이템 수
+    private val token = "Bearer {your_token_here}"           // 로그인 후 받은 토큰 (TODO: 실제 토큰으로 교체)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = setContentViewWithBinding(ActivityReportListBinding::inflate)
 
+        // 상태바, 네비게이션바 영역 피해서 패딩 적용
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
 
-        // 최초 실행 시 applyFilterAndSort()로 데이터 필터링 & 정렬 후 loadPage(1) 호출
+        // RecyclerView 레이아웃 설정
         binding.reportRecyclerView.layoutManager = LinearLayoutManager(this)
-        applyFilterAndSort()
 
+        // 서버에서 데이터 불러오기
+        fetchReports()
+
+        // 뒤로가기 버튼
         binding.ivBack.setOnClickListener { finish() }
+
+        // 상태 필터 팝업
         binding.btnFilter.setOnClickListener { showCustomPopup(it) }
+
+        // 정렬 순서 팝업
         binding.btnSortStatus.setOnClickListener { showSortPopup(it) }
     }
 
-    // 상태와 정렬 기준에 동시에 맞게 페이지 로딩
-    private fun applyFilterAndSort() {
-        val filtered = testList.content.filter { currentFilter == null || it.status == currentFilter }
-        displayedList = PaginationUtils.sortByDate(filtered, currentSortDescending)
-        loadPage(1)
+    // 서버에서 신고 목록 API 호출
+    private fun fetchReports() {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val response = RetrofitClient.apiService.getReports(
+                    token = token,
+                    page = 0,
+                    size = 100,
+                    keyword = null,
+                    status = null,
+                    sortType = null
+                )
+                if (response.isSuccessful) {
+                    val data = response.body()?.content ?: emptyList()
+                    withContext(Dispatchers.Main) {
+                        displayedList = data
+                        applyFilterAndSort() // 필터링 및 정렬 적용
+                    }
+                } else {
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(this@ReportListActivity, "데이터 불러오기 실패", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(this@ReportListActivity, "네트워크 오류: ${e.message}", Toast.LENGTH_LONG).show()
+                }
+            }
+        }
     }
 
-    // 정렬 버튼 누를 때 마다 페이지 새로고침
-    private fun loadPage(page: Int) {
-        currentPage = page
-        val pageSize = 5
-        val pageList = PaginationUtils.paginate(displayedList, page, pageSize)
+    // 현재 필터 및 정렬 기준에 따라 리스트 갱신
+    private fun applyFilterAndSort() {
+        val filtered = displayedList.filter { currentFilter == null || it.status == currentFilter }
+        val sorted = PaginationUtils.sortByDate(filtered, currentSortDescending)
+        loadPage(1, sorted)
+    }
 
+    // 페이징 처리를 위한 특정 페이지 데이터만 출력
+    private fun loadPage(page: Int, list: List<Report>) {
+        currentPage = page
+        val pageList = PaginationUtils.paginate(list, page, pageSize)
+
+        // 어댑터 설정 및 아이템 클릭 이벤트 처리
         binding.reportRecyclerView.adapter = ReportAdapter(pageList) { report ->
             val intent = Intent(this, ReportDetailActivity::class.java)
             intent.putExtra("status", report.status)
             startActivity(intent)
         }
-        val totalPages = PaginationUtils.getTotalPages(displayedList.size, pageSize)
 
+        // 페이지네이션 UI 세팅
+        val totalPages = PaginationUtils.getTotalPages(list.size, pageSize)
         PaginationUiUtils.setupPagination(
             context = this,
             container = binding.paginationLayout,
             currentPage = page,
             totalPages = totalPages,
-            onPageClick = { selectedPage -> loadPage(selectedPage) }
+            onPageClick = { selectedPage -> loadPage(selectedPage, list) }
         )
     }
-    // 정렬 버튼 팝업 띄우기
+
+    // 정렬 팝업 표시 (최신순/오래된 순)
     private fun showSortPopup(anchor: View) {
         PopupUtils.showSortPopup(this, anchor) { isDescending ->
             currentSortDescending = isDescending
@@ -108,7 +127,7 @@ class ReportListActivity : BaseActivity() {
         }
     }
 
-    // 상태 필터 버튼 팝업 띄우기
+    // 상태 필터 팝업 표시 (전체/처리중/승인/반려)
     private fun showCustomPopup(anchor: View) {
         PopupUtils.showFilterPopup(this, anchor) { filter ->
             currentFilter = filter
