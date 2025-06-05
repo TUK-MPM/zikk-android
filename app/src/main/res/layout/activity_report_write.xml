@@ -169,13 +169,15 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:maxLines="1"
+                                android:ellipsize="end"
                                 android:hint="수동으로 입력하기"
                                 android:background="@color/light_blue"
                                 android:paddingHorizontal="16dp"
-                                android:textSize="14sp" />
+                                android:textSize="14sp"
+                                android:inputType="text"
+                                android:singleLine="true" />
 
                         </androidx.cardview.widget.CardView>
-
 
                         <androidx.cardview.widget.CardView
                             android:layout_width="wrap_content"

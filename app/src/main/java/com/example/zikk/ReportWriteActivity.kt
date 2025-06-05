@@ -36,7 +36,6 @@ class ReportWriteActivity : BaseActivity() {
     private lateinit var locationRequest: LocationRequest
     private lateinit var locationCallback: LocationCallback
 
-    private val LOCATION_PERMISSION_REQUEST_CODE = 1001
     private val imageUriList = mutableListOf<Uri>() // 선택된 이미지 리스트
 
     // 사진 선택 런처
@@ -48,13 +47,27 @@ class ReportWriteActivity : BaseActivity() {
     }
 
     // 사진 권한 요청 런처
-    private val permissionLauncher = registerForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) { isGranted ->
-        if (!isGranted) {
+    private val photoPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
+        val granted = permissions.entries.any { it.value }
+        if (!granted) {
             Toast.makeText(this, "사진 접근 권한이 필요합니다.", Toast.LENGTH_SHORT).show()
         }
     }
+
+    // 위치 권한 요청 런처
+    private val locationPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
+        val granted = permissions.entries.any { it.value }
+        if (granted) {
+            getCurrentLocation()
+        } else {
+            Toast.makeText(this, "위치 권한이 필요합니다.", Toast.LENGTH_SHORT).show()
+        }
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,12 +85,13 @@ class ReportWriteActivity : BaseActivity() {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
         // 안드로이드 버전에 따라 적절한 권한 요청
-        val permission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            Manifest.permission.READ_MEDIA_IMAGES
+        val photoPermissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            arrayOf(Manifest.permission.READ_MEDIA_IMAGES)
         } else {
-            Manifest.permission.READ_EXTERNAL_STORAGE
+            arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE)
         }
-        permissionLauncher.launch(permission)
+        photoPermissionLauncher.launch(photoPermissions)
+
 
         // 버튼 리스너 설정
         binding.ivBack.setOnClickListener { finish() }
@@ -88,23 +102,30 @@ class ReportWriteActivity : BaseActivity() {
 
     // 현재 위치 받아오기 및 주소로 변환
     private fun getCurrentLocation() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) !=
-            android.content.pm.PackageManager.PERMISSION_GRANTED
-        ) {
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                LOCATION_PERMISSION_REQUEST_CODE
+        // 정밀 또는 대략 위치 권한이 허용되었는지 확인
+        val fineGranted = ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) ==
+                android.content.pm.PackageManager.PERMISSION_GRANTED
+        val coarseGranted = ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) ==
+                android.content.pm.PackageManager.PERMISSION_GRANTED
+
+
+        // 위치 요청 설정
+        if (!fineGranted && !coarseGranted) {
+            val permissions = arrayOf(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION
             )
+            locationPermissionLauncher.launch(permissions)
             return
         }
 
-        locationRequest = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 1000).setMaxUpdates(1).build()
-
+        // 위치 결과 콜백 정의
         locationCallback = object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult) {
-                val location = locationResult.lastLocation ?: return
+                val location = locationResult.lastLocation ?: return // 마지막 위치 가져오기
+
                 val address = try {
+                    // 위치를 주소로 변환 (Geocoder 사용)
                     val geocoder = Geocoder(this@ReportWriteActivity, Locale.getDefault())
                     val addresses = geocoder.getFromLocation(location.latitude, location.longitude, 1)
                     addresses?.getOrNull(0)?.getAddressLine(0)
@@ -113,12 +134,26 @@ class ReportWriteActivity : BaseActivity() {
                     null
                 } ?: "주소를 변환할 수 없습니다."
 
+                // 주소를 입력란에 설정
                 binding.etLocateWrite.setText(address)
+
+                // 위치 업데이트 중단
                 fusedLocationClient.removeLocationUpdates(this)
             }
         }
 
-        fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper())
+        // 초기화
+        locationRequest = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 1000)
+            .setMaxUpdates(1)
+            .build()
+
+
+        // 위치 업데이트 요청
+        fusedLocationClient.requestLocationUpdates(
+            locationRequest,
+            locationCallback,
+            Looper.getMainLooper()
+        )
     }
 
     // 선택한 이미지를 레이아웃에 추가
