@@ -127,7 +127,7 @@
                             android:orientation="horizontal">
 
                             <EditText
-                                android:id="@+id/et_phone_num"
+                                android:id="@+id/et_phone_Num"
                                 android:layout_width="match_parent"
                                 android:layout_height="48dp"
                                 android:background="@color/background_gray"
@@ -178,13 +178,17 @@
                             app:cardElevation="0dp">
 
                             <EditText
-                                android:id="@+id/et_locate"
+                                android:id="@+id/et_locate_write"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:background="@color/light_blue"
+                                android:maxLines="1"
+                                android:ellipsize="end"
                                 android:hint="수동으로 입력하기"
+                                android:background="@color/light_blue"
                                 android:paddingHorizontal="16dp"
-                                android:textSize="14sp" />
+                                android:textSize="14sp"
+                                android:inputType="text"
+                                android:singleLine="true" />
 
                         </androidx.cardview.widget.CardView>
 
@@ -197,6 +201,7 @@
                             app:cardElevation="0dp">
 
                             <Button
+                                android:id="@+id/btn_locate_get"
                                 android:layout_width="wrap_content"
                                 android:layout_height="48dp"
                                 android:backgroundTint="@color/background_gray"
@@ -289,6 +294,7 @@
                     </LinearLayout>
 
                     <RadioGroup
+                        android:id="@+id/radioGroup"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">

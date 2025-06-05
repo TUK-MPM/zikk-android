@@ -6,6 +6,7 @@ import com.example.zikk.model.response.LoginResponse
 import com.example.zikk.model.Report
 import com.example.zikk.model.response.ReportResponse
 import com.example.zikk.model.Todo
+import com.example.zikk.model.response.ReportUpdateResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -28,6 +29,13 @@ interface ApiService {
     suspend fun sendLocation(
         @Body location: ReportRequest
     ): Response<Unit> // 또는 Response<CustomResponse> 사용 가능
+
+    // 신고 수정
+    @PATCH("report/{report_id}")
+    suspend fun updateReport(
+        @Path("report_id") reportId: String,
+        @Body request: ReportRequest
+    ): Response<ReportUpdateResponse>
 
     // 메인페이지 처리 사례 조회
     @GET("report/examples")

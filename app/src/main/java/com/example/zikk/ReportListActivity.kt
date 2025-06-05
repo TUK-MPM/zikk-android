@@ -24,10 +24,10 @@ class ReportListActivity : BaseActivity() {
 
     private lateinit var binding: ActivityReportListBinding  // ViewBinding 객체
     private var currentPage = 1                              // 현재 페이지 번호
+    private val pageSize = 5                                 // 한 페이지에 보여줄 아이템 수
     private var displayedList: List<Report> = emptyList()    // 필터 및 정렬된 리스트
     private var currentFilter: String? = null                // 현재 선택된 상태 필터
     private var currentSortDescending: Boolean = true        // 정렬 순서: true = 최신순
-    private val pageSize = 5                                 // 한 페이지에 보여줄 아이템 수
     private val token = "Bearer {your_token_here}"           // 로그인 후 받은 토큰 (TODO: 실제 토큰으로 교체)
 
     override fun onCreate(savedInstanceState: Bundle?) {
