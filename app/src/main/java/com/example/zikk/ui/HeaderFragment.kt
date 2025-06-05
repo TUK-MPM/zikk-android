@@ -1,5 +1,6 @@
 package com.example.zikk.ui
 
+import android.content.Context.MODE_PRIVATE
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -33,6 +34,7 @@ class HeaderFragment : Fragment() {
         val searchEditText = view.findViewById<AutoCompleteTextView>(R.id.actv_search)
         val userButton = view.findViewById<ImageButton>(R.id.btn_user)
 
+        val isLoggedIn = getTokenFromSharedPreferences()
 
         menuButton.setOnClickListener {
             // Activity에서 DrawerLayout 찾기
@@ -41,7 +43,15 @@ class HeaderFragment : Fragment() {
         }
 
         userButton.setOnClickListener {
-            showPhoneInputDialog()
+            if(isLoggedIn == null) {
+                showPhoneInputDialog()
+            } else {
+                Toast.makeText(
+                    requireContext(),
+                    "이미 로그인",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
         }
 
         // 예시 자동완성 리스트
@@ -73,4 +83,8 @@ class HeaderFragment : Fragment() {
         Toast.makeText(requireContext(), "연락처 등록: $phoneNumber", Toast.LENGTH_SHORT).show()
     }
 
+    private fun getTokenFromSharedPreferences(): String? {
+        val sharedPreferences = requireActivity().getSharedPreferences("app_prefs", MODE_PRIVATE)
+        return sharedPreferences.getString("auth_token", null)
+    }
 }
