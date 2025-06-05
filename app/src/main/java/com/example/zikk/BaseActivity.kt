@@ -1,9 +1,11 @@
 package com.example.zikk
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.viewbinding.ViewBinding
 import com.example.zikk.databinding.ActivityBaseBinding
@@ -54,6 +56,35 @@ abstract class BaseActivity : AppCompatActivity() {
 
     private fun setupDrawer() {
         val drawerContainer = findViewById<FrameLayout>(R.id.fl_drawer_container)
-        layoutInflater.inflate(R.layout.layout_drawer, drawerContainer, true)
+
+        // ViewBinding 사용
+        val drawerBinding = com.example.zikk.databinding.LayoutDrawerBinding.inflate(layoutInflater, drawerContainer, true)
+
+        // 공통 버튼 클릭 이벤트 처리
+        drawerBinding.btnReportGuide.setOnClickListener {
+            startActivity(Intent(this, ReportGuide::class.java))
+            drawerLayout.closeDrawer(GravityCompat.START)
+        }
+
+        drawerBinding.btnReport.setOnClickListener {
+            startActivity(Intent(this, ReportWriteActivity::class.java))
+            drawerLayout.closeDrawer(GravityCompat.START)
+        }
+
+        drawerBinding.btnReportQuery.setOnClickListener {
+            startActivity(Intent(this, ReportListActivity::class.java))
+            drawerLayout.closeDrawer(GravityCompat.START)
+        }
+
+        // 예시: 공지사항 / 문의
+        drawerBinding.btnNotice.setOnClickListener {
+            startActivity(Intent(this, NoticeActivity::class.java))
+            drawerLayout.closeDrawer(GravityCompat.START)
+        }
+
+        drawerBinding.btnDirectInquiry.setOnClickListener {
+            startActivity(Intent(this, QuestionListActivity::class.java))
+            drawerLayout.closeDrawer(GravityCompat.START)        }
     }
+
 }
