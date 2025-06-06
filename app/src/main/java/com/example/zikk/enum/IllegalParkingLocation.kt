@@ -9,7 +9,4 @@ enum class IllegalParkingLocation(
     WALKWAY_OTHER("상기 사항 외 보도"),
     OTHER("기타");
 
-    override fun toString(): String {
-        return description
-    }
 }

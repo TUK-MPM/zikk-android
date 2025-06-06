@@ -2,6 +2,7 @@ package com.example.zikk
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.core.view.ViewCompat
@@ -80,6 +81,10 @@ class ReportListActivity : BaseActivity() {
                 )
                 if (response.isSuccessful) {
                     val data = response.body()?: emptyList()
+                    // ★ 여기에 로그 추가!
+                    data.forEach { report ->
+                        Log.d("ReportFetch", "report: $report")
+                    }
                     withContext(Dispatchers.Main) {
                         displayedList = data
                         applyFilterAndSort() // 필터링 및 정렬 적용

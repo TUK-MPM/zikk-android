@@ -20,6 +20,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.zikk.databinding.ActivityReportWriteBinding
 import com.example.zikk.enum.IllegalParkingLocation
+import com.example.zikk.extensions.getUserPhoneNumber
 import com.example.zikk.model.request.ReportRequest
 import com.example.zikk.network.RetrofitClient
 import com.google.android.gms.location.*
@@ -92,6 +93,11 @@ class ReportWriteActivity : BaseActivity() {
         }
         photoPermissionLauncher.launch(photoPermissions)
 
+        // 로그인된 경우, SharedPreferences에서 폰 번호를 자동 입력
+        val phoneNumber = getUserPhoneNumber()
+        if (!phoneNumber.isNullOrEmpty()) {
+            binding.etPhone.setText(phoneNumber)
+        }
 
         // 버튼 리스너 설정
         binding.ivBack.setOnClickListener { finish() }
@@ -232,6 +238,8 @@ class ReportWriteActivity : BaseActivity() {
                 val imageUrls = listOf<String>() // TODO: presigned URL 업로드 후 실제 URL 리스트로 대체
 
                 val request = ReportRequest(phone, address, selectedType, imageUrls)
+                // 여기서 로그!
+                Log.d("SubmitReport", "request=$request")
                 val response = RetrofitClient.apiService.sendLocation(request)
 
                 withContext(Dispatchers.Main) {
