@@ -126,7 +126,7 @@ class ReportListActivity : BaseActivity() {
         // 어댑터 설정 및 아이템 클릭 이벤트 처리
         binding.reportRecyclerView.adapter = ReportAdapter(pageList) { report ->
             val intent = Intent(this, ReportDetailActivity::class.java)
-            intent.putExtra("status", report.status)
+            intent.putExtra("reportId", report.reportId)
             startActivity(intent)
         }
 
