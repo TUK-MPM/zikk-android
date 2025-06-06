@@ -34,22 +34,30 @@ class ReportGuide : BaseActivity() {
             val scrollView = v as ScrollView
             val child = scrollView.getChildAt(0)
 
-            val triggerPosition = (child.measuredHeight - scrollView.measuredHeight) * 0.9
+            val maxScroll = child.measuredHeight - scrollView.measuredHeight
 
-            if (!isNavigated && scrollY >= triggerPosition) {
-                isNavigated = true
+            // 조건: 끝에 도달했고 추가로 더 끌어당긴 경우
+            if (scrollY >= maxScroll) {
+                // 추가로 땡긴 정도 측정 (over-scroll 감지)
+                val overscrollAmount = scrollY - maxScroll
 
-                // 애니메이션 → 전환
-                binding.main.animate()
-                    .translationY(-100f)
-                    .setDuration(300)
-                    .withEndAction {
-                        val intent = Intent(this, ReportWriteActivity::class.java)
-                        startActivity(intent)
-                        overridePendingTransition(R.anim.slide_in_up, R.anim.none)
-                        finish() // 화면 종료
-                    }
+                // 일정 기준 이상 땡긴 경우만 반응
+                if (!isNavigated && overscrollAmount > 250) {
+                    isNavigated = true
+
+                    // 전환 애니메이션
+                    binding.main.animate()
+                        .translationY(-100f)
+                        .setDuration(150)
+                        .withEndAction {
+                            val intent = Intent(this, ReportWriteActivity::class.java)
+                            startActivity(intent)
+                            overridePendingTransition(R.anim.slide_in_up, R.anim.none)
+                            finish()
+                        }
+                }
             }
         }
+
     }
 }

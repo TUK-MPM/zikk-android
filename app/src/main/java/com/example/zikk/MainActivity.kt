@@ -14,6 +14,7 @@ import com.example.zikk.databinding.ActivityMainBinding
 import com.example.zikk.model.Notice
 import com.example.zikk.network.RetrofitClient
 import kotlinx.coroutines.launch
+import org.w3c.dom.NodeList
 
 class MainActivity : BaseActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -77,6 +78,11 @@ class MainActivity : BaseActivity() {
             startActivity(intent)
         }
 
+        // 공지사항 more 버튼 클릭 처리
+        binding.tvNoticeMore.setOnClickListener {
+            val intent = Intent(this, NoticeActivity::class.java) // 이동할 액티비티로 교체
+            startActivity(intent)
+        }
     }
 
     private fun getTodos() {
