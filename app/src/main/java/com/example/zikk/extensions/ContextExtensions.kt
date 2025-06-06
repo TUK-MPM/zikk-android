@@ -25,3 +25,22 @@ fun Context.removeLoginToken() {
             remove(KEY_LOGIN_TOKEN)
         }
 }
+
+fun Context.saveUserPhoneNumber(phoneNumber: String) {
+    getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+        .edit() {
+            putString("USER_PHONE_NUMBER", phoneNumber)
+        }
+}
+
+fun Context.getUserPhoneNumber(): String? {
+    return getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+        .getString("USER_PHONE_NUMBER", null)
+}
+
+fun Context.removeUserPhoneNumber() {
+    getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+        .edit() {
+            remove("USER_PHONE_NUMBER")
+        }
+}
