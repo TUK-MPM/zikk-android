@@ -5,6 +5,7 @@ import com.example.zikk.model.request.ReportRequest
 import com.example.zikk.model.request.LoginRequest
 import com.example.zikk.model.response.LoginResponse
 import com.example.zikk.model.Report
+import com.example.zikk.model.ReportDetail
 import com.example.zikk.model.response.ReportResponse
 import com.example.zikk.model.Todo
 import com.example.zikk.model.request.CreateNoticeRequest
@@ -52,14 +53,17 @@ interface ApiService {
         @Query("size") size: Int,
     ): Response<List<Report>>
 
+    // 상세 조회
     @GET("report/{id}")
     suspend fun getReportDetail(
+        @Header("Authorization") token: String,
         @Path("id") reportId: String,
-    ): Response<Report>
+    ): Response<ReportDetail>
 
     // 관리자 통계 조회
     @GET("statistics")
     suspend fun getStatistics()
+
 
     @PATCH("report/status/{id}")
     suspend fun updateReportStatus(

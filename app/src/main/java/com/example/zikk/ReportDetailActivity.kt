@@ -3,18 +3,13 @@ package com.example.zikk
 import android.Manifest
 import android.location.Geocoder
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.os.Looper
 import android.view.MotionEvent
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
@@ -22,7 +17,8 @@ import androidx.core.view.WindowInsetsCompat
 import coil.load
 import com.example.zikk.databinding.ActivityReportDetailBinding
 import com.example.zikk.enum.IllegalParkingLocation
-import com.example.zikk.model.Report
+import com.example.zikk.extensions.getLoginToken
+import com.example.zikk.model.ReportDetail
 import com.example.zikk.model.request.ReportRequest
 import com.example.zikk.network.RetrofitClient
 import com.google.android.gms.location.*
@@ -38,15 +34,25 @@ class ReportDetailActivity : BaseActivity() {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var locationRequest: LocationRequest
     private lateinit var locationCallback: LocationCallback
-
-    private val imageUriList = mutableListOf<Uri>()
     private var reportId: String? = null
+    private lateinit var token: String
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = setContentViewWithBinding(ActivityReportDetailBinding::inflate)
         enableEdgeToEdge()
 
+        // 토큰 유효성 체크
+        val rawToken = getLoginToken()
+        if (rawToken == null) {
+            Toast.makeText(this, "로그인 정보가 없습니다.", Toast.LENGTH_SHORT).show()
+            finish()
+            return
+        }
+        token = "Bearer $rawToken"
+
+        // 시스템 바 패딩 적용
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -55,37 +61,32 @@ class ReportDetailActivity : BaseActivity() {
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
+        // 전달받은 reportId 추출
         reportId = intent.getStringExtra("reportId")
-        val status = intent.getStringExtra("status") ?: "PROCESSING"
 
-        val statusKor = when (status) {
-            "COMPLETED" -> "완료"
-            "REJECTED" -> "반려"
-            else -> "처리중"
-        }
-
-        if (statusKor == "완료" || statusKor == "반려") {
-            binding.btnSubmit.apply {
-                isEnabled = false
-                setBackgroundColor(ContextCompat.getColor(context, R.color.deap_gray))
-            }
-        }
-
-        reportId?.let { fetchReportDetail(it) }
-
+        // 뒤로가기 버튼 동작
         binding.ivBack.setOnClickListener { finish() }
+        // 뒤로가기 버튼 동작
+        binding.btnBack.setOnClickListener { finish() }
+
+        // 위치 다시 가져오기
         binding.btnLocateGet.setOnClickListener { getCurrentLocation() }
+        // 신고 수정 버튼
         binding.btnSubmit.setOnClickListener { updateReport() }
+
+        // 서버에서 상세 정보 조회
+        reportId?.let { fetchReportDetail(it) }
     }
 
-    private fun fetchReportDetail(id: String) {
+    // 상세 데이터 서버에서 조회
+    private fun fetchReportDetail(reportId: String) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val response = RetrofitClient.apiService.getReportDetail(id)
+                val response = RetrofitClient.apiService.getReportDetail(token, reportId)
                 withContext(Dispatchers.Main) {
                     if (response.isSuccessful) {
-                        val report = response.body()!!
-                        populateFields(report)
+                        val reportDetail = response.body()!! // 타입: ReportDetail
+                        populateFields(reportDetail)
                     } else {
                         Toast.makeText(this@ReportDetailActivity, "조회 실패", Toast.LENGTH_SHORT).show()
                     }
@@ -98,30 +99,56 @@ class ReportDetailActivity : BaseActivity() {
         }
     }
 
-    private fun populateFields(report: Report) {
-        binding.etPhoneNum.setText(report.reporterContact ?: "")
-        binding.etLocateWrite.setText(report.address ?: "")
+    // 조회한 데이터를 화면에 표시
+    private fun populateFields(report: ReportDetail) {
+        // 전화번호, 주소 표시
+        binding.etPhoneNum.setText(report.number)
+        binding.etLocateWrite.setText(report.address)
 
-        when (IllegalParkingLocation.valueOf(report.where)) {
-            IllegalParkingLocation.DOT_BLOCK -> binding.rbCrosswalk.isChecked = true
-            IllegalParkingLocation.TRAFFIC_ISLAND -> binding.rbIntersection.isChecked = true
-            IllegalParkingLocation.PROTECTED_ZONE -> binding.rbBusStop.isChecked = true
-            IllegalParkingLocation.WALKWAY_OTHER -> binding.rbSafetyZone.isChecked = true
-            IllegalParkingLocation.OTHER -> binding.rbOthers.isChecked = true
+        // 신고 유형(RadioButton) 선택
+        try {
+            when (IllegalParkingLocation.valueOf(report.where)) {
+                IllegalParkingLocation.DOT_BLOCK -> binding.rbCrosswalk.isChecked = true
+                IllegalParkingLocation.TRAFFIC_ISLAND -> binding.rbIntersection.isChecked = true
+                IllegalParkingLocation.PROTECTED_ZONE -> binding.rbBusStop.isChecked = true
+                IllegalParkingLocation.WALKWAY_OTHER -> binding.rbSafetyZone.isChecked = true
+                IllegalParkingLocation.OTHER -> binding.rbOthers.isChecked = true
+            }
+        } catch (e: Exception) {
+            binding.rbOthers.isChecked = true
         }
 
+        // 상태 표시 (텍스트뷰 추가 필요, 예: binding.tvStatus)
+        val statusText = when (report.status) {
+            "COMPLETED" -> "완료"
+            "REJECTED" -> "반려"
+            else -> "처리중"
+        }
+        // 만약 상태 텍스트뷰가 있다면 아래 주석 해제
+        // binding.tvStatus.text = statusText
+
+        // 첨부 사진 리스트를 LinearLayout에 추가 (기존 뷰는 삭제)
         binding.photoContainer.removeAllViews()
-        report.mediaUrls?.forEach { url ->
+        report.mediaUrls.forEach { url ->
             val imageView = ImageView(this).apply {
                 layoutParams = binding.btnPickImage.layoutParams
                 scaleType = ImageView.ScaleType.CENTER_CROP
                 setPadding(8, 8, 8, 8)
-                load(url)
+                load(url) // coil로 이미지 로딩
             }
             binding.photoContainer.addView(imageView)
         }
+
+        // 이미 완료/반려된 신고는 수정불가 처리
+        if (report.status == "COMPLETED" || report.status == "REJECTED") {
+            binding.btnSubmit.apply {
+                isEnabled = false
+                setBackgroundColor(ContextCompat.getColor(context, R.color.deap_gray))
+            }
+        }
     }
 
+    // 신고 내용 수정 (신고자, 주소, 유형만 수정 가능 예시)
     private fun updateReport() {
         val phone = binding.etPhoneNum.text.toString().trim()
         val address = binding.etLocateWrite.text.toString().trim()
@@ -141,7 +168,7 @@ class ReportDetailActivity : BaseActivity() {
 
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val imageUrls = listOf<String>() // TODO: presigned URL 업로드 구현 필요
+                val imageUrls = listOf<String>() // TODO: presigned URL 업로드 구현 필요(필요 시)
                 val request = ReportRequest(phone, address, selectedType, imageUrls)
                 val response = RetrofitClient.apiService.updateReport(reportId!!, request)
 
@@ -161,6 +188,7 @@ class ReportDetailActivity : BaseActivity() {
         }
     }
 
+    // 현재 위치(주소) 받아오기
     private fun getCurrentLocation() {
         val fineGranted = ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) ==
                 android.content.pm.PackageManager.PERMISSION_GRANTED
@@ -187,7 +215,6 @@ class ReportDetailActivity : BaseActivity() {
                     e.printStackTrace()
                     null
                 } ?: "주소를 변환할 수 없습니다."
-
                 binding.etLocateWrite.setText(address)
                 fusedLocationClient.removeLocationUpdates(this)
             }
@@ -204,9 +231,7 @@ class ReportDetailActivity : BaseActivity() {
         )
     }
 
-    private val Int.dp: Int
-        get() = (this * resources.displayMetrics.density).toInt()
-
+    // 바깥 클릭 시 키보드 숨김 처리
     override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
         if (currentFocus != null) {
             val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
