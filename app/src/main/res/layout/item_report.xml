@@ -11,7 +11,7 @@
     android:foreground="?attr/selectableItemBackground">
 
     <TextView
-        android:id="@+id/txtTitle"
+        android:id="@+id/txtAddress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="신고 위치"
@@ -22,7 +22,7 @@
         android:id="@+id/txtStatus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="신고 상태"
+        android:text="신고 유형"
         android:textSize="14sp"
         android:textColor="#333333"
         android:layout_marginTop="4dp" />

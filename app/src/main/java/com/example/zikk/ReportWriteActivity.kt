@@ -131,14 +131,21 @@ class ReportWriteActivity : BaseActivity() {
                 val location = locationResult.lastLocation ?: return // 마지막 위치 가져오기
 
                 val address = try {
-                    // 위치를 주소로 변환 (Geocoder 사용)
                     val geocoder = Geocoder(this@ReportWriteActivity, Locale.getDefault())
                     val addresses = geocoder.getFromLocation(location.latitude, location.longitude, 1)
-                    addresses?.getOrNull(0)?.getAddressLine(0)
+                    val addrLine = addresses?.getOrNull(0)?.getAddressLine(0) ?: "주소를 변환할 수 없습니다."
+                    val regex = Regex("""([가-힣]+시)\s*(.*)""")
+                    val match = regex.find(addrLine)
+                    if (match != null) {
+                        // "시"로 끝나는 행정구역명 + 나머지 전체
+                        match.groupValues[1] + " " + match.groupValues[2]
+                    } else {
+                        addrLine
+                    }
                 } catch (e: Exception) {
                     e.printStackTrace()
-                    null
-                } ?: "주소를 변환할 수 없습니다."
+                    "주소를 변환할 수 없습니다."
+                }
 
                 // 주소를 입력란에 설정
                 binding.etLocateWrite.setText(address)

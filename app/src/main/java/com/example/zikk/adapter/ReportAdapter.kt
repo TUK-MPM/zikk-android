@@ -33,9 +33,14 @@ class ReportAdapter(
                 "기타"
             }
 
-            binding.txtTitle.text = "신고위치: $whereDesc"
-            binding.txtTitle.text = "신고유형: $whereDesc"
+            // "시/구/동"까지만 추출
+            val addressToShow = Regex("""([가-힣]+시\s)?([가-힣]+구\s)?([가-힣0-9]+동)""")
+                .find(report.address)?.value?.trim() ?: report.address
+            binding.txtAddress.text = "신고위치: $addressToShow"
 
+            binding.txtStatus.text = "신고유형: $whereDesc"
+
+            // 분단위 까지만
             val formattedDate = report.createdAt.replace("T", " ")
             val dateToShow = if (formattedDate.length >= 16) {
                 formattedDate.substring(0, 16) // "2024-06-07 10:20"
