@@ -58,7 +58,11 @@ abstract class BaseActivity : AppCompatActivity() {
         val drawerContainer = findViewById<FrameLayout>(R.id.fl_drawer_container)
 
         // ViewBinding 사용
-        val drawerBinding = com.example.zikk.databinding.LayoutDrawerBinding.inflate(layoutInflater, drawerContainer, true)
+        val drawerBinding = com.example.zikk.databinding.LayoutDrawerBinding.inflate(
+            layoutInflater,
+            drawerContainer,
+            true
+        )
 
         // 공통 버튼 클릭 이벤트 처리
         drawerBinding.btnReportGuide.setOnClickListener {
@@ -84,7 +88,14 @@ abstract class BaseActivity : AppCompatActivity() {
 
         drawerBinding.btnDirectInquiry.setOnClickListener {
             startActivity(Intent(this, QuestionListActivity::class.java))
-            drawerLayout.closeDrawer(GravityCompat.START)        }
+            drawerLayout.closeDrawer(GravityCompat.START)
+        }
+
+        drawerBinding.tvAdmin.setOnClickListener {
+            startActivity(Intent(this, AdminMainActivity::class.java))
+            drawerLayout.closeDrawer(GravityCompat.START)
+        }
+
     }
 
 }

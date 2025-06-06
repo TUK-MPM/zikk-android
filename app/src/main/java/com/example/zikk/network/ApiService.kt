@@ -1,11 +1,14 @@
 package com.example.zikk.network
 
+import com.example.zikk.enum.SortType
 import com.example.zikk.model.request.ReportRequest
 import com.example.zikk.model.request.LoginRequest
 import com.example.zikk.model.response.LoginResponse
 import com.example.zikk.model.Report
 import com.example.zikk.model.response.ReportResponse
 import com.example.zikk.model.Todo
+import com.example.zikk.model.request.CreateNoticeRequest
+import com.example.zikk.model.response.NoticeResponse
 import com.example.zikk.model.response.ReportUpdateResponse
 import retrofit2.Response
 import retrofit2.http.Body
@@ -66,4 +69,21 @@ interface ApiService {
         @Path("id") reportId: String,
         @Body status: String
     )
+
+    @GET("notice")
+    suspend fun getNotices(
+        @Query("size") size: Int,
+        @Query("page") page: Int,
+        @Query("keyword") keyword: String,
+        @Query("sortType") sortType: SortType
+    ): Response<NoticeResponse>
+
+    @GET("notice/{id}")
+    suspend fun getNotice()
+
+    @POST("notice")
+    suspend fun createNotice(
+        @Header("Authorization") token: String,
+        @Body request: CreateNoticeRequest
+    ): Response<String>
 }

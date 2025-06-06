@@ -1,5 +1,6 @@
 package com.example.zikk
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -11,33 +12,24 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.zikk.adapter.NoticeAdapter
 import com.example.zikk.databinding.ActivityMainBinding
+import com.example.zikk.enum.SortType
 import com.example.zikk.model.Notice
 import com.example.zikk.network.RetrofitClient
 import kotlinx.coroutines.launch
-import org.w3c.dom.NodeList
 
 class MainActivity : BaseActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var noticeAdapter: NoticeAdapter
-
+    private val noticeList = mutableListOf<Notice>() // mutableList로 변경
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = setContentViewWithBinding(ActivityMainBinding::inflate)
-//
 
-        val noticeList = listOf(
-            Notice(1, "Test 1", "This is a test", "2020-01-01 12:00:00"),
-            Notice(2, "Test 2", "This is a test", "2020-01-01 12:00:00"),
-            Notice(3, "Test 3", "This is a test", "2020-01-01 12:00:00")
-        )
         noticeAdapter = NoticeAdapter(noticeList) { notice ->
             Toast.makeText(this@MainActivity, "${notice.title} 클릭됨", Toast.LENGTH_SHORT).show()
             Log.d("NoticeClick", "Clicked: ${notice.notiId}")
         }
-
-
-
         binding.rvNoticeList.apply {
             layoutManager = LinearLayoutManager(this@MainActivity)
             adapter = noticeAdapter
@@ -59,21 +51,20 @@ class MainActivity : BaseActivity() {
             insets
         }
 
-
         // 공지 화면 불러오기
-        binding.guideBtn.setOnClickListener{
+        binding.guideBtn.setOnClickListener {
             var intent = Intent(applicationContext, ReportGuide::class.java)
             startActivity(intent)
         }
 
         // 신고 작성 화면 불러오기
-        binding.reportBtn.setOnClickListener{
+        binding.reportBtn.setOnClickListener {
             var intent = Intent(applicationContext, ReportWriteActivity::class.java)
             startActivity(intent)
         }
 
         // 신고 조회 화면 불러오기
-        binding.reportQueryBtn.setOnClickListener{
+        binding.reportQueryBtn.setOnClickListener {
             var intent = Intent(applicationContext, ReportListActivity::class.java)
             startActivity(intent)
         }
@@ -83,32 +74,37 @@ class MainActivity : BaseActivity() {
             val intent = Intent(this, NoticeActivity::class.java) // 이동할 액티비티로 교체
             startActivity(intent)
         }
+
+        getNotices()
     }
 
-    private fun getTodos() {
+    @SuppressLint("NotifyDataSetChanged")
+    private fun getNotices() {
         lifecycleScope.launch {
             try {
-                val response = RetrofitClient.apiService.getTodos()
-                if (response.isSuccessful) {
-                    val todos = response.body()
-                    Log.d("테스트", todos?.get(0)?.title.toString())
-                    Log.d("테스트", todos?.get(0)?.userId.toString())
-                    Log.d("테스트", todos?.get(0)?.id.toString())
-                    Log.d("테스트", todos?.get(0)?.completed.toString())
-                } else {
-                    Toast.makeText(
-                        this@MainActivity,
-                        "서버 오류: ${response.code()}",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                val response = RetrofitClient.apiService.getNotices(
+                    3,
+                    1,
+                    "",
+                    SortType.LATEST
+                )
+
+                Log.d("response", response.toString())
+
+                if(response.isSuccessful) {
+                    val noticeResponse = response.body()
+                    noticeResponse?.let { responseBody ->
+                        // 데이터를 noticeList에 업데이트
+                        noticeList.clear() // 기존 데이터 클리어
+                        Log.d("nioticelist" , noticeResponse.content.toString())
+                        noticeList.addAll(responseBody.content) // 새 데이터 추가
+
+                        // 어댑터에 변경사항 알림
+                        noticeAdapter.notifyDataSetChanged()
+                    }
                 }
             } catch (e: Exception) {
-                e.localizedMessage?.let { Log.d("테스트 요청", it) }
-                Toast.makeText(
-                    this@MainActivity,
-                    "요청 실패: ${e.localizedMessage}",
-                    Toast.LENGTH_SHORT
-                ).show()
+                Toast.makeText(this@MainActivity, "요청실패", Toast.LENGTH_SHORT).show()
             }
         }
     }

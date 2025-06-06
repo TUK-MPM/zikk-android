@@ -109,7 +109,7 @@ class PhoneDialogFragment : DialogFragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             try {
-                val loginRequest = LoginRequest(phoneNumber = phoneNumber)
+                val loginRequest = LoginRequest(phone = phoneNumber)
                 val response = RetrofitClient.apiService.login(loginRequest)
 
                 if (response.isSuccessful && response.body() != null) {

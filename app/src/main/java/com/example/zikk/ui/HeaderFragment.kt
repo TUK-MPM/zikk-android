@@ -58,7 +58,6 @@ class HeaderFragment : Fragment() {
             ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, suggestions)
         searchEditText.setAdapter(adapter)
 
-// 글자 입력 시 자동완성 리스트 보이게 함
         searchEditText.threshold = 1 // 1자 이상 입력하면 자동완성 보임
 
     }
@@ -86,7 +85,6 @@ class HeaderFragment : Fragment() {
             .setMessage("로그아웃 하시겠습니까?")
             .setPositiveButton("로그아웃") { _, _ ->
                 requireContext().removeLoginToken()
-                // 로그아웃 처리 로직
             }
             .setNegativeButton("취소", null)
             .show()
