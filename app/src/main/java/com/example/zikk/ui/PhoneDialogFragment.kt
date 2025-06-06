@@ -9,7 +9,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
@@ -17,6 +16,10 @@ import androidx.core.content.edit
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.lifecycleScope
 import com.example.zikk.R
+import com.example.zikk.extensions.removeLoginToken
+import com.example.zikk.extensions.removeUserPhoneNumber
+import com.example.zikk.extensions.saveLoginToken
+import com.example.zikk.extensions.saveUserPhoneNumber
 import com.example.zikk.model.request.LoginRequest
 import com.example.zikk.network.RetrofitClient
 import kotlinx.coroutines.launch
@@ -116,7 +119,7 @@ class PhoneDialogFragment : DialogFragment() {
                     val loginResponse = response.body()!!
 
                     // SharedPreferences에 토큰 저장
-                    saveTokenToSharedPreferences(loginResponse.token, loginResponse.userId)
+                    saveTokenToSharedPreferences(loginResponse.token, phoneNumber)
 
                     Toast.makeText(
                         requireContext(),
@@ -162,17 +165,12 @@ class PhoneDialogFragment : DialogFragment() {
         }
     }
 
-    private fun saveTokenToSharedPreferences(token: String, userId: Int) {
-        val sharedPreferences =
-            requireActivity().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+    private fun saveTokenToSharedPreferences(token: String, phoneNumber: String) {
+        requireContext().removeLoginToken()
+        requireContext().removeUserPhoneNumber()
 
-        sharedPreferences.edit {
-            putString("auth_token", token)
-            putInt("user_id", userId)
-            putLong("login_time", System.currentTimeMillis()) // 로그인 시간도 저장
-        }
-
-        Log.d("SharedPrefs", "토큰 저장 완료 - Token: $token, UserId: $userId")
+        requireContext().saveLoginToken(token)
+        requireContext().saveUserPhoneNumber(phoneNumber)
     }
 
     companion object {
