@@ -5,11 +5,8 @@ import android.os.Bundle
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.example.zikk.databinding.ActivityAdminNoticeListBinding
-import com.example.zikk.databinding.ActivityMainBinding
 import com.example.zikk.databinding.ActivityNoticeBinding
 
 class NoticeActivity : BaseActivity() {
@@ -31,10 +28,9 @@ class NoticeActivity : BaseActivity() {
             startActivity(intent)
         }
         binding.btnNoticeContext.setOnClickListener {
-            val intent = Intent(this, NoticeContextActivity::class.java)
+            val intent = Intent(this, NoticeContentActivity::class.java)
             startActivity(intent)
         }
-
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())

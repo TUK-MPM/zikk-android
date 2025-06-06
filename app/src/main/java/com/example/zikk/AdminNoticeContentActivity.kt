@@ -2,32 +2,36 @@ package com.example.zikk
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.ArrayAdapter
-import android.widget.Spinner
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.example.zikk.databinding.ActivityNoticeBinding
-import com.example.zikk.databinding.ActivityQuestionContextBinding
+import com.example.zikk.databinding.ActivityAdminNoticeContextBinding
 
-class QuestionContextActivity : AppCompatActivity() {
+class AdminNoticeContentActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        //setContentView(R.layout.activity_question_context)
-        val binding = ActivityQuestionContextBinding.inflate(layoutInflater)
+        val binding = ActivityAdminNoticeContextBinding.inflate(layoutInflater)
+        //setContentView(R.layout.activity_admin_notice_context)
         setContentView(binding.root)
 
         binding.back.setOnClickListener {
-            val intent = Intent(this, QuestionListActivity::class.java)
+            val intent = Intent(this, AdminNoticeListActivity::class.java)
             startActivity(intent)
         }
         binding.btnBack.setOnClickListener {
-            val intent = Intent(this, QuestionListActivity::class.java)
+            val intent = Intent(this, AdminNoticeListActivity::class.java)
             startActivity(intent)
         }
-
+        binding.btnDelete.setOnClickListener {
+            val intent = Intent(this, AdminNoticeListActivity::class.java)
+            startActivity(intent)
+        } // 전환만 해놔서 내용 없애는 기능 넣어야 함
+        binding.btnEdit.setOnClickListener {
+            val intent = Intent(this, AdminNoticeWriteActivity::class.java)
+            startActivity(intent)
+        } // 전환만 해놔서 내용 가지고 가는 기능 넣어야 함
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())

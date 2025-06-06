@@ -1,5 +1,6 @@
 package com.example.zikk
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
@@ -31,8 +32,18 @@ class AdminNoticeWriteActivity : BaseActivity() {
             insets
         }
 
+        binding.back.setOnClickListener {
+            val intent = Intent(this, AdminNoticeListActivity::class.java)
+            startActivity(intent)
+        }
+        binding.btnBack.setOnClickListener {
+            val intent = Intent(this, AdminNoticeListActivity::class.java)
+            startActivity(intent)
+        }
         binding.btnComplete.setOnClickListener {
             createNotice()
+            val intent = Intent(this, AdminNoticeListActivity::class.java)
+            startActivity(intent)
         }
     }
 

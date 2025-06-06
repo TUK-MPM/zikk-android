@@ -88,3 +88,4 @@ interface ApiService {
         @Body request: CreateNoticeRequest
     ): Response<String>
 }
+
