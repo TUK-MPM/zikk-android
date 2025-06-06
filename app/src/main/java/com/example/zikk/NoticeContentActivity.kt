@@ -6,29 +6,24 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.example.zikk.databinding.ActivityNoticeBinding
-import com.example.zikk.databinding.ActivityNoticeWriteBinding
+import com.example.zikk.databinding.ActivityNoticeContextBinding
 
-class NoticeWriteActivity : AppCompatActivity() {
+class NoticeContentActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        //setContentView(R.layout.activity_notice_write)
-        val binding = ActivityNoticeWriteBinding.inflate(layoutInflater)
+        //setContentView(R.layout.activity_notice_context)
+        val binding = ActivityNoticeContextBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         binding.back.setOnClickListener {
-            val intent = Intent(this, AdminNoticeListActivity::class.java)
+            val intent = Intent(this, NoticeActivity::class.java)
             startActivity(intent)
         }
         binding.btnBack.setOnClickListener {
-            val intent = Intent(this, AdminNoticeListActivity::class.java)
+            val intent = Intent(this, NoticeActivity::class.java)
             startActivity(intent)
         }
-        binding.btnComplete.setOnClickListener {
-            val intent = Intent(this, AdminNoticeListActivity::class.java)
-            startActivity(intent)
-        } // 내용 가지고 가는 기능 넣어야 함
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())

@@ -9,7 +9,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.zikk.databinding.ActivityAdminNoticeListBinding
-import com.example.zikk.databinding.ActivityNoticeBinding
 
 class AdminNoticeListActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,11 +28,11 @@ class AdminNoticeListActivity : AppCompatActivity() {
             startActivity(intent)
         }
         binding.btnWrite.setOnClickListener {
-            val intent = Intent(this, NoticeWriteActivity::class.java)
+            val intent = Intent(this, AdminNoticeWriteActivity::class.java)
             startActivity(intent)
         }
         binding.btnNoticeContext.setOnClickListener {
-            val intent = Intent(this, AdminNoticeContextActivity::class.java)
+            val intent = Intent(this, AdminNoticeContentActivity::class.java)
             startActivity(intent)
         }
 
