@@ -1,8 +1,8 @@
 package com.example.zikk.ui
 
+import android.app.AlertDialog
 import android.content.Context.MODE_PRIVATE
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -14,6 +14,8 @@ import android.widget.Toast
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.example.zikk.R
+import com.example.zikk.extensions.getLoginToken
+import com.example.zikk.extensions.removeLoginToken
 
 class HeaderFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,8 +36,6 @@ class HeaderFragment : Fragment() {
         val searchEditText = view.findViewById<AutoCompleteTextView>(R.id.actv_search)
         val userButton = view.findViewById<ImageButton>(R.id.btn_user)
 
-        val isLoggedIn = getTokenFromSharedPreferences()
-
         menuButton.setOnClickListener {
             // Activity에서 DrawerLayout 찾기
             val drawerLayout = requireActivity().findViewById<DrawerLayout>(R.id.dl_container)
@@ -43,14 +43,11 @@ class HeaderFragment : Fragment() {
         }
 
         userButton.setOnClickListener {
-            if(isLoggedIn == null) {
+            val isLoggedIn = requireContext().getLoginToken()
+            if (isLoggedIn == null) {
                 showPhoneInputDialog()
             } else {
-                Toast.makeText(
-                    requireContext(),
-                    "이미 로그인",
-                    Toast.LENGTH_SHORT
-                ).show()
+                showLogoutDialog()
             }
         }
 
@@ -83,8 +80,15 @@ class HeaderFragment : Fragment() {
         Toast.makeText(requireContext(), "연락처 등록: $phoneNumber", Toast.LENGTH_SHORT).show()
     }
 
-    private fun getTokenFromSharedPreferences(): String? {
-        val sharedPreferences = requireActivity().getSharedPreferences("app_prefs", MODE_PRIVATE)
-        return sharedPreferences.getString("auth_token", null)
+    private fun showLogoutDialog() {
+        AlertDialog.Builder(requireContext())
+            .setTitle("로그아웃")
+            .setMessage("로그아웃 하시겠습니까?")
+            .setPositiveButton("로그아웃") { _, _ ->
+                requireContext().removeLoginToken()
+                // 로그아웃 처리 로직
+            }
+            .setNegativeButton("취소", null)
+            .show()
     }
 }
