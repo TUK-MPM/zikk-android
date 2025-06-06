@@ -6,6 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.zikk.databinding.ItemReportBinding
+import com.example.zikk.enum.IllegalParkingLocation
+import com.example.zikk.enum.Status
 import com.example.zikk.model.Report
 
 class ReportAdapter(
@@ -13,26 +15,39 @@ class ReportAdapter(
     private val onItemClick: (Report) -> Unit
 ) : RecyclerView.Adapter<ReportAdapter.ReportViewHolder>() {
 
+    // 상태별 배경색 상수 맵
+    private val statusBgColors = mapOf(
+        "PROCESSING" to Color.parseColor("#FFF9C4"), // 노랑
+        "COMPLETED" to Color.parseColor("#E3F2FD"), // 파랑
+        "REJECTED" to Color.parseColor("#FCE4EC")    // 분홍
+    )
+
     inner class ReportViewHolder(private val binding: ItemReportBinding) :
         RecyclerView.ViewHolder(binding.root) {
+
         fun bind(report: Report) {
-            binding.txtTitle.text = convertWhere(report.where)
-            binding.txtStatus.text = convertStatus(report.status)
+            // 위치 enum 변환
+            val whereDesc = try {
+                IllegalParkingLocation.valueOf(report.where).description
+            } catch (e: Exception) {
+                "기타"
+            }
+            // 상태 enum 변환
+            val statusDesc = try {
+                Status.valueOf(report.status).description
+            } catch (e: Exception) {
+                "미정"
+            }
+
+            binding.txtTitle.text = whereDesc
+            binding.txtStatus.text = statusDesc
             binding.txtDate.text = report.createdAt.replace("T", " ")
 
-            // 🔹 상태별 배경색 적용 (LinearLayout 배경)
-            val bgColor = when (report.status) {
-                "PROCESSING" -> Color.parseColor("#FFF9C4") // 노랑
-                "COMPLETED" -> Color.parseColor("#E3F2FD") // 파랑
-                "REJECTED" -> Color.parseColor("#FCE4EC") // 분홍
-                else -> Color.WHITE
-            }
+            val bgColor = statusBgColors[report.status] ?: Color.WHITE
             binding.reportItemRoot.setBackgroundColor(bgColor)
-            // 🔹 화살표 표시 조건
             binding.imageArrow.visibility = if (report.status == "REJECTED") View.GONE else View.VISIBLE
-            binding.root.setOnClickListener{
-                onItemClick(report)
-            }
+
+            binding.root.setOnClickListener { onItemClick(report) }
         }
     }
 
@@ -42,23 +57,9 @@ class ReportAdapter(
     }
 
     override fun onBindViewHolder(holder: ReportViewHolder, position: Int) {
+        android.util.Log.d("ReportAdapter", "bind position=$position: ${items[position]}")
         holder.bind(items[position])
     }
 
     override fun getItemCount(): Int = items.size
-
-    // 여기 표시해 주는 거 추가 해줘야 함
-    private fun convertWhere(where: String): String = when (where) {
-        "DOT_BLOCK" -> "점자블록"
-        "PROTECTED_ZONE" -> "보호구역"
-        else -> "기타"
-    }
-
-    private fun convertStatus(status: String): String = when (status) {
-        "PROCESSING" -> "처리중"
-        "COMPLETED" -> "완료"
-        "REJECTED" -> "반려"
-        else -> "미정"
-    }
 }
-

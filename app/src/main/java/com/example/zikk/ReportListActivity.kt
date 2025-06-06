@@ -9,6 +9,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.zikk.adapter.ReportAdapter
 import com.example.zikk.databinding.ActivityReportListBinding
+import com.example.zikk.extensions.getLoginToken
 import com.example.zikk.model.Report
 import com.example.zikk.model.response.ReportResponse
 import com.example.zikk.network.RetrofitClient
@@ -28,12 +29,22 @@ class ReportListActivity : BaseActivity() {
     private var displayedList: List<Report> = emptyList()    // 필터 및 정렬된 리스트
     private var currentFilter: String? = null                // 현재 선택된 상태 필터
     private var currentSortDescending: Boolean = true        // 정렬 순서: true = 최신순
-    private val token = "Bearer {your_token_here}"           // 로그인 후 받은 토큰 (TODO: 실제 토큰으로 교체)
+    private lateinit var token: String                       // 토큰 선언 (초기화는 나중에)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = setContentViewWithBinding(ActivityReportListBinding::inflate)
 
+        // 1. 토큰 유효성 체크
+        val rawToken = getLoginToken()
+        if (rawToken == null) {
+            Toast.makeText(this, "로그인 정보가 없습니다.", Toast.LENGTH_SHORT).show()
+            finish()
+            return
+        }
+        token = "Bearer $rawToken"
+
+        // 2. 이후 로직 초기화
         // 상태바, 네비게이션바 영역 피해서 패딩 적용
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -57,6 +68,7 @@ class ReportListActivity : BaseActivity() {
         binding.btnSortStatus.setOnClickListener { showSortPopup(it) }
     }
 
+
     // 서버에서 신고 목록 API 호출
     private fun fetchReports() {
         CoroutineScope(Dispatchers.IO).launch {
@@ -65,12 +77,9 @@ class ReportListActivity : BaseActivity() {
                     token = token,
                     page = 0,
                     size = 100,
-                    keyword = null,
-                    status = null,
-                    sortType = null
                 )
                 if (response.isSuccessful) {
-                    val data = response.body()?.content ?: emptyList()
+                    val data = response.body()?: emptyList()
                     withContext(Dispatchers.Main) {
                         displayedList = data
                         applyFilterAndSort() // 필터링 및 정렬 적용
@@ -81,6 +90,7 @@ class ReportListActivity : BaseActivity() {
                     }
                 }
             } catch (e: Exception) {
+                e.printStackTrace()
                 withContext(Dispatchers.Main) {
                     Toast.makeText(this@ReportListActivity, "네트워크 오류: ${e.message}", Toast.LENGTH_LONG).show()
                 }
@@ -92,6 +102,12 @@ class ReportListActivity : BaseActivity() {
     private fun applyFilterAndSort() {
         val filtered = displayedList.filter { currentFilter == null || it.status == currentFilter }
         val sorted = PaginationUtils.sortByDate(filtered, currentSortDescending)
+
+        // 신고 내역이 없으면 안내 메시지
+        if (sorted.isEmpty()) {
+            Toast.makeText(this, "신고 내역이 없습니다.", Toast.LENGTH_SHORT).show()
+        }
+
         loadPage(1, sorted)
     }
 

@@ -44,16 +44,13 @@ interface ApiService {
     @GET("report/examples")
     suspend fun getReportExamples(): Response<List<Report>>
 
-    // 관리자 신고 내역 전체 조회
+    // 관리자 - 사용자 신고 내역 전체 조회
     @GET("report")
     suspend fun getReports(
         @Header("Authorization") token: String,
         @Query("page") page: Int,
         @Query("size") size: Int,
-        @Query("keyword") keyword: String? = null,
-        @Query("status") status: String? = null,     // 예: "COMPLETED"
-        @Query("sortType") sortType: String? = null  // 예: "LATEST", "STATUS"
-    ): Response<ReportResponse>
+    ): Response<List<Report>>
 
     @GET("report/{id}")
     suspend fun getReportDetail(
