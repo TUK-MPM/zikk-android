@@ -15,4 +15,3 @@ data class Report(
     val mediaUrls: List<String>? = null,
     val reporterContact: String? = null,
 )
-

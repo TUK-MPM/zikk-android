@@ -17,7 +17,7 @@ class ReportAdapter(
 
     // 상태별 배경색 상수 맵
     private val statusBgColors = mapOf(
-        "PROCESSING" to Color.parseColor("#FFF9C4"), // 노랑
+        "PENDING" to Color.parseColor("#FFF9C4"), // 노랑
         "COMPLETED" to Color.parseColor("#E3F2FD"), // 파랑
         "REJECTED" to Color.parseColor("#FCE4EC")    // 분홍
     )
@@ -32,16 +32,17 @@ class ReportAdapter(
             } catch (e: Exception) {
                 "기타"
             }
-            // 상태 enum 변환
-            val statusDesc = try {
-                Status.valueOf(report.status).description
-            } catch (e: Exception) {
-                "미정"
-            }
 
-            binding.txtTitle.text = whereDesc
-            binding.txtStatus.text = statusDesc
-            binding.txtDate.text = report.createdAt.replace("T", " ")
+            binding.txtTitle.text = "신고위치: $whereDesc"
+            binding.txtTitle.text = "신고유형: $whereDesc"
+
+            val formattedDate = report.createdAt.replace("T", " ")
+            val dateToShow = if (formattedDate.length >= 16) {
+                formattedDate.substring(0, 16) // "2024-06-07 10:20"
+            } else {
+                formattedDate
+            }
+            binding.txtDate.text = "신고시간: $dateToShow"
 
             val bgColor = statusBgColors[report.status] ?: Color.WHITE
             binding.reportItemRoot.setBackgroundColor(bgColor)

@@ -69,6 +69,8 @@ class ReportListActivity : BaseActivity() {
         binding.btnSortStatus.setOnClickListener { showSortPopup(it) }
     }
 
+    // 사진을 +로 등록하면 서버에 보내서 S3 URL을 받아서 신고할 때 보내는 느낌.
+    // gpt에게 물어봐야 할 것. multipart form data을 통해서 서버에 보내느 방법을 적용시켜서 만들어라
 
     // 서버에서 신고 목록 API 호출
     private fun fetchReports() {
