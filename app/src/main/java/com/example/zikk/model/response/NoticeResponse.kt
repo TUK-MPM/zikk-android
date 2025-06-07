@@ -7,6 +7,6 @@ data class NoticeResponse(
     val totalPages: Int,
     val hasNext: Boolean,
     val hasPrevious: Boolean,
-    val isFirst: Boolean,
-    val isLast: Boolean
+    val first: Boolean,
+    val last: Boolean
 )

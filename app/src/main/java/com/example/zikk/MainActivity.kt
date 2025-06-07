@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.zikk.adapter.NoticeAdapter
 import com.example.zikk.databinding.ActivityMainBinding
 import com.example.zikk.enum.SortType
+import com.example.zikk.extensions.getLoginToken
 import com.example.zikk.model.Notice
 import com.example.zikk.network.RetrofitClient
 import kotlinx.coroutines.launch
@@ -83,30 +84,28 @@ class MainActivity : BaseActivity() {
         lifecycleScope.launch {
             try {
                 val response = RetrofitClient.apiService.getNotices(
-                    3,
-                    1,
-                    "",
-                    SortType.LATEST
+                    size = 3,
+                    page = 1
                 )
 
                 Log.d("response", response.toString())
 
-                if(response.isSuccessful) {
-                    val noticeResponse = response.body()
-                    noticeResponse?.let { responseBody ->
-                        // 데이터를 noticeList에 업데이트
-                        noticeList.clear() // 기존 데이터 클리어
-                        Log.d("nioticelist" , noticeResponse.content.toString())
-                        noticeList.addAll(responseBody.content) // 새 데이터 추가
-
-                        // 어댑터에 변경사항 알림
+                if (response.isSuccessful) {
+                    val noticeListResponse = response.body()
+                    noticeListResponse?.let {
+                        // NoticeResponse에서 공지사항 리스트 꺼내기
+                        val newList = it.content
+                        noticeList.clear()
+                        noticeList.addAll(newList)
                         noticeAdapter.notifyDataSetChanged()
                     }
+                } else {
+                    Toast.makeText(this@MainActivity, "응답 실패: ${response.code()}", Toast.LENGTH_SHORT).show()
                 }
             } catch (e: Exception) {
-                Toast.makeText(this@MainActivity, "요청실패", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@MainActivity, "요청 실패", Toast.LENGTH_SHORT).show()
+                Log.e("getNotices", "오류", e)
             }
         }
     }
-
 }

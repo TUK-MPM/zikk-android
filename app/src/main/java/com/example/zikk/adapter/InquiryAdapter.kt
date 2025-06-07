@@ -23,7 +23,7 @@ class InquiryAdapter(
 
             // 배경색 조건 설정 (선택)
             val bgColorRes = when (inquiry.status) {
-                "PENDING" -> R.color.qusetion_yellow
+                "WAITING" -> R.color.qusetion_yellow
                 "COMPLETED" -> R.color.qusetion_blue
                 else -> R.color.background_gray
             }

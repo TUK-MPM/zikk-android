@@ -252,7 +252,6 @@ class ReportWriteActivity : BaseActivity() {
             return
         }
 
-        // ======================
         // 유효성 검사 통과 후 전송
         CoroutineScope(Dispatchers.IO).launch {
             try {

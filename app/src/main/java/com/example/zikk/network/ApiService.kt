@@ -2,6 +2,7 @@ package com.example.zikk.network
 
 import com.example.zikk.enum.SortType
 import com.example.zikk.model.Inquiry
+import com.example.zikk.model.Notice
 import com.example.zikk.model.request.ReportRequest
 import com.example.zikk.model.request.LoginRequest
 import com.example.zikk.model.response.LoginResponse
@@ -78,19 +79,17 @@ interface ApiService {
     @GET("statistics")
     suspend fun getStatistics()
 
-
     @PATCH("report/status/{id}")
     suspend fun updateReportStatus(
         @Path("id") reportId: String,
         @Body status: String
     )
 
+    // 공지사항 조회
     @GET("notice")
     suspend fun getNotices(
         @Query("size") size: Int,
         @Query("page") page: Int,
-        @Query("keyword") keyword: String,
-        @Query("sortType") sortType: SortType
     ): Response<NoticeResponse>
 
     @GET("notice/{id}")

@@ -8,5 +8,4 @@ enum class IllegalParkingLocation(
     PROTECTED_ZONE("보호구역"),
     WALKWAY_OTHER("상기 사항 외 보도"),
     OTHER("기타");
-
 }

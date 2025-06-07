@@ -9,7 +9,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.zikk.R
 import com.example.zikk.model.Notice
 
-class NoticeAdapter(private var notices: List<Notice>, private val onItemClick: (Notice) -> Unit): RecyclerView.Adapter<NoticeAdapter.NoticeViewHolder> () {
+class NoticeAdapter(
+    private var notices: List<Notice>,
+    private val onItemClick: (Notice) -> Unit
+) : RecyclerView.Adapter<NoticeAdapter.NoticeViewHolder>() {
+
     inner class NoticeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val titleTextView: TextView = itemView.findViewById(R.id.tv_notice_title)
         val dateTextView: TextView = itemView.findViewById(R.id.tv_notice_created_at)
@@ -30,11 +34,20 @@ class NoticeAdapter(private var notices: List<Notice>, private val onItemClick: 
         return NoticeViewHolder(view)
     }
 
-    override fun getItemCount(): Int {
-        return notices.size
-    }
+    override fun getItemCount(): Int = notices.size
 
     override fun onBindViewHolder(holder: NoticeViewHolder, position: Int) {
         holder.bind(notices[position])
+    }
+
+    // 외부에서 데이터 교체 및 갱신 시 사용
+    fun updateData(newNotices: List<Notice>) {
+        this.notices = newNotices
+        notifyDataSetChanged()
+    }
+
+    // (선택) RecyclerView 성능 최적화를 위한 ID 제공
+    override fun getItemId(position: Int): Long {
+        return position.toLong()
     }
 }
