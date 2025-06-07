@@ -1,7 +1,6 @@
 package com.example.zikk.ui
 
 import android.app.Dialog
-import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -12,14 +11,16 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
-import androidx.core.content.edit
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.lifecycleScope
+import com.auth0.android.jwt.JWT
 import com.example.zikk.R
 import com.example.zikk.extensions.removeLoginToken
 import com.example.zikk.extensions.removeUserPhoneNumber
+import com.example.zikk.extensions.removeUserRole
 import com.example.zikk.extensions.saveLoginToken
 import com.example.zikk.extensions.saveUserPhoneNumber
+import com.example.zikk.extensions.saveUserRole
 import com.example.zikk.model.request.LoginRequest
 import com.example.zikk.network.RetrofitClient
 import kotlinx.coroutines.launch
@@ -117,15 +118,25 @@ class PhoneDialogFragment : DialogFragment() {
 
                 if (response.isSuccessful && response.body() != null) {
                     val loginResponse = response.body()!!
+                    val decodeJWT: JWT = JWT(loginResponse.token)
+                    val role = decodeJWT.getClaim("role").asString()!!
 
                     // SharedPreferences에 토큰 저장
-                    saveTokenToSharedPreferences(loginResponse.token, phoneNumber)
+                    saveTokenToSharedPreferences(loginResponse.token, phoneNumber, role)
+                    if (role == "ROLE_ADMIN") {
+                        Toast.makeText(
+                            requireContext(),
+                            "관리자 로그인 성공!",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    } else {
+                        Toast.makeText(
+                            requireContext(),
+                            "로그인 성공!",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
 
-                    Toast.makeText(
-                        requireContext(),
-                        "로그인 성공!",
-                        Toast.LENGTH_SHORT
-                    ).show()
 
                     Log.d("Login", "로그인 성공 - UserId: ${loginResponse.userId}")
 
@@ -165,12 +176,14 @@ class PhoneDialogFragment : DialogFragment() {
         }
     }
 
-    private fun saveTokenToSharedPreferences(token: String, phoneNumber: String) {
+    private fun saveTokenToSharedPreferences(token: String, phoneNumber: String, role: String) {
         requireContext().removeLoginToken()
         requireContext().removeUserPhoneNumber()
+        requireContext().removeUserRole()
 
         requireContext().saveLoginToken(token)
         requireContext().saveUserPhoneNumber(phoneNumber)
+        requireContext().saveUserRole(role)
     }
 
     companion object {
