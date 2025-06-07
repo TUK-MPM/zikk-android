@@ -220,8 +220,7 @@ class ReportDetailActivity : BaseActivity() {
     private fun updateReport(reportId: Long) {
         val phone = binding.etPhoneNum.text.toString().trim()
         val address = binding.etLocateWrite.text.toString().trim()
-        val status = "PENDING"
-        val patchRequest = PatchReportRequest(phone, address, status, existingImageUrls)
+        val patchRequest = PatchReportRequest(phone, address, existingImageUrls)
         val requestJson = Gson().toJson(patchRequest)
         val requestBody = requestJson.toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())
 
@@ -243,15 +242,7 @@ class ReportDetailActivity : BaseActivity() {
                             Toast.LENGTH_SHORT
                         ).show()
                         finish()
-                    } else {
-                        Toast.makeText(
-                            this@ReportDetailActivity,
-                            "수정 실패: ${response.code()}",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        Toast.makeText(this@ReportDetailActivity, "수정 완료", Toast.LENGTH_SHORT).show()
-                        finish()
-                    } else {
+                    }  else {
                         Log.e("updateReport", "수정 실패 code=${response.code()}, error=${response.errorBody()?.string()}")
                         Toast.makeText(this@ReportDetailActivity, "수정 실패", Toast.LENGTH_SHORT).show()
                     }
@@ -279,12 +270,7 @@ class ReportDetailActivity : BaseActivity() {
     }
 
     private fun getCurrentLocation() {
-        val fineGranted =
-            ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) ==
-                    android.content.pm.PackageManager.PERMISSION_GRANTED
-        val coarseGranted =
-            ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) ==
-                    android.content.pm.PackageManager.PERMISSION_GRANTED
+
         val fineGranted = ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == android.content.pm.PackageManager.PERMISSION_GRANTED
         val coarseGranted = ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == android.content.pm.PackageManager.PERMISSION_GRANTED
 
