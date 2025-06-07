@@ -10,8 +10,12 @@ import com.example.zikk.model.Report
 import com.example.zikk.model.ReportDetail
 import com.example.zikk.model.Todo
 import com.example.zikk.model.request.CreateNoticeRequest
+import com.example.zikk.model.request.ReportStatusRequest
 import com.example.zikk.model.response.NoticeResponse
+import com.example.zikk.model.response.NoticeWriteResponse
+import com.example.zikk.model.response.ReportStatusResponse
 import com.example.zikk.model.response.ReportUpdateResponse
+import com.example.zikk.model.response.StatisticsResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Response
@@ -77,7 +81,7 @@ interface ApiService {
 
     // 관리자 통계 조회
     @GET("statistics")
-    suspend fun getStatistics()
+    suspend fun getStatistics(): Response<StatisticsResponse>
 
     @PATCH("report/status/{id}")
     suspend fun updateReportStatus(
@@ -99,6 +103,13 @@ interface ApiService {
     suspend fun createNotice(
         @Header("Authorization") token: String,
         @Body request: CreateNoticeRequest
-    ): Response<String>
+    ): Response<NoticeWriteResponse>
+
+    @PATCH("report/status/{id}")
+    suspend fun processReportStatus(
+        @Header("Authorization") token: String,
+        @Path("id") reportId: Int,
+        @Body request: ReportStatusRequest
+    ): Response<ReportStatusResponse>
 }
 
