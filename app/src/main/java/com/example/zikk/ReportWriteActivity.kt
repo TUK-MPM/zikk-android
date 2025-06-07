@@ -32,6 +32,7 @@ import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import java.util.Locale
 
 class ReportWriteActivity : BaseActivity() {
@@ -258,10 +259,8 @@ class ReportWriteActivity : BaseActivity() {
                 // 1. JSON request 객체를 문자열로 변환
                 val request = ReportRequest(phone, address, selectedType, listOf())
                 val requestJson = com.google.gson.Gson().toJson(request)
-                val requestBody = RequestBody.create(
-                    "text/plain".toMediaTypeOrNull(),
-                    requestJson
-                )
+                val requestBody = requestJson.toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())
+
 
                 // 2. 이미지 파일들을 Multipart로 변환
                 val imageParts = createImageMultipartList(this@ReportWriteActivity, imageUriList)
