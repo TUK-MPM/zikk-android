@@ -37,13 +37,10 @@ class AdminNoticeWriteActivity : BaseActivity() {
             startActivity(intent)
         }
         binding.btnBack.setOnClickListener {
-            val intent = Intent(this, AdminNoticeListActivity::class.java)
-            startActivity(intent)
+            finish()
         }
         binding.btnComplete.setOnClickListener {
             createNotice()
-            val intent = Intent(this, AdminNoticeListActivity::class.java)
-            startActivity(intent)
         }
     }
 
@@ -68,6 +65,7 @@ class AdminNoticeWriteActivity : BaseActivity() {
                     noticeResponse?.let { responseBody ->
                         Toast.makeText(this@AdminNoticeWriteActivity, "완료", Toast.LENGTH_SHORT).show()
                     }
+                    finish()
                 }
             } catch (e: Exception) {
                 throw e
