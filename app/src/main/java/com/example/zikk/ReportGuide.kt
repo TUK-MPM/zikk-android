@@ -42,7 +42,7 @@ class ReportGuide : BaseActivity() {
                 val overscrollAmount = scrollY - maxScroll
 
                 // 일정 기준 이상 땡긴 경우만 반응
-                if (!isNavigated && overscrollAmount > 250) {
+                if (!isNavigated && overscrollAmount > 100) {
                     isNavigated = true
 
                     // 전환 애니메이션
