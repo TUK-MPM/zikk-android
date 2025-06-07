@@ -44,3 +44,22 @@ fun Context.removeUserPhoneNumber() {
             remove("USER_PHONE_NUMBER")
         }
 }
+
+fun Context.saveUserRole(role: String) {
+    getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+        .edit(){
+            putString("USER_ROLE", role)
+        }
+}
+
+fun Context.getUserRole(): String? {
+    return getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+        .getString("USER_ROLE", null)
+}
+
+fun Context.removeUserRole() {
+    getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+        .edit() {
+            remove("USER_ROLE")
+        }
+}
