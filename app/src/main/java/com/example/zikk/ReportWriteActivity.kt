@@ -1,6 +1,7 @@
 package com.example.zikk
 
 import android.Manifest
+import android.content.Context
 import android.location.Geocoder
 import android.net.Uri
 import android.os.Build
@@ -28,6 +29,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import java.util.Locale
 
 class ReportWriteActivity : BaseActivity() {
@@ -104,6 +108,16 @@ class ReportWriteActivity : BaseActivity() {
         binding.btnPickImage.setOnClickListener { imagePickerLauncher.launch("image/*") }
         binding.btnLocateGet.setOnClickListener { getCurrentLocation() }
         binding.btnSubmit.setOnClickListener { submitReport() }
+    }
+
+    // 이미지 변환 함수
+    fun createImageMultipartList(context: Context, uris: List<Uri>): List<MultipartBody.Part> {
+        return uris.mapIndexed { index, uri ->
+            val inputStream = context.contentResolver.openInputStream(uri)!!
+            val bytes = inputStream.readBytes()
+            val requestFile = RequestBody.create("image/*".toMediaTypeOrNull(), bytes)
+            MultipartBody.Part.createFormData("images", "image$index.jpg", requestFile)
+        }
     }
 
     // 현재 위치 받아오기 및 주소로 변환
@@ -242,22 +256,31 @@ class ReportWriteActivity : BaseActivity() {
         // 유효성 검사 통과 후 전송
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val imageUrls = listOf<String>() // TODO: presigned URL 업로드 후 실제 URL 리스트로 대체
+                // 1. JSON request 객체를 문자열로 변환
+                val request = ReportRequest(phone, address, selectedType, listOf())
+                val requestJson = com.google.gson.Gson().toJson(request)
+                val requestBody = RequestBody.create(
+                    "text/plain".toMediaTypeOrNull(),
+                    requestJson
+                )
 
-                val request = ReportRequest(phone, address, selectedType, imageUrls)
-                // 여기서 로그!
-                Log.d("SubmitReport", "request=$request")
-                val response = RetrofitClient.apiService.sendLocation(request)
+                // 2. 이미지 파일들을 Multipart로 변환
+                val imageParts = createImageMultipartList(this@ReportWriteActivity, imageUriList)
+
+                // 3. multipart 전송
+                val response = RetrofitClient.apiService.sendLocationWithImages(requestBody, imageParts)
 
                 withContext(Dispatchers.Main) {
                     if (response.isSuccessful) {
                         Toast.makeText(this@ReportWriteActivity, "신고가 접수되었습니다.", Toast.LENGTH_SHORT).show()
                         finish()
                     } else {
+                        Log.d("ReportWrite", "신고 실패 code=${response.code()}, errorBody=${response.errorBody()?.string()}")
                         Toast.makeText(this@ReportWriteActivity, "신고 실패: ${response.code()}", Toast.LENGTH_SHORT).show()
                     }
                 }
             } catch (e: Exception) {
+                Log.e("ReportWrite", "Exception", e) // 추가!
                 withContext(Dispatchers.Main) {
                     Toast.makeText(this@ReportWriteActivity, "에러: ${e.message}", Toast.LENGTH_SHORT).show()
                 }
