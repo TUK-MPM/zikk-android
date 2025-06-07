@@ -136,109 +136,25 @@
                     </Button>
                 </LinearLayout>
 
-                <!-- 버튼 하나 -->
-                <LinearLayout
-                    android:id="@+id/customButton2"
+                <!-- 문의 리스트를 보여줄 RecyclerView -->
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/inquiryRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="16dp"
+                    android:paddingHorizontal="16dp"
+                    android:nestedScrollingEnabled="false"
+                    android:scrollbars="none" />
+
+                <com.google.android.flexbox.FlexboxLayout
+                    android:id="@+id/paginationLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="20dp"
-                    android:layout_marginVertical="10dp"
-                    android:background="@drawable/round_box_medium"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
                     android:padding="16dp"
-                    android:backgroundTint="@color/qusetion_yellow">
-
-                    <!-- 텍스트 두 개 세로로 정렬 -->
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:id="@+id/topText"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="문의사항1"
-                            android:textColor="#000000"
-                            android:textSize="16sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/bottomText"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="2025-05-27 11:06"
-                            android:textColor="#000000"
-                            android:textSize="12sp" />
-                    </LinearLayout>
-
-                    <!-- 오른쪽에 아이콘 -->
-                    <ImageView
-                        android:id="@+id/btnQuestionContext"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/baseline_chevron_right_24" />
-                </LinearLayout>
-
-
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentBottom="true"
-                        android:gravity="center"
-                        android:orientation="horizontal"
-                        android:padding="16dp">
-
-                        <!-- 이전 버튼, 크기 바꾸기 -->
-                        <ImageButton
-                            android:id="@+id/prevButton"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="?attr/selectableItemBackgroundBorderless"
-                            android:contentDescription="이전"
-                            android:src="@drawable/baseline_arrow_back_ios_24" />
-
-                        <!-- 이전 페이지 표시 -->
-                        <TextView
-                            android:id="@+id/priorpageText"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="1 2 3 "
-                            android:textSize="20sp" />
-                        <!-- 현재 페이지 표시 -->
-                        <TextView
-                            android:id="@+id/pageText"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="4"
-                            android:textSize="20sp"
-                            android:textStyle="bold" />
-                        <!-- 다음 페이지 표시 -->
-                        <TextView
-                            android:id="@+id/nextpageText"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text=" ... 20"
-                            android:textSize="20sp" />
-
-                        <!-- 다음 버튼 -->
-                        <ImageButton
-                            android:id="@+id/nextButton"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="?attr/selectableItemBackgroundBorderless"
-                            android:contentDescription="다음"
-                            android:src="@drawable/baseline_arrow_forward_ios_24" />
-                    </LinearLayout>
-                </RelativeLayout>
+                    app:flexWrap="wrap"
+                    app:justifyContent="center" />
 
 
             </LinearLayout>

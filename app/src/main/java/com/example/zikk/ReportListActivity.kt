@@ -12,7 +12,6 @@ import com.example.zikk.adapter.ReportAdapter
 import com.example.zikk.databinding.ActivityReportListBinding
 import com.example.zikk.extensions.getLoginToken
 import com.example.zikk.model.Report
-import com.example.zikk.model.response.ReportResponse
 import com.example.zikk.network.RetrofitClient
 import com.example.zikk.util.PaginationUiUtils
 import com.example.zikk.util.PaginationUtils
@@ -108,11 +107,14 @@ class ReportListActivity : BaseActivity() {
     // 현재 필터 및 정렬 기준에 따라 리스트 갱신
     private fun applyFilterAndSort() {
         val filtered = displayedList.filter { currentFilter == null || it.status == currentFilter }
-        val sorted = PaginationUtils.sortByDate(filtered, currentSortDescending)
+        val sorted = PaginationUtils.sortByDate(filtered, currentSortDescending) { it.createdAt }
 
-        // 신고 내역이 없으면 안내 메시지
+        // 신고 내역이 없으면 안내 메시지 및 UI 정리
         if (sorted.isEmpty()) {
             Toast.makeText(this, "신고 내역이 없습니다.", Toast.LENGTH_SHORT).show()
+            binding.reportRecyclerView.adapter = ReportAdapter(emptyList()) {}
+            binding.paginationLayout.removeAllViews() // 페이지네이션 초기화
+            return
         }
 
         loadPage(1, sorted)
