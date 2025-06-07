@@ -89,6 +89,7 @@ class NoticeActivity : BaseActivity() {
                 if (response.isSuccessful) {
                     val body = response.body()
                     val content = body?.content ?: emptyList()
+                    allNotices = content // 🔹 정렬용 전체 데이터 저장
                     val totalPages = body?.totalPages ?: 1
 
                     Log.d("fetchNotices", "받아온 공지 수: ${content.size}")

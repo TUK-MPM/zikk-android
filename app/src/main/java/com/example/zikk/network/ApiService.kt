@@ -5,6 +5,7 @@ import com.example.zikk.enum.SortType
 import com.example.zikk.model.Inquiry
 import com.example.zikk.model.InquiryDetail
 import com.example.zikk.model.Notice
+import com.example.zikk.model.NoticeDetail
 import com.example.zikk.model.request.ReportRequest
 import com.example.zikk.model.request.LoginRequest
 import com.example.zikk.model.response.LoginResponse
@@ -108,8 +109,11 @@ interface ApiService {
         @Query("page") page: Int,
     ): Response<NoticeResponse>
 
+    // 공지사항 상세 조회
     @GET("notice/{id}")
-    suspend fun getNotice()
+    suspend fun getNoticeDetail(
+        @Path("id") notiId: Int
+    ): Response<NoticeDetail>
 
     @POST("notice")
     suspend fun createNotice(

@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 data class PatchReportRequest(
     @SerializedName("number") val phone: String,
     val address: String,
-    @SerializedName("reason") val type: String,
+    @SerializedName("reportType") val type: String,
     @SerializedName("mediaUrls") val imageUrls: List<String>
 )
 
