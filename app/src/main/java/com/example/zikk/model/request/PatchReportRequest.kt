@@ -1,8 +1,12 @@
 package com.example.zikk.model.request
 
+import com.google.gson.annotations.SerializedName
+
 data class PatchReportRequest(
-    val phone: String,
+    @SerializedName("number") val phone: String,
     val address: String,
-    val status: String,
-    val imageUrls: List<String>
+    @SerializedName("reason") val type: String,
+    @SerializedName("mediaUrls") val imageUrls: List<String>
 )
+
+

@@ -1,5 +1,7 @@
 package com.example.zikk.model
 
+import com.google.gson.annotations.SerializedName
+
 data class ReportDetail(
     val number: String,
     val reportId: String,
@@ -9,4 +11,6 @@ data class ReportDetail(
     val status: String,
     val createdAt: String
 )
+
+
 

@@ -13,7 +13,6 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
@@ -23,15 +22,13 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
-import coil.load
 import com.example.zikk.databinding.ActivityReportDetailBinding
 import com.example.zikk.enum.IllegalParkingLocation
 import com.example.zikk.extensions.getLoginToken
 import com.example.zikk.extensions.getUserRole
 import com.example.zikk.model.ReportDetail
-import com.example.zikk.model.request.ReportRequest
-import com.example.zikk.model.request.ReportStatusRequest
 import com.example.zikk.model.request.PatchReportRequest
+import com.example.zikk.model.request.ReportStatusRequest
 import com.example.zikk.network.RetrofitClient
 import com.google.android.gms.location.*
 import com.google.gson.Gson
@@ -60,7 +57,7 @@ class ReportDetailActivity : BaseActivity() {
     private val imagePickerLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
         uri?.let {
             newImageUris.add(it)
-            addImageToLayout(uri, isExisting = false)
+            addImageToLayout(it, isExisting = false)
         }
     }
 
@@ -74,7 +71,7 @@ class ReportDetailActivity : BaseActivity() {
 
         val rawToken = getLoginToken()
         if (rawToken == null) {
-            Toast.makeText(this, "\uB85C\uADF8\uC778 \uC815\uBCF4\uAC00 \uC5C6\uC2B5\uB2C8\uB2E4.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "로그인 정보가 없습니다.", Toast.LENGTH_SHORT).show()
             finish()
             return
         }
@@ -100,13 +97,13 @@ class ReportDetailActivity : BaseActivity() {
 
         reportId?.let { fetchReportDetail(it) }
 
-        if(isAdmin()) {
+        if (isAdmin()) {
             binding.btnConfirm.setOnClickListener {
-                reportId?.toInt()?.let { it1 -> processReportStatus("COMPLETED", it1) }
+                reportId?.toIntOrNull()?.let { id -> processReportStatus("COMPLETED", id) }
             }
 
             binding.btnReject.setOnClickListener {
-                reportId?.toInt()?.let { it1 -> processReportStatus("REJECTED", it1) }
+                reportId?.toIntOrNull()?.let { id -> processReportStatus("REJECTED", id) }
             }
         }
     }
@@ -122,25 +119,14 @@ class ReportDetailActivity : BaseActivity() {
                             populateFields(reportDetail)
                         } else {
                             Toast.makeText(this@ReportDetailActivity, "조회 결과가 비어 있습니다.", Toast.LENGTH_SHORT).show()
-                            Log.e("fetchReportDetail", "response body is null")
                         }
                     } else {
-                        Toast.makeText(this@ReportDetailActivity, "조회 실패", Toast.LENGTH_SHORT)
-                            .show()
-                        val errorBody = response.errorBody()?.string()
                         Toast.makeText(this@ReportDetailActivity, "조회 실패: ${response.code()}", Toast.LENGTH_SHORT).show()
-                        Log.e("fetchReportDetail", "조회 실패: code=${response.code()}, error=$errorBody")
                     }
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(
-                        this@ReportDetailActivity,
-                        "에러: ${e.message}",
-                        Toast.LENGTH_SHORT
-                    ).show()
                     Toast.makeText(this@ReportDetailActivity, "에러: ${e.message}", Toast.LENGTH_SHORT).show()
-                    Log.e("fetchReportDetail", "예외 발생", e)
                 }
             }
         }
@@ -151,7 +137,9 @@ class ReportDetailActivity : BaseActivity() {
         binding.etLocateWrite.setText(report.address)
 
         try {
-            when (IllegalParkingLocation.valueOf(report.where)) {
+            val cleanWhere = report.where?.trim() ?: ""
+            val type = IllegalParkingLocation.valueOf(cleanWhere)
+            when (type) {
                 IllegalParkingLocation.DOT_BLOCK -> binding.rbCrosswalk.isChecked = true
                 IllegalParkingLocation.TRAFFIC_ISLAND -> binding.rbIntersection.isChecked = true
                 IllegalParkingLocation.PROTECTED_ZONE -> binding.rbBusStop.isChecked = true
@@ -187,11 +175,7 @@ class ReportDetailActivity : BaseActivity() {
             scaleType = ImageView.ScaleType.CENTER_CROP
             setPadding(8, 8, 8, 8)
 
-            if (isExisting) {
-                load(uri.toString())
-            } else {
-                setImageURI(uri)
-            }
+            if (isExisting) load(uri.toString()) else setImageURI(uri)
 
             setOnClickListener {
                 AlertDialog.Builder(this@ReportDetailActivity)
@@ -220,43 +204,52 @@ class ReportDetailActivity : BaseActivity() {
     private fun updateReport(reportId: Long) {
         val phone = binding.etPhoneNum.text.toString().trim()
         val address = binding.etLocateWrite.text.toString().trim()
-        val patchRequest = PatchReportRequest(phone, address, existingImageUrls)
+        val type = getSelectedType()
+        val patchRequest = PatchReportRequest(phone, address, type, existingImageUrls)
+
         val requestJson = Gson().toJson(patchRequest)
         val requestBody = requestJson.toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())
+
+        // 로그 추가
+        Log.d("PATCH_REQUEST_JSON", requestJson)
+        newImageUris.forEachIndexed { index, uri ->
+            Log.d("PATCH_IMAGE_URI", "[$index] $uri")
+        }
 
         val imageParts = createImageMultipartList(this, newImageUris)
 
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val response = RetrofitClient.apiService.updateReportWithImages(
-                    reportId,
-                    requestBody,
-                    if (imageParts.isNotEmpty()) imageParts else null
+                    token = token,
+                    reportId = reportId,
+                    request = requestBody,
+                    images = if (imageParts.isNotEmpty()) imageParts else null
                 )
 
                 withContext(Dispatchers.Main) {
                     if (response.isSuccessful) {
-                        Toast.makeText(
-                            this@ReportDetailActivity,
-                            response.body()?.message ?: "수정 완료",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        Toast.makeText(this@ReportDetailActivity, response.body()?.message ?: "수정 완료", Toast.LENGTH_SHORT).show()
                         finish()
-                    }  else {
-                        Log.e("updateReport", "수정 실패 code=${response.code()}, error=${response.errorBody()?.string()}")
+                    } else {
                         Toast.makeText(this@ReportDetailActivity, "수정 실패", Toast.LENGTH_SHORT).show()
                     }
                 }
             } catch (e: Exception) {
-                Log.e("updateReport", "예외 발생", e)
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(
-                        this@ReportDetailActivity,
-                        "에러: ${e.message}",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    Toast.makeText(this@ReportDetailActivity, "에러: ${e.message}", Toast.LENGTH_SHORT).show()
                 }
             }
+        }
+    }
+
+    private fun getSelectedType(): String {
+        return when {
+            binding.rbCrosswalk.isChecked -> IllegalParkingLocation.DOT_BLOCK.name
+            binding.rbIntersection.isChecked -> IllegalParkingLocation.TRAFFIC_ISLAND.name
+            binding.rbBusStop.isChecked -> IllegalParkingLocation.PROTECTED_ZONE.name
+            binding.rbSafetyZone.isChecked -> IllegalParkingLocation.WALKWAY_OTHER.name
+            else -> IllegalParkingLocation.OTHER.name
         }
     }
 
@@ -270,16 +263,14 @@ class ReportDetailActivity : BaseActivity() {
     }
 
     private fun getCurrentLocation() {
-
         val fineGranted = ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == android.content.pm.PackageManager.PERMISSION_GRANTED
         val coarseGranted = ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == android.content.pm.PackageManager.PERMISSION_GRANTED
 
         if (!fineGranted && !coarseGranted) {
-            val permissions = arrayOf(
+            requestPermissions(arrayOf(
                 Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.ACCESS_COARSE_LOCATION
-            )
-            requestPermissions(permissions, 1001)
+            ), 1001)
             return
         }
 
@@ -288,11 +279,9 @@ class ReportDetailActivity : BaseActivity() {
                 val location = locationResult.lastLocation ?: return
                 val address = try {
                     val geocoder = Geocoder(this@ReportDetailActivity, Locale.getDefault())
-                    val addresses =
-                        geocoder.getFromLocation(location.latitude, location.longitude, 1)
+                    val addresses = geocoder.getFromLocation(location.latitude, location.longitude, 1)
                     addresses?.getOrNull(0)?.getAddressLine(0)
                 } catch (e: Exception) {
-                    e.printStackTrace()
                     null
                 } ?: "주소를 변환할 수 없습니다."
                 binding.etLocateWrite.setText(address)
@@ -304,49 +293,36 @@ class ReportDetailActivity : BaseActivity() {
             .setMaxUpdates(1)
             .build()
 
-        fusedLocationClient.requestLocationUpdates(
-            locationRequest,
-            locationCallback,
-            Looper.getMainLooper()
-        )
+        fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper())
     }
 
     override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
-        if (currentFocus != null) {
+        currentFocus?.let {
             val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.hideSoftInputFromWindow(currentFocus!!.windowToken, 0)
-            currentFocus!!.clearFocus()
+            imm.hideSoftInputFromWindow(it.windowToken, 0)
+            it.clearFocus()
         }
         return super.dispatchTouchEvent(ev)
     }
 
     private fun isAdmin(): Boolean {
-        if (getUserRole() == "ROLE_ADMIN") {
-            return true
-        } else {
-            return false
-        }
+        return getUserRole() == "ROLE_ADMIN"
     }
 
     private fun processReportStatus(status: String, reportId: Int) {
         lifecycleScope.launch {
             try {
-                val token = "Bearer " + getLoginToken()
+                val token = "Bearer ${getLoginToken()}"
                 val request = ReportStatusRequest(status)
-                val response =
-                    RetrofitClient.apiService.processReportStatus(token, reportId, request)
+                val response = RetrofitClient.apiService.processReportStatus(token, reportId, request)
 
-                Log.d("REQUEAST", request.toString())
-                Log.d("RESPONSE", response.toString())
-                if(response.isSuccessful) {
+                if (response.isSuccessful) {
                     Toast.makeText(this@ReportDetailActivity, response.body()?.message ?: "", Toast.LENGTH_SHORT).show()
                 } else {
                     Toast.makeText(this@ReportDetailActivity, "요청 실패", Toast.LENGTH_SHORT).show()
                 }
-
             } catch (e: Exception) {
                 Toast.makeText(this@ReportDetailActivity, "요청 실패", Toast.LENGTH_SHORT).show()
-                throw e
             }
         }
     }

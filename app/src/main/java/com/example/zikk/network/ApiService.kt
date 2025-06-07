@@ -1,5 +1,6 @@
 package com.example.zikk.network
 
+import ReportResponse
 import com.example.zikk.enum.SortType
 import com.example.zikk.model.Inquiry
 import com.example.zikk.model.Notice
@@ -14,7 +15,6 @@ import com.example.zikk.model.request.ReportStatusRequest
 import com.example.zikk.model.response.NoticeResponse
 import com.example.zikk.model.response.NoticeWriteResponse
 import com.example.zikk.model.response.ReportStatusResponse
-import com.example.zikk.model.response.ReportResponse
 import com.example.zikk.model.response.ReportUpdateResponse
 import com.example.zikk.model.response.StatisticsResponse
 import okhttp3.MultipartBody
@@ -46,13 +46,6 @@ interface ApiService {
         @Part images: List<MultipartBody.Part>
     ): Response<Unit>
 
-    // 신고 수정
-    @PATCH("report/{report_id}")
-    suspend fun updateReport(
-        @Path("report_id") reportId: String,
-        @Body request: ReportRequest
-    ): Response<ReportUpdateResponse>
-
     // 메인페이지 처리 사례 조회
     @GET("report/examples")
     suspend fun getReportExamples(): Response<List<Report>>
@@ -76,11 +69,11 @@ interface ApiService {
     @Multipart
     @PATCH("report/{reportId}")
     suspend fun updateReportWithImages(
+        @Header("Authorization") token: String,
         @Path("reportId") reportId: Long,
         @Part("request") request: RequestBody,
         @Part images: List<MultipartBody.Part>?
     ): Response<ReportResponse>
-
 
     // 문의 조회
     @GET("inquiries")
