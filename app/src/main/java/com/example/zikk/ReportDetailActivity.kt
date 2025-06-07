@@ -1,6 +1,7 @@
 package com.example.zikk
 
 import android.Manifest
+import android.app.Dialog
 import android.content.Context
 import android.location.Geocoder
 import android.net.Uri
@@ -11,6 +12,7 @@ import android.os.Looper
 import android.util.Log
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import android.widget.Toast
@@ -54,12 +56,13 @@ class ReportDetailActivity : BaseActivity() {
     private val existingImageUrls = mutableListOf<String>()
     private val deletedImageUrls = mutableListOf<String>()
 
-    private val imagePickerLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
-        uri?.let {
-            newImageUris.add(it)
-            addImageToLayout(it, isExisting = false)
+    private val imagePickerLauncher =
+        registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+            uri?.let {
+                newImageUris.add(it)
+                addImageToLayout(it, isExisting = false)
+            }
         }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -99,7 +102,7 @@ class ReportDetailActivity : BaseActivity() {
 
         if (isAdmin()) {
             binding.btnConfirm.setOnClickListener {
-                reportId?.toIntOrNull()?.let { id -> processReportStatus("COMPLETED", id) }
+                reportId?.toIntOrNull()?.let { id -> processReportStatus("APPROVED", id) }
             }
 
             binding.btnReject.setOnClickListener {
@@ -118,15 +121,27 @@ class ReportDetailActivity : BaseActivity() {
                         if (reportDetail != null) {
                             populateFields(reportDetail)
                         } else {
-                            Toast.makeText(this@ReportDetailActivity, "조회 결과가 비어 있습니다.", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                this@ReportDetailActivity,
+                                "조회 결과가 비어 있습니다.",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
                     } else {
-                        Toast.makeText(this@ReportDetailActivity, "조회 실패: ${response.code()}", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            this@ReportDetailActivity,
+                            "조회 실패: ${response.code()}",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(this@ReportDetailActivity, "에러: ${e.message}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this@ReportDetailActivity,
+                        "에러: ${e.message}",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
         }
@@ -177,29 +192,38 @@ class ReportDetailActivity : BaseActivity() {
 
             if (isExisting) load(uri.toString()) else setImageURI(uri)
 
-            setOnClickListener {
-                AlertDialog.Builder(this@ReportDetailActivity)
-                    .setTitle("사진 삭제")
-                    .setMessage("이 사진을 삭제하시겠습니까?")
-                    .setPositiveButton("삭제") { _, _ ->
-                        if (isExisting) {
-                            deletedImageUrls.add(uri.toString())
-                            existingImageUrls.remove(uri.toString())
-                        } else {
-                            newImageUris.remove(uri)
+            if (isAdmin()) {
+                setOnClickListener {
+
+                }
+            } else {
+                setOnClickListener {
+                    AlertDialog.Builder(this@ReportDetailActivity)
+                        .setTitle("사진 삭제")
+                        .setMessage("이 사진을 삭제하시겠습니까?")
+                        .setPositiveButton("삭제") { _, _ ->
+                            if (isExisting) {
+                                deletedImageUrls.add(uri.toString())
+                                existingImageUrls.remove(uri.toString())
+                            } else {
+                                newImageUris.remove(uri)
+                            }
+                            binding.photoContainer.removeView(this)
+                            binding.photoContainer.removeView(binding.btnPickImage)
+                            binding.photoContainer.addView(binding.btnPickImage)
                         }
-                        binding.photoContainer.removeView(this)
-                        binding.photoContainer.removeView(binding.btnPickImage)
-                        binding.photoContainer.addView(binding.btnPickImage)
-                    }
-                    .setNegativeButton("취소", null)
-                    .show()
+                        .setNegativeButton("취소", null)
+                        .show()
+                }
             }
+
         }
 
         val index = binding.photoContainer.indexOfChild(binding.btnPickImage)
         binding.photoContainer.addView(imageView, index)
     }
+
+
 
     private fun updateReport(reportId: Long) {
         val phone = binding.etPhoneNum.text.toString().trim()
@@ -208,7 +232,8 @@ class ReportDetailActivity : BaseActivity() {
         val patchRequest = PatchReportRequest(phone, address, type, existingImageUrls)
 
         val requestJson = Gson().toJson(patchRequest)
-        val requestBody = requestJson.toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())
+        val requestBody =
+            requestJson.toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())
 
         // 로그 추가
         Log.d("PATCH_REQUEST_JSON", requestJson)
@@ -229,15 +254,24 @@ class ReportDetailActivity : BaseActivity() {
 
                 withContext(Dispatchers.Main) {
                     if (response.isSuccessful) {
-                        Toast.makeText(this@ReportDetailActivity, response.body()?.message ?: "수정 완료", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            this@ReportDetailActivity,
+                            response.body()?.message ?: "수정 완료",
+                            Toast.LENGTH_SHORT
+                        ).show()
                         finish()
                     } else {
-                        Toast.makeText(this@ReportDetailActivity, "수정 실패", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@ReportDetailActivity, "수정 실패", Toast.LENGTH_SHORT)
+                            .show()
                     }
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(this@ReportDetailActivity, "에러: ${e.message}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this@ReportDetailActivity,
+                        "에러: ${e.message}",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
         }
@@ -253,7 +287,10 @@ class ReportDetailActivity : BaseActivity() {
         }
     }
 
-    private fun createImageMultipartList(context: Context, uris: List<Uri>): List<MultipartBody.Part> {
+    private fun createImageMultipartList(
+        context: Context,
+        uris: List<Uri>
+    ): List<MultipartBody.Part> {
         return uris.mapIndexed { index, uri ->
             val inputStream = context.contentResolver.openInputStream(uri)!!
             val bytes = inputStream.readBytes()
@@ -263,14 +300,22 @@ class ReportDetailActivity : BaseActivity() {
     }
 
     private fun getCurrentLocation() {
-        val fineGranted = ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == android.content.pm.PackageManager.PERMISSION_GRANTED
-        val coarseGranted = ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == android.content.pm.PackageManager.PERMISSION_GRANTED
+        val fineGranted = ActivityCompat.checkSelfPermission(
+            this,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        ) == android.content.pm.PackageManager.PERMISSION_GRANTED
+        val coarseGranted = ActivityCompat.checkSelfPermission(
+            this,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        ) == android.content.pm.PackageManager.PERMISSION_GRANTED
 
         if (!fineGranted && !coarseGranted) {
-            requestPermissions(arrayOf(
-                Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ), 1001)
+            requestPermissions(
+                arrayOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                ), 1001
+            )
             return
         }
 
@@ -279,7 +324,8 @@ class ReportDetailActivity : BaseActivity() {
                 val location = locationResult.lastLocation ?: return
                 val address = try {
                     val geocoder = Geocoder(this@ReportDetailActivity, Locale.getDefault())
-                    val addresses = geocoder.getFromLocation(location.latitude, location.longitude, 1)
+                    val addresses =
+                        geocoder.getFromLocation(location.latitude, location.longitude, 1)
                     addresses?.getOrNull(0)?.getAddressLine(0)
                 } catch (e: Exception) {
                     null
@@ -293,7 +339,11 @@ class ReportDetailActivity : BaseActivity() {
             .setMaxUpdates(1)
             .build()
 
-        fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper())
+        fusedLocationClient.requestLocationUpdates(
+            locationRequest,
+            locationCallback,
+            Looper.getMainLooper()
+        )
     }
 
     override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
@@ -310,18 +360,30 @@ class ReportDetailActivity : BaseActivity() {
     }
 
     private fun processReportStatus(status: String, reportId: Int) {
+        Log.d("process status", "clicked")
         lifecycleScope.launch {
             try {
                 val token = "Bearer ${getLoginToken()}"
-                val request = ReportStatusRequest(status)
-                val response = RetrofitClient.apiService.processReportStatus(token, reportId, request)
+                val request = Gson().toJson(ReportStatusRequest(status))
+                val requestBody =
+                    request.toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())
 
+                val response =
+                    RetrofitClient.apiService.processReportStatus(token, reportId, requestBody)
+                Log.d("token", token)
+                Log.d("requestBody", requestBody.toString())
+                Log.d("Response:", response.toString())
                 if (response.isSuccessful) {
-                    Toast.makeText(this@ReportDetailActivity, response.body()?.message ?: "", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this@ReportDetailActivity,
+                        response.body()?.message ?: "",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 } else {
                     Toast.makeText(this@ReportDetailActivity, "요청 실패", Toast.LENGTH_SHORT).show()
                 }
             } catch (e: Exception) {
+                throw e
                 Toast.makeText(this@ReportDetailActivity, "요청 실패", Toast.LENGTH_SHORT).show()
             }
         }

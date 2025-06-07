@@ -18,9 +18,12 @@ import com.example.zikk.model.response.ReportStatusResponse
 import com.example.zikk.model.response.ReportUpdateResponse
 import com.example.zikk.model.response.StatisticsResponse
 import okhttp3.MultipartBody
+import okhttp3.Request
 import okhttp3.RequestBody
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.Field
+import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Multipart
@@ -109,11 +112,12 @@ interface ApiService {
         @Body request: CreateNoticeRequest
     ): Response<NoticeWriteResponse>
 
-    @PATCH("report/status/{id}")
+    @Multipart
+    @PATCH("report/{id}")
     suspend fun processReportStatus(
         @Header("Authorization") token: String,
         @Path("id") reportId: Int,
-        @Body request: ReportStatusRequest
+        @Part("request") request: RequestBody
     ): Response<ReportStatusResponse>
 }
 
