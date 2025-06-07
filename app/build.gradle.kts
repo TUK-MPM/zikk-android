@@ -47,6 +47,7 @@ dependencies {
     implementation(libs.converter.gson)  // Gson Converter
     implementation(libs.okhttp)  // OkHttp
     implementation(libs.gson) // GSon
+    implementation(libs.jwtdecode)
 
     implementation(libs.coil) // 이미지 로딩
     implementation(libs.kotlinx.coroutines.core) // 코루틴
