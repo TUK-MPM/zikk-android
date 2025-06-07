@@ -12,8 +12,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.zikk.adapter.NoticeAdapter
 import com.example.zikk.databinding.ActivityMainBinding
-import com.example.zikk.enum.SortType
-import com.example.zikk.extensions.getLoginToken
 import com.example.zikk.model.Notice
 import com.example.zikk.network.RetrofitClient
 import kotlinx.coroutines.launch
