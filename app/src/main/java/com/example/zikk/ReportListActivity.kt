@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.zikk.adapter.ReportAdapter
 import com.example.zikk.databinding.ActivityReportListBinding
 import com.example.zikk.extensions.getLoginToken
+import com.example.zikk.extensions.getUserRole
 import com.example.zikk.model.Report
 import com.example.zikk.network.RetrofitClient
 import com.example.zikk.util.PaginationUiUtils
@@ -34,6 +35,8 @@ class ReportListActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = setContentViewWithBinding(ActivityReportListBinding::inflate)
+
+        binding.tvReportListTitle.text = if (isAdmin()) "신고 내역" else "내 신고 내역"
 
         // 1. 토큰 유효성 체크
         val rawToken = getLoginToken()
@@ -164,6 +167,14 @@ class ReportListActivity : BaseActivity() {
                 else -> "전체 보기"
             }
             applyFilterAndSort()
+        }
+    }
+
+    private fun isAdmin(): Boolean {
+        if(getUserRole() == "ROLE_ADMIN") {
+            return true
+        } else {
+            return false
         }
     }
 }
