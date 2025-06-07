@@ -1,26 +1,19 @@
 package com.example.zikk.adapter
 
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.example.zikk.R
 import com.example.zikk.databinding.ItemReportBinding
 import com.example.zikk.enum.IllegalParkingLocation
-import com.example.zikk.enum.Status
 import com.example.zikk.model.Report
 
 class ReportAdapter(
     private val items: List<Report>,
     private val onItemClick: (Report) -> Unit
 ) : RecyclerView.Adapter<ReportAdapter.ReportViewHolder>() {
-
-    // 상태별 배경색 상수 맵
-    private val statusBgColors = mapOf(
-        "PENDING" to Color.parseColor("#FFF9C4"), // 노랑
-        "COMPLETED" to Color.parseColor("#E3F2FD"), // 파랑
-        "REJECTED" to Color.parseColor("#FCE4EC")    // 분홍
-    )
 
     inner class ReportViewHolder(private val binding: ItemReportBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -49,8 +42,17 @@ class ReportAdapter(
             }
             binding.txtDate.text = "신고시간: $dateToShow"
 
-            val bgColor = statusBgColors[report.status] ?: Color.WHITE
+            // 배경색 조건 설정
+            val bgColorRes = when (report.status) {
+                "PENDING" -> R.color.qusetion_yellow
+                "COMPLETED" -> R.color.qusetion_blue
+                "REJECTED" -> R.color.qusetion_pink
+                else -> R.color.background_gray
+            }
+            val bgColor = ContextCompat.getColor(binding.root.context, bgColorRes)
             binding.reportItemRoot.setBackgroundColor(bgColor)
+
+            // 화살표 표시 여부
             binding.imageArrow.visibility = if (report.status == "REJECTED") View.GONE else View.VISIBLE
 
             binding.root.setOnClickListener { onItemClick(report) }
