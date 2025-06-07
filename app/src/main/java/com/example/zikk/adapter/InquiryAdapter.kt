@@ -1,5 +1,6 @@
 package com.example.zikk.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,7 +20,10 @@ class InquiryAdapter(
         fun bind(inquiry: Inquiry) {
             binding.topText.text = inquiry.title
             binding.bottomText.text = inquiry.createdAt.replace("T", " ")
-            binding.root.setOnClickListener { onItemClick(inquiry) }
+            binding.root.setOnClickListener {
+                Log.d("InquiryAdapter", "클릭된 inquiryId: ${inquiry.inquiryId}")
+                onItemClick(inquiry)
+            }
 
             // 배경색 조건 설정 (선택)
             val bgColorRes = when (inquiry.status) {

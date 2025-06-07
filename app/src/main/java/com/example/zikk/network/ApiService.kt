@@ -3,6 +3,7 @@ package com.example.zikk.network
 import ReportResponse
 import com.example.zikk.enum.SortType
 import com.example.zikk.model.Inquiry
+import com.example.zikk.model.InquiryDetail
 import com.example.zikk.model.Notice
 import com.example.zikk.model.request.ReportRequest
 import com.example.zikk.model.request.LoginRequest
@@ -53,7 +54,7 @@ interface ApiService {
     @GET("report/examples")
     suspend fun getReportExamples(): Response<List<Report>>
 
-    // 관리자 - 사용자 신고 내역 전체 조회
+    // 신고 내역 전체 조회
     @GET("report")
     suspend fun getReports(
         @Header("Authorization") token: String,
@@ -61,14 +62,14 @@ interface ApiService {
         @Query("size") size: Int,
     ): Response<List<Report>>
 
-    // 상세 조회
+    // 신고 내역 상세 조회
     @GET("report/{id}")
     suspend fun getReportDetail(
         @Header("Authorization") token: String,
         @Path("id") reportId: String,
     ): Response<ReportDetail>
 
-    // 신고 수정
+    // 신고 내역 수정
     @Multipart
     @PATCH("report/{reportId}")
     suspend fun updateReportWithImages(
@@ -78,13 +79,20 @@ interface ApiService {
         @Part images: List<MultipartBody.Part>?
     ): Response<ReportResponse>
 
-    // 문의 조회
+    // 문의 내역 전체 조회
     @GET("inquiries")
     suspend fun getInquiries(
         @Header("Authorization") token: String,
         @Query("page") page: Int,
         @Query("size") size: Int
     ): Response<List<Inquiry>>
+
+    // 문의 내역 상세 조회
+    @GET("inquiries/{id}")
+    suspend fun getInquiryDetail(
+        @Header("Authorization") token: String,
+        @Path("id") inquiryId: Long
+    ): Response<InquiryDetail>
 
     // 관리자 통계 조회
     @GET("statistics")
