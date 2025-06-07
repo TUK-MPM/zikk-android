@@ -151,8 +151,10 @@ class ReportDetailActivity : BaseActivity() {
         binding.etPhoneNum.setText(report.number)
         binding.etLocateWrite.setText(report.address)
 
+        Log.d("ReportDetail", "서버에서 받은 where: ${report.reportType}")
+
         try {
-            val cleanWhere = report.where?.trim() ?: ""
+            val cleanWhere = report.reportType?.trim() ?: ""
             val type = IllegalParkingLocation.valueOf(cleanWhere)
             when (type) {
                 IllegalParkingLocation.DOT_BLOCK -> binding.rbCrosswalk.isChecked = true
