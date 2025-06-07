@@ -5,7 +5,9 @@ import android.location.Geocoder
 import android.net.Uri
 import android.os.Bundle
 import android.os.Looper
+import android.util.Log
 import android.view.MotionEvent
+import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import android.widget.Toast
@@ -14,12 +16,15 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
 import coil.load
 import com.example.zikk.databinding.ActivityReportDetailBinding
 import com.example.zikk.enum.IllegalParkingLocation
 import com.example.zikk.extensions.getLoginToken
+import com.example.zikk.extensions.getUserRole
 import com.example.zikk.model.ReportDetail
 import com.example.zikk.model.request.ReportRequest
+import com.example.zikk.model.request.ReportStatusRequest
 import com.example.zikk.network.RetrofitClient
 import com.google.android.gms.location.*
 import kotlinx.coroutines.CoroutineScope
@@ -41,6 +46,9 @@ class ReportDetailActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = setContentViewWithBinding(ActivityReportDetailBinding::inflate)
+        binding.llAdminBtnGroup.visibility = if (isAdmin()) View.VISIBLE else View.GONE
+        binding.llUserBtnGroup.visibility = if (isAdmin()) View.GONE else View.VISIBLE
+
         enableEdgeToEdge()
 
         // 토큰 유효성 체크
@@ -76,6 +84,16 @@ class ReportDetailActivity : BaseActivity() {
 
         // 서버에서 상세 정보 조회
         reportId?.let { fetchReportDetail(it) }
+
+        if(isAdmin()) {
+            binding.btnConfirm.setOnClickListener {
+                reportId?.toInt()?.let { it1 -> processReportStatus("COMPLETED", it1) }
+            }
+
+            binding.btnReject.setOnClickListener {
+                reportId?.toInt()?.let { it1 -> processReportStatus("REJECTED", it1) }
+            }
+        }
     }
 
     // 상세 데이터 서버에서 조회
@@ -88,12 +106,17 @@ class ReportDetailActivity : BaseActivity() {
                         val reportDetail = response.body()!! // 타입: ReportDetail
                         populateFields(reportDetail)
                     } else {
-                        Toast.makeText(this@ReportDetailActivity, "조회 실패", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@ReportDetailActivity, "조회 실패", Toast.LENGTH_SHORT)
+                            .show()
                     }
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(this@ReportDetailActivity, "에러: ${e.message}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this@ReportDetailActivity,
+                        "에러: ${e.message}",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
         }
@@ -174,15 +197,27 @@ class ReportDetailActivity : BaseActivity() {
 
                 withContext(Dispatchers.Main) {
                     if (response.isSuccessful) {
-                        Toast.makeText(this@ReportDetailActivity, response.body()?.message ?: "수정 완료", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            this@ReportDetailActivity,
+                            response.body()?.message ?: "수정 완료",
+                            Toast.LENGTH_SHORT
+                        ).show()
                         finish()
                     } else {
-                        Toast.makeText(this@ReportDetailActivity, "수정 실패: ${response.code()}", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            this@ReportDetailActivity,
+                            "수정 실패: ${response.code()}",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(this@ReportDetailActivity, "에러: ${e.message}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this@ReportDetailActivity,
+                        "에러: ${e.message}",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
         }
@@ -190,10 +225,12 @@ class ReportDetailActivity : BaseActivity() {
 
     // 현재 위치(주소) 받아오기
     private fun getCurrentLocation() {
-        val fineGranted = ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) ==
-                android.content.pm.PackageManager.PERMISSION_GRANTED
-        val coarseGranted = ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) ==
-                android.content.pm.PackageManager.PERMISSION_GRANTED
+        val fineGranted =
+            ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) ==
+                    android.content.pm.PackageManager.PERMISSION_GRANTED
+        val coarseGranted =
+            ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) ==
+                    android.content.pm.PackageManager.PERMISSION_GRANTED
 
         if (!fineGranted && !coarseGranted) {
             val permissions = arrayOf(
@@ -209,7 +246,8 @@ class ReportDetailActivity : BaseActivity() {
                 val location = locationResult.lastLocation ?: return
                 val address = try {
                     val geocoder = Geocoder(this@ReportDetailActivity, Locale.getDefault())
-                    val addresses = geocoder.getFromLocation(location.latitude, location.longitude, 1)
+                    val addresses =
+                        geocoder.getFromLocation(location.latitude, location.longitude, 1)
                     addresses?.getOrNull(0)?.getAddressLine(0)
                 } catch (e: Exception) {
                     e.printStackTrace()
@@ -239,5 +277,36 @@ class ReportDetailActivity : BaseActivity() {
             currentFocus!!.clearFocus()
         }
         return super.dispatchTouchEvent(ev)
+    }
+
+    private fun isAdmin(): Boolean {
+        if (getUserRole() == "ROLE_ADMIN") {
+            return true
+        } else {
+            return false
+        }
+    }
+
+    private fun processReportStatus(status: String, reportId: Int) {
+        lifecycleScope.launch {
+            try {
+                val token = "Bearer " + getLoginToken()
+                val request = ReportStatusRequest(status)
+                val response =
+                    RetrofitClient.apiService.processReportStatus(token, reportId, request)
+
+                Log.d("REQUEAST", request.toString())
+                Log.d("RESPONSE", response.toString())
+                if(response.isSuccessful) {
+                    Toast.makeText(this@ReportDetailActivity, response.body()?.message ?: "", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(this@ReportDetailActivity, "요청 실패", Toast.LENGTH_SHORT).show()
+                }
+
+            } catch (e: Exception) {
+                Toast.makeText(this@ReportDetailActivity, "요청 실패", Toast.LENGTH_SHORT).show()
+                throw e
+            }
+        }
     }
 }
