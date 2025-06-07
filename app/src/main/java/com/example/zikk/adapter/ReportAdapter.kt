@@ -27,8 +27,12 @@ class ReportAdapter(
             }
 
             // "시/구/동"까지만 추출
-            val addressToShow = Regex("""([가-힣]+시\s)?([가-힣]+구\s)?([가-힣0-9]+동)""")
-                .find(report.address)?.value?.trim() ?: report.address
+            val addressToShow = if (!report.address.isNullOrEmpty()) {
+                Regex("""([가-힣]+시\s)?([가-힣]+구\s)?([가-힣0-9]+동)""")
+                    .find(report.address)?.value?.trim() ?: report.address
+            } else {
+                "주소 정보 없음"  // 또는 ""
+            }
             binding.txtAddress.text = "신고위치: $addressToShow"
 
             binding.txtStatus.text = "신고유형: $whereDesc"
