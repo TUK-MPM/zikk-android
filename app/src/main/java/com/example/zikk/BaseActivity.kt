@@ -4,11 +4,13 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.FrameLayout
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.viewbinding.ViewBinding
 import com.example.zikk.databinding.ActivityBaseBinding
+import com.example.zikk.extensions.getUserRole
 
 abstract class BaseActivity : AppCompatActivity() {
 
@@ -92,8 +94,12 @@ abstract class BaseActivity : AppCompatActivity() {
         }
 
         drawerBinding.tvAdmin.setOnClickListener {
-            startActivity(Intent(this, AdminMainActivity::class.java))
-            drawerLayout.closeDrawer(GravityCompat.START)
+            if (getUserRole() == "ROLE_ADMIN") {
+                startActivity(Intent(this, AdminMainActivity::class.java))
+                drawerLayout.closeDrawer(GravityCompat.START)
+            } else {
+                Toast.makeText(applicationContext, "권한이 없습니다!", Toast.LENGTH_SHORT).show()
+            }
         }
 
     }
