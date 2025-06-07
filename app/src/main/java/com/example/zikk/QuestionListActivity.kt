@@ -13,6 +13,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.zikk.adapter.InquiryAdapter
 import com.example.zikk.databinding.ActivityQuestionListBinding
+import com.example.zikk.databinding.ActivityReportDetailBinding
 import com.example.zikk.extensions.getLoginToken
 import com.example.zikk.model.Inquiry
 import com.example.zikk.network.RetrofitClient
@@ -23,7 +24,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class QuestionListActivity : AppCompatActivity() {
+class QuestionListActivity : BaseActivity() {
 
     private lateinit var binding: ActivityQuestionListBinding
     private var currentPage = 1
@@ -35,8 +36,7 @@ class QuestionListActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityQuestionListBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        binding = setContentViewWithBinding(ActivityQuestionListBinding::inflate)
 
         val rawToken = getLoginToken()
         if (rawToken == null) {

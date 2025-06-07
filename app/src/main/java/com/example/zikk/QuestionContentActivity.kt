@@ -7,14 +7,16 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.zikk.databinding.ActivityQuestionContextBinding
+import com.example.zikk.databinding.ActivityQuestionListBinding
+import com.example.zikk.databinding.ActivityQuestionWriteBinding
 
-class QuestionContentActivity : AppCompatActivity() {
+class QuestionContentActivity : BaseActivity() {
+    private lateinit var binding: ActivityQuestionContextBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        //setContentView(R.layout.activity_question_context)
-        val binding = ActivityQuestionContextBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        binding = setContentViewWithBinding(ActivityQuestionContextBinding::inflate)
 
         binding.back.setOnClickListener {
             val intent = Intent(this, QuestionListActivity::class.java)

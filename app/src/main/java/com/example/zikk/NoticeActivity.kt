@@ -13,6 +13,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.zikk.adapter.NoticeAdapter
 import com.example.zikk.databinding.ActivityNoticeBinding
+import com.example.zikk.databinding.ActivityQuestionContextBinding
 import com.example.zikk.model.Notice
 import com.example.zikk.network.RetrofitClient
 import com.example.zikk.util.PaginationUiUtils
@@ -22,8 +23,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class NoticeActivity : AppCompatActivity() {
-
+class NoticeActivity : BaseActivity() {
     private lateinit var binding: ActivityNoticeBinding
     private var currentPage = 1
     private val pageSize = 5
@@ -33,8 +33,7 @@ class NoticeActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityNoticeBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        binding = setContentViewWithBinding(ActivityNoticeBinding::inflate)
 
         initUI()
         fetchNotices()

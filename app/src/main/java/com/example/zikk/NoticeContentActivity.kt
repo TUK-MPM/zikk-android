@@ -7,14 +7,15 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.zikk.databinding.ActivityNoticeContextBinding
+import com.example.zikk.databinding.ActivityQuestionContextBinding
 
-class NoticeContentActivity : AppCompatActivity() {
+class NoticeContentActivity : BaseActivity() {
+    private lateinit var binding: ActivityNoticeContextBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        //setContentView(R.layout.activity_notice_context)
-        val binding = ActivityNoticeContextBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        binding = setContentViewWithBinding(ActivityNoticeContextBinding::inflate)
 
         binding.back.setOnClickListener {
             val intent = Intent(this, NoticeActivity::class.java)
