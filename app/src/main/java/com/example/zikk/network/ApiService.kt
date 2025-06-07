@@ -14,6 +14,7 @@ import com.example.zikk.model.request.ReportStatusRequest
 import com.example.zikk.model.response.NoticeResponse
 import com.example.zikk.model.response.NoticeWriteResponse
 import com.example.zikk.model.response.ReportStatusResponse
+import com.example.zikk.model.response.ReportResponse
 import com.example.zikk.model.response.ReportUpdateResponse
 import com.example.zikk.model.response.StatisticsResponse
 import okhttp3.MultipartBody
@@ -70,6 +71,16 @@ interface ApiService {
         @Header("Authorization") token: String,
         @Path("id") reportId: String,
     ): Response<ReportDetail>
+
+    // 신고 수정
+    @Multipart
+    @PATCH("report/{reportId}")
+    suspend fun updateReportWithImages(
+        @Path("reportId") reportId: Long,
+        @Part("request") request: RequestBody,
+        @Part images: List<MultipartBody.Part>?
+    ): Response<ReportResponse>
+
 
     // 문의 조회
     @GET("inquiries")
