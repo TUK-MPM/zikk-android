@@ -1,5 +1,6 @@
 package com.example.zikk.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,7 +19,11 @@ class ReportAdapter(
     inner class ReportViewHolder(private val binding: ItemReportBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
+
         fun bind(report: Report) {
+
+            Log.d("ReportAdapter", "report.where = ${report.where}")
+
             // 위치 enum 변환
             val whereDesc = try {
                 IllegalParkingLocation.valueOf(report.where).description
