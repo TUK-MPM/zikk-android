@@ -11,9 +11,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.zikk.adapter.InquiryAdapter
 import com.example.zikk.adapter.NoticeAdapter
 import com.example.zikk.databinding.ActivityNoticeBinding
 import com.example.zikk.databinding.ActivityQuestionContextBinding
+import com.example.zikk.extensions.getUserRole
 import com.example.zikk.model.Notice
 import com.example.zikk.network.RetrofitClient
 import com.example.zikk.util.PaginationUiUtils
@@ -49,6 +51,8 @@ class NoticeActivity : BaseActivity() {
         binding.noticeRecyclerView.layoutManager = LinearLayoutManager(this)
         binding.noticeRecyclerView.adapter = NoticeAdapter(emptyList()) {}
 
+        binding.btnWrite.visibility = if (getUserRole() == "ROLE_ADMIN") View.VISIBLE else View.GONE
+
         setupSpinner()
         setupListeners()
     }
@@ -76,6 +80,9 @@ class NoticeActivity : BaseActivity() {
     private fun setupListeners() {
         binding.back.setOnClickListener {
             startActivity(Intent(this, MainActivity::class.java))
+        }
+        binding.btnWrite.setOnClickListener{
+            startActivity(Intent(this, AdminNoticeWriteActivity::class.java))
         }
     }
 
