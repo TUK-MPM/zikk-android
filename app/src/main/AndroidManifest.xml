@@ -49,9 +49,6 @@
             android:name=".NoticeActivity"
             android:exported="false" />
         <activity
-            android:name=".NoticeWriteActivity"
-            android:exported="false" />
-        <activity
             android:name=".AdminMainActivity"
             android:exported="false" />
         <activity

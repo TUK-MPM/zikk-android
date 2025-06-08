@@ -180,7 +180,7 @@
 
                         <!-- 이전 버튼, 크기 바꾸기 -->
                         <ImageButton
-                            android:id="@+id/prevButton"
+                            android:id="@+id/btnPrev"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:background="?attr/selectableItemBackgroundBorderless"
@@ -189,7 +189,7 @@
 
                         <!-- 이전 페이지 표시 -->
                         <TextView
-                            android:id="@+id/priorpageText"
+                            android:id="@+id/tvPageInfo"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="1 2 3 "
@@ -212,7 +212,7 @@
 
                         <!-- 다음 버튼 -->
                         <ImageButton
-                            android:id="@+id/nextButton"
+                            android:id="@+id/btnNext"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:background="?attr/selectableItemBackgroundBorderless"

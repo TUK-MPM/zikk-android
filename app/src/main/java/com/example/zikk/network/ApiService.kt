@@ -13,9 +13,11 @@ import com.example.zikk.model.Report
 import com.example.zikk.model.ReportDetail
 import com.example.zikk.model.Todo
 import com.example.zikk.model.request.CreateNoticeRequest
+import com.example.zikk.model.request.InquiryRequest
 import com.example.zikk.model.request.ReportStatusRequest
 import com.example.zikk.model.response.NoticeResponse
 import com.example.zikk.model.response.NoticeWriteResponse
+import com.example.zikk.model.response.QuestionWriteResponse
 import com.example.zikk.model.response.ReportStatusResponse
 import com.example.zikk.model.response.ReportUpdateResponse
 import com.example.zikk.model.response.StatisticsResponse
@@ -94,6 +96,13 @@ interface ApiService {
         @Header("Authorization") token: String,
         @Path("id") inquiryId: Long
     ): Response<InquiryDetail>
+
+    //문의 작성
+    @POST("inquiries")
+    suspend fun createInquiry(
+        @Header("Authorization") token: String,
+        @Body request: InquiryRequest
+    ): Response<QuestionWriteResponse>
 
     // 관리자 통계 조회
     @GET("statistics")
