@@ -51,7 +51,7 @@ object PopupUtils {
         }
 
         view.findViewById<TextView>(R.id.item_processing).setOnClickListener {
-            onFilterSelected("PROCESSING")
+            onFilterSelected("PENDING")
             popup.dismiss()
         }
 
