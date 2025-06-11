@@ -7,14 +7,11 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.zikk.adapter.InquiryAdapter
 import com.example.zikk.adapter.NoticeAdapter
 import com.example.zikk.databinding.ActivityNoticeBinding
-import com.example.zikk.databinding.ActivityQuestionContextBinding
 import com.example.zikk.extensions.getUserRole
 import com.example.zikk.model.Notice
 import com.example.zikk.network.RetrofitClient

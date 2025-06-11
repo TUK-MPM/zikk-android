@@ -3,11 +3,15 @@ package com.example.zikk
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
 import com.example.zikk.databinding.ActivityNoticeContextBinding
+import com.example.zikk.extensions.getLoginToken
+import com.example.zikk.extensions.getUserRole
 import com.example.zikk.model.NoticeDetail
 import com.example.zikk.network.RetrofitClient
 import kotlinx.coroutines.CoroutineScope
@@ -39,6 +43,21 @@ class NoticeContentActivity : BaseActivity() {
         binding.btnBack.setOnClickListener {
             startActivity(Intent(this, NoticeActivity::class.java))
         }
+
+        binding.btnDelete.setOnClickListener {
+            deleteNotice(notiId)
+        }
+
+        binding.btnEdit.setOnClickListener {
+            val intent = Intent(this, AdminNoticeWriteActivity::class.java)
+            intent.putExtra("noticeId", notiId)
+            intent.putExtra("title", binding.titleTextView.text)
+            intent.putExtra("content", binding.contentTextView.text)
+            startActivity(intent)
+        }
+
+        binding.btnDelete.visibility = if (isAdmin()) View.VISIBLE else View.GONE
+        binding.btnEdit.visibility = if (isAdmin()) View.VISIBLE else View.GONE
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -84,8 +103,29 @@ class NoticeContentActivity : BaseActivity() {
         return raw.replace("T", " ").substring(0, 16)
     }
 
+    private fun isAdmin(): Boolean {
+        return getUserRole() == "ROLE_ADMIN"
+    }
 
     private fun showToast(msg: String) {
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun deleteNotice(id: Int) {
+        lifecycleScope.launch {
+            try {
+                val response = RetrofitClient.apiService.deleteNotice(
+                    token = "Bearer " + getLoginToken()!!,
+                    noticeId = id
+                )
+                Log.d("response", response.toString())
+                if (response.isSuccessful) {
+                    showToast("삭제되었습니다!")
+                    startActivity(Intent(applicationContext, NoticeActivity::class.java))
+                }
+            } catch (e: Exception) {
+                throw e
+            }
+        }
     }
 }

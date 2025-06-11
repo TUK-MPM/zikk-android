@@ -5,21 +5,24 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
-import com.example.zikk.databinding.ActivityAdminMainBinding
 import com.example.zikk.databinding.ActivityAdminNoticeWriteBinding
-import com.example.zikk.databinding.ActivityMainBinding
-import com.example.zikk.enum.SortType
 import com.example.zikk.extensions.getLoginToken
 import com.example.zikk.model.request.CreateNoticeRequest
+import com.example.zikk.model.request.NoticeUpdateRequest
+import com.example.zikk.model.request.ReportStatusRequest
 import com.example.zikk.network.RetrofitClient
+import com.google.gson.Gson
 import kotlinx.coroutines.launch
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody.Companion.toRequestBody
 
 class AdminNoticeWriteActivity : BaseActivity() {
     private lateinit var binding: ActivityAdminNoticeWriteBinding
+    private var isEditMode = false
+    private var noticeId: Int? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,7 +36,7 @@ class AdminNoticeWriteActivity : BaseActivity() {
         }
 
         binding.back.setOnClickListener {
-            val intent = Intent(this, AdminNoticeListActivity::class.java)
+            val intent = Intent(this, NoticeActivity::class.java)
             startActivity(intent)
         }
         binding.btnBack.setOnClickListener {
@@ -41,6 +44,23 @@ class AdminNoticeWriteActivity : BaseActivity() {
         }
         binding.btnComplete.setOnClickListener {
             createNotice()
+        }
+
+        intent.getStringExtra("title")?.let {
+            isEditMode = true
+            binding.etTitle.setText(it)
+        }
+        intent.getStringExtra("content")?.let {
+            binding.etContent.setText(it)
+        }
+        noticeId = intent.getIntExtra("noticeId", -1).takeIf { it != -1 }
+
+        binding.btnComplete.setOnClickListener {
+            if (isEditMode) {
+                updateNotice()
+            } else {
+                createNotice()
+            }
         }
     }
 
@@ -67,6 +87,33 @@ class AdminNoticeWriteActivity : BaseActivity() {
                     }
                     finish()
                 }
+            } catch (e: Exception) {
+                throw e
+            }
+        }
+    }
+
+    private fun updateNotice() {
+        lifecycleScope.launch {
+            try {
+
+                val title = binding.etTitle.text.toString()
+                val content = binding.etContent.text.toString()
+
+                val request = Gson().toJson(NoticeUpdateRequest(title, content))
+                val requestBody =
+                    request.toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())
+                val response = RetrofitClient.apiService.updateNotice(
+                    token = "Bearer " + getLoginToken()!!,
+                    noticeId = noticeId!!,
+                    request = requestBody
+                )
+
+                if(response.isSuccessful) {
+                    Toast.makeText(applicationContext, "수정 성공", Toast.LENGTH_SHORT).show()
+                    finish()
+                }
+
             } catch (e: Exception) {
                 throw e
             }

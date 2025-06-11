@@ -15,7 +15,9 @@ import com.example.zikk.model.Todo
 import com.example.zikk.model.request.CreateNoticeRequest
 import com.example.zikk.model.request.InquiryRequest
 import com.example.zikk.model.request.ReportStatusRequest
+import com.example.zikk.model.response.NoticeDeleteResponse
 import com.example.zikk.model.response.NoticeResponse
+import com.example.zikk.model.response.NoticeUpdateResponse
 import com.example.zikk.model.response.NoticeWriteResponse
 import com.example.zikk.model.response.QuestionWriteResponse
 import com.example.zikk.model.response.ReportStatusResponse
@@ -26,6 +28,7 @@ import okhttp3.Request
 import okhttp3.RequestBody
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
@@ -140,5 +143,18 @@ interface ApiService {
         @Path("id") reportId: Int,
         @Part("request") request: RequestBody
     ): Response<ReportStatusResponse>
+
+    @DELETE("notice/{id}")
+    suspend fun deleteNotice(
+        @Header("Authorization") token: String,
+        @Path("id") noticeId: Int
+    ): Response<NoticeDeleteResponse>
+
+    @PATCH("notice/{id}")
+    suspend fun updateNotice(
+        @Header("Authorization") token: String,
+        @Path("id") noticeId: Int,
+        @Body request: RequestBody
+    ) : Response<NoticeUpdateResponse>
 }
 
