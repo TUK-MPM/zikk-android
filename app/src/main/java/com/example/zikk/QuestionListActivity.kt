@@ -144,7 +144,14 @@ class QuestionListActivity : BaseActivity() {
             val pageList = PaginationUtils.paginate(list, page, pageSize)
 
             binding.inquiryRecyclerView.adapter = InquiryAdapter(pageList) { inquiry ->
-                val intent = Intent(this, QuestionContentActivity::class.java)
+                val intent: Intent
+
+                if(isAdmin()) {
+                    intent =  Intent(this, AdminQuestionContentAcitivity::class.java)
+                } else {
+                    intent = Intent(this, QuestionContentActivity::class.java)
+                }
+
                 intent.putExtra("inquiryId", inquiry.inquiryId)
                 startActivity(intent)
             }
@@ -167,5 +174,9 @@ class QuestionListActivity : BaseActivity() {
 
     private fun showToast(msg: String) {
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun isAdmin(): Boolean {
+        return getUserRole() == "ROLE_ADMIN"
     }
 }

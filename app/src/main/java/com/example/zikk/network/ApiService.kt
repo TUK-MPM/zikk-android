@@ -15,6 +15,7 @@ import com.example.zikk.model.Todo
 import com.example.zikk.model.request.CreateNoticeRequest
 import com.example.zikk.model.request.InquiryRequest
 import com.example.zikk.model.request.ReportStatusRequest
+import com.example.zikk.model.response.InquiryUpdateResponse
 import com.example.zikk.model.response.NoticeDeleteResponse
 import com.example.zikk.model.response.NoticeResponse
 import com.example.zikk.model.response.NoticeUpdateResponse
@@ -156,5 +157,12 @@ interface ApiService {
         @Path("id") noticeId: Int,
         @Body request: RequestBody
     ) : Response<NoticeUpdateResponse>
+
+    @PATCH("inquiries/{id}")
+    suspend fun updateInquiry(
+        @Header("Authorization") token: String,
+        @Path("id") inquiryId: Int,
+        @Body request: RequestBody
+    ) : Response<InquiryUpdateResponse>
 }
 

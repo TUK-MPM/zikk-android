@@ -1,6 +1,6 @@
 package com.example.zikk.model.request
 
 data class NoticeUpdateRequest(
-    val title: String,
+    val response: String,
     val content: String
 )
