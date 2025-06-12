@@ -16,6 +16,8 @@ import androidx.drawerlayout.widget.DrawerLayout
 import com.example.zikk.R
 import com.example.zikk.extensions.getLoginToken
 import com.example.zikk.extensions.removeLoginToken
+import com.example.zikk.extensions.removeUserPhoneNumber
+import com.example.zikk.extensions.removeUserRole
 
 class HeaderFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -85,6 +87,8 @@ class HeaderFragment : Fragment() {
             .setMessage("로그아웃 하시겠습니까?")
             .setPositiveButton("로그아웃") { _, _ ->
                 requireContext().removeLoginToken()
+                requireContext().removeUserRole()
+                requireContext().removeUserPhoneNumber()
             }
             .setNegativeButton("취소", null)
             .show()

@@ -55,27 +55,14 @@ class AdminMainActivity : BaseActivity() {
             startActivity(intent)
         }
 
+        binding.tvNoticeMore.setOnClickListener {
+            val intent = Intent(this, NoticeActivity::class.java) // 이동할 액티비티로 교체
+            startActivity(intent)
+        }
+
         getNotices()
     }
 
-
-    fun getStatistics() {
-        lifecycleScope.launch {
-            try {
-                val response = RetrofitClient.apiService.getStatistics()
-                Log.d("response", response.toString())
-
-                if (response.isSuccessful) {
-                    Toast.makeText(this@AdminMainActivity, response.toString(), Toast.LENGTH_SHORT).show()
-                } else {
-                    Toast.makeText(this@AdminMainActivity, "응답 실패: ${response.code()}", Toast.LENGTH_SHORT).show()
-                }
-            } catch (e: Exception) {
-                Toast.makeText(this@AdminMainActivity, "요청 실패", Toast.LENGTH_SHORT).show()
-                Log.e("getNotices", "오류", e)
-            }
-        }
-    }
 
     @SuppressLint("NotifyDataSetChanged")
     private fun getNotices() {

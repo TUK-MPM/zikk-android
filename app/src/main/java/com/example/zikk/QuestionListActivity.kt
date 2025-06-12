@@ -179,4 +179,9 @@ class QuestionListActivity : BaseActivity() {
     private fun isAdmin(): Boolean {
         return getUserRole() == "ROLE_ADMIN"
     }
+
+    override fun onResume() {
+        super.onResume()
+        fetchInquiries()
+    }
 }

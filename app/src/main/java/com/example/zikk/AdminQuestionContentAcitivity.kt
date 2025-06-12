@@ -22,6 +22,7 @@ import okhttp3.RequestBody.Companion.toRequestBody
 
 class AdminQuestionContentAcitivity : AppCompatActivity() {
     private lateinit var binding: ActivityAdminQuestionContextAcitivityBinding
+    private var inquiryId: Long = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,7 +31,7 @@ class AdminQuestionContentAcitivity : AppCompatActivity() {
         binding = ActivityAdminQuestionContextAcitivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val inquiryId = intent.getLongExtra("inquiryId", -1L)
+        inquiryId = intent.getLongExtra("inquiryId", -1L)
         if (inquiryId == -1L) {
             finish()
             return
@@ -145,4 +146,13 @@ class AdminQuestionContentAcitivity : AppCompatActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        fetchInquiryDetail(inquiryId)
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+        fetchInquiryDetail(inquiryId)
+    }
 }
