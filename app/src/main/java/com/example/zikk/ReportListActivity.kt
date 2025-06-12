@@ -177,4 +177,9 @@ class ReportListActivity : BaseActivity() {
             return false
         }
     }
+
+    override fun onResume() {
+        super.onResume()
+        fetchReports()
+    }
 }

@@ -34,8 +34,12 @@ class NoticeActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         binding = setContentViewWithBinding(ActivityNoticeBinding::inflate)
 
+
         initUI()
         fetchNotices()
+
+        binding.btnWrite.visibility =  if (isAdmin()) View.GONE else View.VISIBLE
+
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { view, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -176,5 +180,9 @@ class NoticeActivity : BaseActivity() {
 
     private fun showToast(msg: String) {
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun isAdmin(): Boolean {
+        return getUserRole() == "ROLE_ADMIN"
     }
 }

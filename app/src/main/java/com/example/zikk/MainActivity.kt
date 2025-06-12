@@ -12,6 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.zikk.adapter.NoticeAdapter
 import com.example.zikk.databinding.ActivityMainBinding
+import com.example.zikk.extensions.getUserRole
 import com.example.zikk.model.Notice
 import com.example.zikk.network.RetrofitClient
 import kotlinx.coroutines.launch
@@ -58,8 +59,12 @@ class MainActivity : BaseActivity() {
 
         // 신고 작성 화면 불러오기
         binding.reportBtn.setOnClickListener {
-            var intent = Intent(applicationContext, ReportWriteActivity::class.java)
-            startActivity(intent)
+            if(isAdmin()) {
+                Toast.makeText(this, "관리자는 신고를 작성할 수 없습니다!", Toast.LENGTH_SHORT).show()
+            } else {
+                var intent = Intent(applicationContext, ReportWriteActivity::class.java)
+                startActivity(intent)
+            }
         }
 
         // 신고 조회 화면 불러오기
@@ -105,5 +110,9 @@ class MainActivity : BaseActivity() {
                 Log.e("getNotices", "오류", e)
             }
         }
+    }
+
+    private fun isAdmin(): Boolean {
+        return getUserRole() == "ROLE_ADMIN"
     }
 }

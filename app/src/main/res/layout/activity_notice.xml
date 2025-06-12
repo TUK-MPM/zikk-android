@@ -100,7 +100,7 @@
                             android:background="@drawable/round_box_large"
                             android:backgroundTint="@color/background_gray" />
                         <Button
-                            android:id="@+id/btnWrite"
+                            android:id="@+id/btn_write"
                             android:layout_width="85dp"
                             android:layout_height="25dp"
                             android:layout_marginRight="20dp"
