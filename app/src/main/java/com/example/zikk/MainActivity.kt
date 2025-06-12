@@ -67,6 +67,15 @@ class MainActivity : BaseActivity() {
             }
         }
 
+        binding.fabReport.setOnClickListener {
+            if(isAdmin()) {
+                Toast.makeText(this, "관리자는 신고를 작성할 수 없습니다!", Toast.LENGTH_SHORT).show()
+            } else {
+                var intent = Intent(applicationContext, ReportWriteActivity::class.java)
+                startActivity(intent)
+            }
+        }
+
         // 신고 조회 화면 불러오기
         binding.reportQueryBtn.setOnClickListener {
             var intent = Intent(applicationContext, ReportListActivity::class.java)
