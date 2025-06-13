@@ -178,7 +178,7 @@ class ReportDetailActivity : BaseActivity() {
         binding.photoContainer.removeView(binding.btnPickImage)
         binding.photoContainer.addView(binding.btnPickImage)
 
-        if (report.status == "COMPLETED" || report.status == "REJECTED") {
+        if (report.status == "COMPLETED" || report.status == "REJECTED" || report.status == "APPROVED") {
             binding.btnSubmit.apply {
                 isEnabled = false
                 setBackgroundColor(ContextCompat.getColor(context, R.color.deap_gray))

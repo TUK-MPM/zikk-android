@@ -55,6 +55,7 @@ class ReportAdapter(
             val bgColorRes = when (report.status) {
                 "PENDING" -> R.color.qusetion_yellow
                 "COMPLETED" -> R.color.qusetion_blue
+                "APPROVED" -> R.color.qusetion_blue
                 "REJECTED" -> R.color.qusetion_pink
                 else -> R.color.background_gray
             }
@@ -62,7 +63,7 @@ class ReportAdapter(
             binding.reportItemRoot.setBackgroundColor(bgColor)
 
             // 화살표 표시 여부
-            binding.imageArrow.visibility = if (report.status == "REJECTED") View.GONE else View.VISIBLE
+            binding.imageArrow.visibility = if (report.status == "REJECTED" || report.status == "APPROVED") View.GONE else View.VISIBLE
 
             binding.root.setOnClickListener { onItemClick(report) }
         }
