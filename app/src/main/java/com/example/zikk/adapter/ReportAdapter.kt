@@ -54,7 +54,6 @@ class ReportAdapter(
             // 배경색 조건 설정
             val bgColorRes = when (report.status) {
                 "PENDING" -> R.color.qusetion_yellow
-                "COMPLETED" -> R.color.qusetion_blue
                 "APPROVED" -> R.color.qusetion_blue
                 "REJECTED" -> R.color.qusetion_pink
                 else -> R.color.background_gray
