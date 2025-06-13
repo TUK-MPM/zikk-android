@@ -19,7 +19,12 @@ class InquiryAdapter(
 
         fun bind(inquiry: Inquiry) {
             binding.topText.text = inquiry.title
-            binding.bottomText.text = inquiry.createdAt.replace("T", " ")
+
+            val formattedTime = inquiry.createdAt
+                .replace("T", " ")
+                .substring(0, 16)
+
+            binding.bottomText.text = formattedTime
             binding.root.setOnClickListener {
                 Log.d("InquiryAdapter", "클릭된 inquiryId: ${inquiry.inquiryId}")
                 onItemClick(inquiry)

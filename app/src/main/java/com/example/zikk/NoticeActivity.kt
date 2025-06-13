@@ -38,7 +38,7 @@ class NoticeActivity : BaseActivity() {
         initUI()
         fetchNotices()
 
-        binding.btnWrite.visibility =  if (isAdmin()) View.GONE else View.VISIBLE
+        //binding.btnWrite.visibility =  if (isAdmin()) View.GONE else View.VISIBLE
 
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { view, insets ->

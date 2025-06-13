@@ -27,7 +27,7 @@ class AdminQuestionContentAcitivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        //setContentView(R.layout.activity_admin_question_context_acitivity)
+        //setContentView(R.layout.activity_admin_question_content_acitivity)
         binding = ActivityAdminQuestionContextAcitivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
 

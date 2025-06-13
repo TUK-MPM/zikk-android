@@ -22,12 +22,13 @@ class NoticeAdapter(
             titleTextView.text = notice.title
 
             // createdAt이 "2025-06-07T11:36:16.774078" 형식일 경우, 앞의 "YYYY-MM-DD"까지만 표시
-            val date = if (notice.createdAt.length >= 10) {
-                notice.createdAt.substring(0, 10)
+            val date = if (notice.createdAt.length >= 16) {
+                notice.createdAt.replace("T", " ").substring(0, 16)
             } else {
-                notice.createdAt
+                notice.createdAt.replace("T", " ")
             }
             dateTextView.text = date
+
 
             // ✅ ID 로그 찍기
             Log.d("NoticeAdapter", "바인딩된 공지 ID: ${notice.notiId}, 제목: ${notice.title}")

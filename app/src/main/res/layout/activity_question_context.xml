@@ -120,7 +120,8 @@
                     android:layout_height="100dp"
                     android:layout_marginHorizontal="30dp"
                     android:background="@drawable/round_box_medium"
-                    android:hint="    아직 답변이 작성되지 않았습니다."
+                    android:hint="아직 답변이 작성되지 않았습니다."
+                    android:paddingStart="12dp"
                     android:textSize="13sp"
                     android:gravity="start"
                     android:paddingTop="6dp"
@@ -136,7 +137,6 @@
                     android:layout_gravity="right"
                     android:layout_marginRight="30dp"
                     android:layout_marginTop="5dp"
-                    android:text="2025-05-31 11:00"
                     android:textColor="@color/text_gray" />
 
                 <!-- 목록으로 버튼 -->
