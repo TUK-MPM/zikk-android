@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
-import com.example.zikk.databinding.ActivityAdminQuestionContextAcitivityBinding
+import com.example.zikk.databinding.ActivityAdminQuestionContentAcitivityBinding
 import com.example.zikk.databinding.ActivityQuestionContextBinding
 import com.example.zikk.extensions.getLoginToken
 import com.example.zikk.model.InquiryDetail
@@ -21,14 +21,14 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
 
 class AdminQuestionContentAcitivity : AppCompatActivity() {
-    private lateinit var binding: ActivityAdminQuestionContextAcitivityBinding
+    private lateinit var binding: ActivityAdminQuestionContentAcitivityBinding
     private var inquiryId: Long = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         //setContentView(R.layout.activity_admin_question_content_acitivity)
-        binding = ActivityAdminQuestionContextAcitivityBinding.inflate(layoutInflater)
+        binding = ActivityAdminQuestionContentAcitivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         inquiryId = intent.getLongExtra("inquiryId", -1L)
