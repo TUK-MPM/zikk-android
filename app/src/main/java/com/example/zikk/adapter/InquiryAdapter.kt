@@ -22,7 +22,7 @@ class InquiryAdapter(
 
             val formattedTime = inquiry.createdAt
                 .replace("T", " ")
-                .substring(0, 16)
+                .substring(0, 10)
 
             binding.bottomText.text = formattedTime
             binding.root.setOnClickListener {

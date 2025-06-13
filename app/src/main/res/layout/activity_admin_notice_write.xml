@@ -83,8 +83,7 @@
                     android:paddingStart="12dp"
                     android:hint="공지사항 제목을 입력해주세요. (최대 50자)"
                     android:textSize="13sp"
-                    android:textColorHint="@color/deap_gray"
-                    android:textStyle="bold">
+                    android:textColorHint="@color/deap_gray">
                 </EditText>
 
                 <TextView
@@ -109,8 +108,7 @@
                     android:textSize="13sp"
                     android:gravity="start"
                     android:paddingTop="6dp"
-                    android:textColorHint="@color/deap_gray"
-                    android:textStyle="bold">
+                    android:textColorHint="@color/deap_gray">
                 </EditText>
 
 

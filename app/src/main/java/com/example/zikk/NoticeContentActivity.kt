@@ -9,7 +9,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
-import com.example.zikk.databinding.ActivityNoticeContextBinding
+import com.example.zikk.databinding.ActivityNoticeContentBinding
 import com.example.zikk.extensions.getLoginToken
 import com.example.zikk.extensions.getUserRole
 import com.example.zikk.model.NoticeDetail
@@ -20,12 +20,12 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class NoticeContentActivity : BaseActivity() {
-    private lateinit var binding: ActivityNoticeContextBinding
+    private lateinit var binding: ActivityNoticeContentBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        binding = setContentViewWithBinding(ActivityNoticeContextBinding::inflate)
+        binding = setContentViewWithBinding(ActivityNoticeContentBinding::inflate)
 
         val notiId = intent.getIntExtra("notiId", -1)
         if (notiId == -1) {
