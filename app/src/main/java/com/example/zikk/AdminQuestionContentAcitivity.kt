@@ -45,10 +45,9 @@ class AdminQuestionContentAcitivity : AppCompatActivity() {
             val intent = Intent(this, QuestionListActivity::class.java)
             startActivity(intent)
         }
-        binding.btnDelete.setOnClickListener {
-            val intent = Intent(this, QuestionListActivity::class.java)
-            startActivity(intent)
-        } // 삭제되는 기능 넣어야 함
+        binding.btnEdit.setOnClickListener {
+            createAnswer(inquiryId)
+        }
         binding.btnComplete.setOnClickListener {
             createAnswer(inquiryId)
         } // 내용 옮기는 기능 넣어야 함
