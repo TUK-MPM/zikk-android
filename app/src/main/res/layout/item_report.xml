@@ -3,38 +3,46 @@
     android:id="@+id/reportItemRoot"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     android:padding="16dp"
     android:layout_marginBottom="8dp"
     android:elevation="1dp"
+    android:gravity="center_vertical"
+    android:background="@drawable/round_box_medium"
     android:clickable="true"
-    android:foreground="?attr/selectableItemBackground">
+    android:focusable="true">
 
-    <TextView
-        android:id="@+id/txtAddress"
-        android:layout_width="wrap_content"
+    <!-- 텍스트 두 개 세로로 정렬 -->
+    <LinearLayout
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="신고 위치"
-        android:textSize="14sp"
-        android:textColor="#333333" />
+        android:layout_weight="1"
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/txtStatus"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="신고 유형"
-        android:textSize="14sp"
-        android:textColor="#333333"
-        android:layout_marginTop="4dp" />
-
-    <TextView
-        android:id="@+id/txtDate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="신고 시간"
-        android:textSize="14sp"
-        android:textColor="#333333"
-        android:layout_marginTop="4dp" />
+        <TextView
+            android:id="@+id/txtAddress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="신고 위치"
+            android:textSize="14sp"
+            android:textColor="#333333" />
+        <TextView
+            android:id="@+id/txtStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="신고 유형"
+            android:textSize="14sp"
+            android:textColor="#333333"
+            android:layout_marginTop="4dp" />
+        <TextView
+            android:id="@+id/txtDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="신고 시간"
+            android:textSize="14sp"
+            android:textColor="#333333"
+            android:layout_marginTop="4dp" />
+    </LinearLayout>
 
     <!-- 상태에 따라 표시되는 화살표 -->
     <ImageView
@@ -46,3 +54,14 @@
         android:layout_marginTop="-60dp"
         android:visibility="visible" />
 </LinearLayout>
+
+
+
+
+
+
+
+
+
+
+

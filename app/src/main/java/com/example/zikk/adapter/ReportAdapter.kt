@@ -58,8 +58,8 @@ class ReportAdapter(
                 "REJECTED" -> R.color.qusetion_pink
                 else -> R.color.background_gray
             }
-            val bgColor = ContextCompat.getColor(binding.root.context, bgColorRes)
-            binding.reportItemRoot.setBackgroundColor(bgColor)
+            binding.reportItemRoot.backgroundTintList =
+                ContextCompat.getColorStateList(binding.root.context, bgColorRes)
 
             // 화살표 표시 여부
             binding.imageArrow.visibility = if (report.status == "REJECTED" || report.status == "APPROVED") View.GONE else View.VISIBLE
