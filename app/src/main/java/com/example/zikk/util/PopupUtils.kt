@@ -46,7 +46,7 @@ object PopupUtils {
         }
 
         view.findViewById<TextView>(R.id.item_completed).setOnClickListener {
-            onFilterSelected("COMPLETED")
+            onFilterSelected("APPROVED")
             popup.dismiss()
         }
 

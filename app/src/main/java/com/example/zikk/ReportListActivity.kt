@@ -69,6 +69,28 @@ class ReportListActivity : BaseActivity() {
 
         // 정렬 순서 팝업
         binding.btnSortStatus.setOnClickListener { showSortPopup(it) }
+
+        // 처리중 아이콘 클릭 시 "PENDING" 필터 적용
+        binding.filterProcessing.setOnClickListener {
+            currentFilter = "PENDING"
+            binding.btnFilter.text = "처리중만 보기"
+            applyFilterAndSort()
+        }
+
+        // 승인 아이콘 클릭 시 "COMPLETED" 필터 적용
+        binding.filterCompleted.setOnClickListener {
+            currentFilter = "APPROVED"
+            binding.btnFilter.text = "승인만 보기"
+            applyFilterAndSort()
+        }
+
+        // 반려 아이콘 클릭 시 "REJECTED" 필터 적용
+        binding.filterRejected.setOnClickListener {
+            currentFilter = "REJECTED"
+            binding.btnFilter.text = "반려만 보기"
+            applyFilterAndSort()
+        }
+
     }
 
     // 사진을 +로 등록하면 서버에 보내서 S3 URL을 받아서 신고할 때 보내는 느낌.
