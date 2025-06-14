@@ -3,7 +3,7 @@
     <style name="Base.Theme.Zikk" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorControlActivated">@color/deap_gray</item> <!-- 라디오 버튼 체크 색상 -->
     </style>
-
     <style name="Theme.Zikk" parent="Base.Theme.Zikk" />
 </resources>

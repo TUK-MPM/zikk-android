@@ -90,6 +90,9 @@ class ReportWriteActivity : BaseActivity() {
         // 위치 서비스 초기화
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
+        // 자동으로 위치 가져오기
+        getCurrentLocation()
+
         // 안드로이드 버전에 따라 적절한 권한 요청
         val photoPermissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             arrayOf(Manifest.permission.READ_MEDIA_IMAGES)

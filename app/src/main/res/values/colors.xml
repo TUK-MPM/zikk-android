@@ -5,10 +5,13 @@
     <color name="blue">#0172FE</color>
     <color name="red">#FF4A4A</color>
     <color name="deap_gray">#8F8F91</color>
+    <color name="deap_blue">#1E4185</color>
     <color name="text_gray">#CCCCCC</color>
     <color name="light_gray">#E1E1E1</color>
     <color name="light_blue">#D3E1FB</color>
     <color name="background_gray">#FFE9E9E9</color>
+    <color name="orange">#F47621</color>
+    <color name="background_orange">#F9CFA7</color>
     <color name="qusetion_yellow">#FFF176</color>
     <color name="qusetion_blue">#D6E3FF</color>
     <color name="qusetion_red">#FF4C4C</color>

@@ -28,12 +28,6 @@
             android:name=".AdminQuestionContentAcitivity"
             android:exported="false" />
         <activity
-            android:name=".AdminNoticeListActivity"
-            android:exported="false" />
-        <activity
-            android:name=".AdminNoticeContentActivity"
-            android:exported="false" />
-        <activity
             android:name=".QuestionContentActivity"
             android:exported="false" />
         <activity
