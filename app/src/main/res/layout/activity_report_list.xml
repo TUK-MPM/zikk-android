@@ -73,89 +73,107 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="총 신고 건수: "/>
+                    android:text="총 신고 건수: "
+                    android:textStyle="bold"/>
 
             </LinearLayout>
 
             <!-- 필터 & 정렬 옵션 -->
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
                 android:gravity="end"
-                android:layout_marginBottom="10dp">
+                android:orientation="vertical">
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
+                <FrameLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
+                    android:layout_marginVertical="10dp">
 
                     <ImageView
-                        android:id="@+id/filter_processing"
+                        android:id="@+id/iv_character"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:src="@drawable/ic_emoji_reportlist_page"
+                        android:layout_gravity="start"
+                        android:layout_marginLeft="12dp"
+                        android:scaleType="centerCrop" />
+
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/report_list_processing"
-                        android:layout_marginEnd="5dp" />
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:layout_gravity="end"
+                        android:layout_marginTop="35dp">
 
-                    <ImageView
-                        android:id="@+id/filter_completed"
+                        <ImageView
+                            android:id="@+id/filter_processing"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="5dp"
+                            android:src="@drawable/report_list_processing" />
+
+                        <ImageView
+                            android:id="@+id/filter_completed"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="5dp"
+                            android:src="@drawable/report_list_accepted" />
+
+                        <ImageView
+                            android:id="@+id/filter_rejected"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/report_list_rejected" />
+                    </LinearLayout>
+
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/report_list_accepted"
-                        android:layout_marginEnd="5dp" />
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:layout_gravity="end"
+                        android:layout_marginTop="60dp">
 
-                    <ImageView
-                        android:id="@+id/filter_rejected"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/report_list_rejected" />
-                </LinearLayout>
+                        <Button
+                            android:id="@+id/btn_filter"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="8dp"
+                            android:backgroundTint="@color/background_gray"
+                            android:minWidth="0dp"
+                            android:minHeight="0dp"
+                            android:paddingHorizontal="8dp"
+                            android:paddingVertical="4dp"
+                            android:text="전체 보기"
+                            android:textColor="@color/black"
+                            android:textSize="10sp" />
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
-
-                    <Button
-                        android:id="@+id/btn_filter"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="전체 보기"
-                        android:textSize="10sp"
-                        android:textColor="@color/black"
-                        android:backgroundTint="@color/background_gray"
-                        android:paddingHorizontal="8dp"
-                        android:paddingVertical="4dp"
-                        android:minWidth="0dp"
-                        android:minHeight="0dp"
-                        android:layout_marginEnd="8dp" />
-
-                    <Button
-                        android:id="@+id/btn_sort_status"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="최신순으로 나열"
-                        android:textSize="10sp"
-                        android:textColor="@color/black"
-                        android:backgroundTint="@color/background_gray"
-                        android:paddingHorizontal="8dp"
-                        android:paddingVertical="4dp"
-                        android:minWidth="0dp"
-                        android:minHeight="0dp" />
-                </LinearLayout>
+                        <Button
+                            android:id="@+id/btn_sort_status"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:backgroundTint="@color/background_gray"
+                            android:minWidth="0dp"
+                            android:minHeight="0dp"
+                            android:paddingHorizontal="8dp"
+                            android:paddingVertical="4dp"
+                            android:text="최신순으로 나열"
+                            android:textColor="@color/black"
+                            android:textSize="10sp" />
+                    </LinearLayout>
+                </FrameLayout>
             </LinearLayout>
 
-            <!-- 신고 목록 RecyclerView -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/reportRecyclerView"
                 android:layout_width="match_parent"
-                android:layout_height="500dp"
+                android:layout_height="0dp"
+                android:layout_weight="1"
                 android:scrollbars="none"
-                android:nestedScrollingEnabled="false"
-                android:layout_marginBottom="10dp"/>
-
+                android:nestedScrollingEnabled="false"/>
 
             <!-- 페이지네이션 (FlexboxLayout 활용) -->
             <com.google.android.flexbox.FlexboxLayout
