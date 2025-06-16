@@ -82,11 +82,11 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="휴대폰 번호를 입력해주세요!"
+                            android:text="아이디를 입력해주세요!"
                             android:textSize="14sp"
                             android:textStyle="bold"
                             android:textColor="@color/black"
-                            android:layout_marginEnd="20dp" />
+                            android:layout_marginEnd="60dp" />
 
                         <ImageView
                             android:layout_width="wrap_content"
@@ -144,7 +144,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="위치를 입력주세요!"
+                        android:text="위치를 알려주세요!"
                         android:textSize="14sp"
                         android:textStyle="bold"
                         android:textColor="@color/black"
@@ -281,7 +281,6 @@
                             android:src="@drawable/parking_help" />
                     </LinearLayout>
 
-                    <!-- 라디오 버튼 영역을 RelativeLayout으로 감싸서 캐릭터 오버레이 -->
                     <!-- 라디오 버튼 영역을 RelativeLayout으로 감싸서 캐릭터 오버레이 -->
                     <RelativeLayout
                         android:layout_width="match_parent"

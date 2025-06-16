@@ -4,7 +4,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/background_orange"
     android:orientation="vertical">
 
     <!-- 상태창 -->
@@ -75,44 +75,31 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="10dp"
+                        android:orientation="horizontal"
                         android:gravity="center_vertical"
-                        android:orientation="horizontal">
+                        android:layout_marginBottom="10dp">
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
+                        <TextView
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:orientation="vertical">
+                            android:text="아이디를 입력해주세요!"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/black"
+                            android:layout_marginEnd="60dp" />
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginEnd="10dp"
-                                android:text="휴대폰 번호를 입력해주세요!"
-                                android:textColor="@color/black"
-                                android:textSize="14sp"
-                                android:textStyle="bold" />
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_exclamation"
+                            android:layout_marginEnd="5dp" />
 
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:gravity="center_vertical"
-                                android:orientation="horizontal">
-
-                                <ImageView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginEnd="5dp"
-                                    android:src="@drawable/ic_exclamation" />
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="휴대폰 번호로 신고 현황을 조회할 수 있어요"
-                                    android:textColor="@color/red"
-                                    android:textSize="11sp" />
-                            </LinearLayout>
-                        </LinearLayout>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/red"
+                            android:text="아이디로 신고 현황을 조회할 수 있어요"
+                            android:textSize="7sp" />
                     </LinearLayout>
 
                     <!-- 폰 번호 입력 창 -->
@@ -131,7 +118,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="48dp"
                                 android:background="@color/background_gray"
-                                android:hint="010-0000-0000"
+                                android:hint="최소 2글자 ~ 최대 10글자"
                                 android:inputType="phone"
                                 android:paddingHorizontal="16dp"
                                 android:textSize="14sp" />
@@ -184,7 +171,7 @@
                                 android:maxLines="1"
                                 android:ellipsize="end"
                                 android:hint="수동으로 입력하기"
-                                android:background="@color/light_blue"
+                                android:background="@color/background_gray"
                                 android:paddingHorizontal="16dp"
                                 android:textSize="14sp"
                                 android:inputType="text"
@@ -293,53 +280,69 @@
                             android:src="@drawable/parking_help" />
                     </LinearLayout>
 
-                    <RadioGroup
-                        android:id="@+id/radioGroup"
+                    <!-- 라디오 버튼 영역을 RelativeLayout으로 감싸서 캐릭터 오버레이 -->
+                    <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
+                        android:layout_height="wrap_content">
 
-                        <RadioButton
-                            android:id="@+id/rb_crosswalk"
+                        <RadioGroup
+                            android:id="@+id/radioGroup"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:paddingVertical="8dp"
-                            android:text="점자블록"
-                            android:textSize="14sp" />
+                            android:orientation="vertical">
 
-                        <RadioButton
-                            android:id="@+id/rb_intersection"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:checked="true"
-                            android:paddingVertical="8dp"
-                            android:text="교통섬 내부"
-                            android:textSize="14sp" />
+                            <RadioButton
+                                android:id="@+id/rbCrosswalk"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="점자블록"
+                                android:textSize="14sp"
+                                android:paddingVertical="8dp" />
 
-                        <RadioButton
-                            android:id="@+id/rb_bus_stop"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:paddingVertical="8dp"
-                            android:text="보호 구역"
-                            android:textSize="14sp" />
+                            <RadioButton
+                                android:id="@+id/rbIntersection"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="교통섬 내부"
+                                android:textSize="14sp"
+                                android:paddingVertical="8dp"
+                                android:checked="true" />
 
-                        <RadioButton
-                            android:id="@+id/rb_safety_zone"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:paddingVertical="8dp"
-                            android:text="상기 사항 외 보도"
-                            android:textSize="14sp" />
+                            <RadioButton
+                                android:id="@+id/rbBusStop"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="보호 구역"
+                                android:textSize="14sp"
+                                android:paddingVertical="8dp" />
 
-                        <RadioButton
-                            android:id="@+id/rb_others"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:paddingVertical="8dp"
-                            android:text="기타"
-                            android:textSize="14sp" />
-                    </RadioGroup>
+                            <RadioButton
+                                android:id="@+id/rbSafetyZone"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="상기 사항 외 보도"
+                                android:textSize="14sp"
+                                android:paddingVertical="8dp" />
+
+                            <RadioButton
+                                android:id="@+id/rbOthers"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="기타"
+                                android:textSize="14sp"
+                                android:paddingVertical="8dp" />
+                        </RadioGroup>
+
+                        <!-- 캐릭터 이미지 - 라디오 버튼 위에 오버레이 -->
+                        <ImageView
+                            android:layout_width="159dp"
+                            android:layout_height="92dp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignParentBottom="true"
+                            android:layout_marginBottom="8dp"
+                            android:src="@drawable/ic_emoji_report_page"
+                            android:contentDescription="캐릭터" />
+                    </RelativeLayout>
                 </LinearLayout>
 
                 <!-- 구분 선 -->
