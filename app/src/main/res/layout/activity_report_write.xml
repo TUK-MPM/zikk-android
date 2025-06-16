@@ -342,7 +342,7 @@
                             android:layout_alignParentEnd="true"
                             android:layout_alignParentBottom="true"
                             android:layout_marginBottom="8dp"
-                            android:src="@drawable/ic_emoji_reportpage"
+                            android:src="@drawable/ic_emoji_report_page"
                             android:contentDescription="캐릭터" />
                     </RelativeLayout>
                 </LinearLayout>

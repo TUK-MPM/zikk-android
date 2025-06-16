@@ -53,13 +53,23 @@ class ReportAdapter(
 
             // 배경색 조건 설정
             val bgColorRes = when (report.status) {
-                "PENDING" -> R.color.qusetion_yellow
-                "APPROVED" -> R.color.qusetion_blue
-                "REJECTED" -> R.color.qusetion_pink
+                "PENDING" -> R.color.milk
+                "APPROVED" -> R.color.navi
+                "REJECTED" -> R.color.deap_orange
                 else -> R.color.background_gray
             }
-            binding.reportItemRoot.backgroundTintList =
-                ContextCompat.getColorStateList(binding.root.context, bgColorRes)
+            binding.root.setCardBackgroundColor(ContextCompat.getColor(binding.root.context, bgColorRes))
+
+            // 텍스트 색 조건 설정
+            val textColorRes = when (report.status) {
+                "APPROVED" -> R.color.white
+                else -> R.color.black
+            }
+            val context = binding.root.context
+            binding.txtStatus.setTextColor(ContextCompat.getColor(context, textColorRes))
+            binding.txtAddress.setTextColor(ContextCompat.getColor(context, textColorRes))
+            binding.txtDate.setTextColor(ContextCompat.getColor(context, textColorRes))
+
 
             // 화살표 표시 여부
             binding.imageArrow.visibility = if (report.status == "REJECTED" || report.status == "APPROVED") View.GONE else View.VISIBLE

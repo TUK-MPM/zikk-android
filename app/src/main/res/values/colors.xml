@@ -5,8 +5,11 @@
     <color name="blue">#0172FE</color>
     <color name="red">#FF4A4A</color>
     <color name="orange">#F47621</color>
+    <color name="milk">#FFF1E7</color>
+    <color name="navi">#324C9A</color>
     <color name="deap_gray">#8F8F91</color>
     <color name="deap_blue">#1E4185</color>
+    <color name="deap_orange">#FF994D</color>
     <color name="text_gray">#CCCCCC</color>
     <color name="light_gray">#E1E1E1</color>
     <color name="light_blue">#D3E1FB</color>
