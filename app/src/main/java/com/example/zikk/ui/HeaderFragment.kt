@@ -35,7 +35,6 @@ class HeaderFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val menuButton = view.findViewById<ImageButton>(R.id.btn_menu)
-        val searchEditText = view.findViewById<AutoCompleteTextView>(R.id.actv_search)
         val userButton = view.findViewById<ImageButton>(R.id.btn_user)
 
         menuButton.setOnClickListener {
@@ -56,11 +55,6 @@ class HeaderFragment : Fragment() {
         // 예시 자동완성 리스트
         val suggestions = listOf("사과", "바나나", "포도", "오렌지", "수박")
 
-        val adapter =
-            ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, suggestions)
-        searchEditText.setAdapter(adapter)
-
-        searchEditText.threshold = 1 // 1자 이상 입력하면 자동완성 보임
 
     }
 

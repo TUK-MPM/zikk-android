@@ -2,10 +2,11 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingVertical="15dp"
-    android:background="@color/blue">
+    android:background="@color/deap_blue">
 
     <ImageButton
         android:id="@+id/btn_menu"
@@ -19,20 +20,11 @@
         app:layout_constraintTop_toTopOf="parent"
         app:tint="@color/white" />
 
-    <AutoCompleteTextView
-        android:id="@+id/actv_search"
-        android:textSize="12sp"
-        android:hint="검색어를 입력하세요"
-        android:background="@drawable/edittext_rounded_background"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:paddingVertical="5dp"
-        android:paddingStart="15dp"
-        android:paddingEnd="15dp"
-        android:maxLines="1"
-        android:inputType="text"
-        android:drawableTint="@color/text_gray"
-        android:drawableEnd="@drawable/baseline_search_24"
+    <ImageView
+        android:layout_width="180dp"
+        android:layout_height="40dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/city_logo"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/btn_user"
         app:layout_constraintStart_toEndOf="@+id/btn_menu"

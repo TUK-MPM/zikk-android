@@ -30,10 +30,6 @@ class MainActivity : BaseActivity() {
             Toast.makeText(this@MainActivity, "${notice.title} 클릭됨", Toast.LENGTH_SHORT).show()
             Log.d("NoticeClick", "Clicked: ${notice.notiId}")
         }
-        binding.rvNoticeList.apply {
-            layoutManager = LinearLayoutManager(this@MainActivity)
-            adapter = noticeAdapter
-        }
 
         enableEdgeToEdge()
 
@@ -67,28 +63,18 @@ class MainActivity : BaseActivity() {
             }
         }
 
-        binding.fabReport.setOnClickListener {
-            if(isAdmin()) {
-                Toast.makeText(this, "관리자는 신고를 작성할 수 없습니다!", Toast.LENGTH_SHORT).show()
-            } else {
-                var intent = Intent(applicationContext, ReportWriteActivity::class.java)
-                startActivity(intent)
-            }
-        }
-
         // 신고 조회 화면 불러오기
         binding.reportQueryBtn.setOnClickListener {
             var intent = Intent(applicationContext, ReportListActivity::class.java)
             startActivity(intent)
         }
 
-        // 공지사항 more 버튼 클릭 처리
-        binding.tvNoticeMore.setOnClickListener {
-            val intent = Intent(this, NoticeActivity::class.java) // 이동할 액티비티로 교체
+        binding.btnToNotice.setOnClickListener {
+            var intent = Intent(applicationContext, NoticeActivity::class.java)
             startActivity(intent)
         }
 
-        getNotices()
+
     }
 
     @SuppressLint("NotifyDataSetChanged")
