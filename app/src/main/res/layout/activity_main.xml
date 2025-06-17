@@ -44,8 +44,8 @@
 
                         <!-- 하얀색 배경 -->
                         <androidx.cardview.widget.CardView
-                            android:layout_width="130dp"
-                            android:layout_height="130dp"
+                            android:layout_width="150dp"
+                            android:layout_height="150dp"
                             android:layout_gravity="center"
                             app:cardBackgroundColor="@android:color/white"
                             app:cardCornerRadius="24dp"
@@ -54,8 +54,8 @@
                         <!-- ImageButton (배경보다 크게) -->
                         <ImageButton
                             android:id="@+id/guide_btn"
-                            android:layout_width="140dp"
-                            android:layout_height="140dp"
+                            android:layout_width="180dp"
+                            android:layout_height="180dp"
                             android:layout_gravity="center"
                             android:background="@android:color/transparent"
                             android:elevation="3dp"
@@ -82,8 +82,8 @@
                         android:layout_margin="8dp">
 
                         <androidx.cardview.widget.CardView
-                            android:layout_width="130dp"
-                            android:layout_height="130dp"
+                            android:layout_width="150dp"
+                            android:layout_height="150dp"
                             android:layout_gravity="center"
                             app:cardBackgroundColor="@android:color/white"
                             app:cardCornerRadius="24dp"
@@ -91,8 +91,8 @@
 
                         <ImageButton
                             android:id="@+id/report_btn"
-                            android:layout_width="140dp"
-                            android:layout_height="140dp"
+                            android:layout_width="180dp"
+                            android:layout_height="180dp"
                             android:layout_gravity="center"
                             android:background="@android:color/transparent"
                             android:elevation="2dp"
@@ -124,8 +124,8 @@
                         android:layout_margin="8dp">
 
                         <androidx.cardview.widget.CardView
-                            android:layout_width="130dp"
-                            android:layout_height="130dp"
+                            android:layout_width="150dp"
+                            android:layout_height="150dp"
                             android:layout_gravity="center"
                             app:cardBackgroundColor="@android:color/white"
                             app:cardCornerRadius="24dp"
@@ -133,8 +133,8 @@
 
                         <ImageButton
                             android:id="@+id/btn_to_notice"
-                            android:layout_width="140dp"
-                            android:layout_height="140dp"
+                            android:layout_width="180dp"
+                            android:layout_height="180dp"
                             android:layout_gravity="center"
                             android:background="@android:color/transparent"
                             android:elevation="2dp"
@@ -164,16 +164,16 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="8dp">
                         <androidx.cardview.widget.CardView
-                            android:layout_width="130dp"
-                            android:layout_height="130dp"
+                            android:layout_width="150dp"
+                            android:layout_height="150dp"
                             android:layout_gravity="center"
                             app:cardBackgroundColor="@android:color/white"
                             app:cardCornerRadius="24dp"
                             app:cardElevation="2dp" />
                         <ImageButton
                             android:id="@+id/report_query_btn"
-                            android:layout_width="140dp"
-                            android:layout_height="140dp"
+                            android:layout_width="180dp"
+                            android:layout_height="180dp"
                             android:layout_gravity="center"
                             android:scaleType="centerInside"
                             android:background="@android:color/transparent"
