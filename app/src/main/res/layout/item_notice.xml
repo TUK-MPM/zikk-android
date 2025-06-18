@@ -4,31 +4,39 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:padding="16dp"
-    android:layout_marginBottom="8dp"
+    android:layout_marginBottom="15dp"
     android:elevation="1dp"
     android:gravity="center_vertical"
     android:background="@drawable/round_box_medium"
     android:clickable="true"
-    android:focusable="true">
+    android:focusable="true"
+    android:layout_marginHorizontal="10dp">
 
     <!-- 텍스트 두 개 세로로 정렬 -->
     <LinearLayout
-        android:layout_width="0dp"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:orientation="vertical"
-        android:background="@color/background_orange">
+        android:orientation="vertical">
         <TextView
             android:id="@+id/tv_notice_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAlignment="textStart"/>
+            android:textAlignment="textStart"
+            android:textStyle="bold"/>
         <TextView
             android:id="@+id/tv_notice_created_at"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAlignment="textStart"/>
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/imageArrow"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center_vertical|end"
+        android:src="@drawable/baseline_chevron_right_24"
+        android:visibility="visible" />
 
 </LinearLayout>
 

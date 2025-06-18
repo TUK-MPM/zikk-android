@@ -100,7 +100,7 @@ class NoticeContentActivity : BaseActivity() {
 
     private fun formatDate(raw: String?): String {
         if (raw.isNullOrEmpty()) return ""
-        return raw.replace("T", " ").substring(0, 16)
+        return raw.replace("T", " ").substring(0, 10)
     }
 
     private fun isAdmin(): Boolean {
