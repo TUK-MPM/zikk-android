@@ -81,7 +81,7 @@ class QuestionContentActivity : BaseActivity() {
     }
 
     private fun formatDate(raw: String): String {
-        return raw.replace("T", " ").substring(0, 16)
+        return raw.replace("T", " ").substring(0, 10)
     }
 
     private fun showToast(msg: String) {

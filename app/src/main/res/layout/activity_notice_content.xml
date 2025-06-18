@@ -29,9 +29,8 @@
             android:layout_marginHorizontal="10dp"
             android:layout_marginTop="15dp"
             android:layout_marginBottom="50dp"
-            android:background="@drawable/round_box"
-            app:cardCornerRadius="30dp"
-            app:cardElevation="10dp">
+            app:cardCornerRadius="16dp"
+            app:cardElevation="4dp">
 
             <!--버튼 하나-->
             <LinearLayout
@@ -133,7 +132,7 @@
                             android:id="@+id/btn_edit"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:backgroundTint="@color/blue"
+                            android:backgroundTint="@color/deap_blue"
                             android:text="수정하기" />
                     </LinearLayout>
 

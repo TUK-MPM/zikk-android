@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import com.example.zikk.util.PopupUtils
 import androidx.activity.result.ActivityResultLauncher
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -34,11 +35,14 @@ class QuestionListActivity : BaseActivity() {
     private var allInquiries: List<Inquiry> = emptyList()
     private var isDescending = true
     private lateinit var token: String
-    private var isSpinnerInitialized = false // 🔸 스피너 초기화 감지 플래그
+    private var displayedList: List<Inquiry> = emptyList()    // 필터 및 정렬된 리스트
+    private var currentFilter: String? = null                // 현재 선택된 상태 필터
+    private var currentSortDescending: Boolean = true        // 정렬 순서: true = 최신순
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = setContentViewWithBinding(ActivityQuestionListBinding::inflate)
+        binding.btnSortStatus.setOnClickListener { showSortPopup(it) }
 
         val rawToken = getLoginToken()
         if (rawToken == null) {
@@ -62,28 +66,7 @@ class QuestionListActivity : BaseActivity() {
         binding.inquiryRecyclerView.layoutManager = LinearLayoutManager(this)
         binding.inquiryRecyclerView.adapter = InquiryAdapter(emptyList()) {}
 
-        setupSpinner()
         setupListeners()
-    }
-
-    private fun setupSpinner() {
-        val items = arrayOf("최신순", "오래된순")
-        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, items)
-        binding.mySpinner.adapter = adapter
-        binding.mySpinner.setSelection(0)
-
-        binding.mySpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
-                if (!isSpinnerInitialized) {
-                    isSpinnerInitialized = true
-                    return
-                }
-                isDescending = position == 0
-                applySortAndLoad()
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>) {}
-        }
     }
 
 
@@ -169,6 +152,36 @@ class QuestionListActivity : BaseActivity() {
         } catch (e: Exception) {
             Log.e("loadPage", "페이징 처리 오류", e)
             showToast("페이지를 로드하는 중 오류가 발생했습니다.")
+        }
+    }
+
+    private fun applyFilterAndSort() {
+        // allInquiries에서 필터 적용
+        val filtered = if (currentFilter == null) {
+            allInquiries
+        } else {
+            allInquiries.filter { it.status == currentFilter } // Inquiry 객체에 status가 있다고 가정
+        }
+
+        val sorted = PaginationUtils.sortByDate(filtered, currentSortDescending) { it.createdAt }
+
+        if (sorted.isEmpty()) {
+            Toast.makeText(this, "문의 사항이 없습니다.", Toast.LENGTH_SHORT).show()
+            binding.inquiryRecyclerView.adapter = InquiryAdapter(emptyList()) {}
+            binding.paginationLayout.removeAllViews()
+            return
+        }
+
+        displayedList = sorted
+        loadPageSafely(1, sorted)
+    }
+
+
+    private fun showSortPopup(anchor: View) {
+        PopupUtils.showSortPopup(this, anchor) { isDescending ->
+            currentSortDescending = isDescending
+            binding.btnSortStatus.text = if (isDescending) "최신순으로 나열" else "오래된 순으로 나열"
+            applyFilterAndSort()
         }
     }
 
