@@ -134,6 +134,9 @@ class ReportListActivity : BaseActivity() {
         val filtered = displayedList.filter { currentFilter == null || it.status == currentFilter }
         val sorted = PaginationUtils.sortByDate(filtered, currentSortDescending) { it.createdAt }
 
+        // 총 신고 건수 표시
+        binding.tvTotalreport.text = "총 신고 건수: ${filtered.size}건"
+
         // 신고 내역이 없으면 안내 메시지 및 UI 정리
         if (sorted.isEmpty()) {
             Toast.makeText(this, "신고 내역이 없습니다.", Toast.LENGTH_SHORT).show()

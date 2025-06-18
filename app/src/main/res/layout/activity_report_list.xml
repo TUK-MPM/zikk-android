@@ -68,13 +68,16 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="horizontal">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:id="@+id/tv_totalreport"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:text="총 신고 건수: "
-                    android:textStyle="bold"/>
+                    android:textStyle="bold"
+                    android:layout_marginStart="8dp"/>
 
             </LinearLayout>
 
@@ -108,25 +111,46 @@
                         android:layout_gravity="end"
                         android:layout_marginTop="35dp">
 
-                        <ImageView
+
+
+                        <TextView
                             android:id="@+id/filter_processing"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="5dp"
-                            android:src="@drawable/report_list_processing" />
+                            android:layout_width="46dp"
+                            android:layout_height="20dp"
+                            android:layout_marginEnd="10dp"
+                            android:background="@drawable/round_box"
+                            android:backgroundTint="@color/milk"
+                            android:gravity="center"
+                            android:text="처리중"
+                            android:textSize="10sp"
+                            android:textColor="@color/black"
+                            android:textStyle="bold" />
 
-                        <ImageView
+                        <TextView
                             android:id="@+id/filter_completed"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="5dp"
-                            android:src="@drawable/report_list_accepted" />
+                            android:layout_width="46dp"
+                            android:layout_height="20dp"
+                            android:layout_marginEnd="10dp"
+                            android:background="@drawable/round_box"
+                            android:backgroundTint="@color/deap_blue"
+                            android:gravity="center"
+                            android:text="완료"
+                            android:textSize="10sp"
+                            android:textColor="@color/white"
+                            android:textStyle="bold" />
 
-                        <ImageView
+                        <TextView
                             android:id="@+id/filter_rejected"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/report_list_rejected" />
+                            android:layout_width="46dp"
+                            android:layout_height="20dp"
+                            android:background="@drawable/round_box"
+                            android:backgroundTint="@color/deap_orange"
+                            android:gravity="center"
+                            android:text="완료"
+                            android:textSize="10sp"
+                            android:textColor="@color/black"
+                            android:textStyle="bold"
+                            android:layout_marginEnd="8dp"/>
                     </LinearLayout>
 
                     <LinearLayout
@@ -140,29 +164,36 @@
                         <Button
                             android:id="@+id/btn_filter"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="8dp"
-                            android:backgroundTint="@color/background_gray"
+                            android:layout_height="25dp"
+                            android:background="@drawable/round_box_large"
+                            android:backgroundTint="@color/sort_gray"
                             android:minWidth="0dp"
                             android:minHeight="0dp"
-                            android:paddingHorizontal="8dp"
-                            android:paddingVertical="4dp"
-                            android:text="전체 보기"
+                            android:paddingTop="0dp"
+                            android:paddingBottom="0dp"
+                            android:paddingHorizontal="10dp"
+                            android:text="완료 건으로 나열"
                             android:textColor="@color/black"
-                            android:textSize="10sp" />
+                            android:textSize="11sp"
+                            android:layout_marginRight="10dp"
+                            app:backgroundTint="@null"/>
 
                         <Button
                             android:id="@+id/btn_sort_status"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:backgroundTint="@color/background_gray"
+                            android:layout_height="25dp"
+                            android:background="@drawable/round_box_large"
+                            android:backgroundTint="@color/sort_gray"
                             android:minWidth="0dp"
                             android:minHeight="0dp"
-                            android:paddingHorizontal="8dp"
-                            android:paddingVertical="4dp"
+                            android:paddingTop="0dp"
+                            android:paddingBottom="0dp"
+                            android:layout_marginEnd="8dp"
+                            android:paddingHorizontal="10dp"
                             android:text="최신순으로 나열"
                             android:textColor="@color/black"
-                            android:textSize="10sp" />
+                            android:textSize="11sp"
+                            app:backgroundTint="@null" />
                     </LinearLayout>
                 </FrameLayout>
             </LinearLayout>
