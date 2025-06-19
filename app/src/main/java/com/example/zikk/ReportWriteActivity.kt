@@ -17,14 +17,17 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
+import androidx.core.text.HtmlCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.zikk.databinding.ActivityReportWriteBinding
+import com.example.zikk.databinding.DialogParkingHelpBinding
 import com.example.zikk.enum.IllegalParkingLocation
 import com.example.zikk.extensions.getUserPhoneNumber
 import com.example.zikk.model.request.ReportRequest
 import com.example.zikk.network.RetrofitClient
 import com.google.android.gms.location.*
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -107,11 +110,14 @@ class ReportWriteActivity : BaseActivity() {
             binding.etPhone.setText(phoneNumber)
         }
 
+
+
         // 버튼 리스너 설정
         binding.ivBack.setOnClickListener { finish() }
         binding.btnPickImage.setOnClickListener { imagePickerLauncher.launch("image/*") }
         binding.btnLocateGet.setOnClickListener { getCurrentLocation() }
         binding.btnSubmit.setOnClickListener { submitReport() }
+        binding.ivHelp.setOnClickListener { showHelpDialog() }
     }
 
     // 이미지 변환 함수
@@ -289,6 +295,37 @@ class ReportWriteActivity : BaseActivity() {
         }
     }
 
+    fun showHelpDialog() {
+        val helpText = """
+        <h3>🚦 어떤 유형인지 헷갈린다면?</h3>
+        <b>점자블록</b><br>
+        - 시각장애인 이동을 돕기 위한 노란색 돌기 또는 선형 블록 위에 주·정차한 경우<br>
+        - <i>보도 위에서 흔히 볼 수 있습니다.</i><br><br>
+
+        <b>교통섬 내부</b><br>
+        - 교차로 한가운데 또는 중앙선 부근의 <i>교통섬(삼각형·원형 공간)</i> 내부에 방치된 경우<br><br>
+
+        <b>보호구역</b><br>
+        - <i>어린이 보호구역(스쿨존), 노인 보호구역, 장애인 보호구역</i> 등에 방치된 경우<br>
+        - 흔히 학교 근처에 위치<br><br>
+
+        <b>상기 사항 외 보도</b><br>
+        - 점자블록·교통섬·보호구역 외 <i>보도(인도)</i>에 방치된 경우<br>
+        - 예: 가게 앞, 공원 보행로, 일반 인도 등<br><br>
+
+        <b>기타</b><br>
+        - <i>차도, 지하철역 내부, 계단, 공원 잔디밭, 자전거도로</i> 등 기타 부적절한 장소
+    """.trimIndent()
+
+        val binding = DialogParkingHelpBinding.inflate(layoutInflater)
+        binding.tvHelpText.text = HtmlCompat.fromHtml(helpText, HtmlCompat.FROM_HTML_MODE_LEGACY)
+
+        BottomSheetDialog(this).apply {
+            setContentView(binding.root)
+            show()
+        }
+    }
+
     // dp 단위 변환 확장 함수
     private val Int.dp: Int
         get() = (this * resources.displayMetrics.density).toInt()
@@ -302,4 +339,5 @@ class ReportWriteActivity : BaseActivity() {
         }
         return super.dispatchTouchEvent(ev)
     }
+
 }
