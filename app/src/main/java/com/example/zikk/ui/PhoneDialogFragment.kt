@@ -64,14 +64,14 @@ class PhoneDialogFragment : DialogFragment() {
     }
 
     private fun setupListeners() {
-        // 전화번호 입력 감지
+        // 아이디 입력 감지
         etPhone.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                val phoneNumber = s.toString().trim()
-                // 전화번호가 입력되었을 때만 확인 버튼 활성화
-                btnConfirm.isEnabled = phoneNumber.isNotEmpty() && isValidPhoneNumber(phoneNumber)
+                val userId = s.toString().trim()
+                // 아이디 유효성 검사 후 확인 버튼 활성화
+                btnConfirm.isEnabled = isValidUserId(userId)
             }
 
             override fun afterTextChanged(s: Editable?) {}
@@ -79,31 +79,28 @@ class PhoneDialogFragment : DialogFragment() {
 
         // 확인 버튼 클릭 리스너
         btnConfirm.setOnClickListener {
-            val phoneNumber = etPhone.text.toString().trim()
+            val userId = etPhone.text.toString().trim()
 
-            if (phoneNumber.isEmpty()) {
-                Toast.makeText(requireContext(), "전화번호를 입력해주세요", Toast.LENGTH_SHORT).show()
+            if (userId.isEmpty()) {
+                Toast.makeText(requireContext(), "아이디를 입력해주세요", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            if (!isValidPhoneNumber(phoneNumber)) {
-                Toast.makeText(requireContext(), "올바른 전화번호 형식이 아닙니다", Toast.LENGTH_SHORT).show()
+            if (!isValidUserId(userId)) {
+                Toast.makeText(requireContext(), "아이디는 2자 이상 10자 이하로 입력해주세요", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
             // 콜백 실행
-            onPhoneEnteredListener?.invoke(phoneNumber)
-//
-            performLogin(phoneNumber)
+            onPhoneEnteredListener?.invoke(userId)
+
+            performLogin(userId)
         }
     }
 
-    private fun isValidPhoneNumber(phoneNumber: String): Boolean {
-        // 한국 전화번호 형식 검증
-        // 010, 011, 016, 017, 018, 019로 시작하는 10-11자리 숫자
-        val phonePattern = "^01([0|1|6|7|8|9])[0-9]{7,8}$".toRegex()
-        val cleanPhoneNumber = phoneNumber.replace("-", "").replace(" ", "")
-        return cleanPhoneNumber.length >= 10 && phonePattern.matches(cleanPhoneNumber)
+    // 아이디 유효성 검사 함수
+    private fun isValidUserId(userId: String): Boolean {
+        return userId.matches(Regex("^[a-zA-Z0-9가-힣]{2,10}$"))
     }
 
     private fun performLogin(phoneNumber: String) {

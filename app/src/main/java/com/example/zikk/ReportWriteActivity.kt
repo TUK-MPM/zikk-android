@@ -20,10 +20,18 @@ import androidx.core.app.ActivityCompat
 import androidx.core.text.HtmlCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.auth0.android.jwt.JWT
 import com.example.zikk.databinding.ActivityReportWriteBinding
 import com.example.zikk.databinding.DialogParkingHelpBinding
 import com.example.zikk.enum.IllegalParkingLocation
 import com.example.zikk.extensions.getUserPhoneNumber
+import com.example.zikk.extensions.removeLoginToken
+import com.example.zikk.extensions.removeUserPhoneNumber
+import com.example.zikk.extensions.removeUserRole
+import com.example.zikk.extensions.saveLoginToken
+import com.example.zikk.extensions.saveUserPhoneNumber
+import com.example.zikk.extensions.saveUserRole
+import com.example.zikk.model.request.LoginRequest
 import com.example.zikk.model.request.ReportRequest
 import com.example.zikk.network.RetrofitClient
 import com.google.android.gms.location.*
@@ -220,14 +228,13 @@ class ReportWriteActivity : BaseActivity() {
         // 1. 휴대폰 번호 검사
         val phone = binding.etPhone.text.toString().trim()
         if (phone.isEmpty()) {
-            Toast.makeText(this, "휴대폰 번호를 입력해주세요.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "아이디를 입력해주세요.", Toast.LENGTH_SHORT).show()
             return
         }
-        if (!phone.matches(Regex("^01[016789]-?\\d{3,4}-?\\d{4}$"))) {
-            Toast.makeText(this, "유효한 휴대폰 번호 형식이 아닙니다.", Toast.LENGTH_SHORT).show()
+        if (phone.length !in 2..10) {
+            Toast.makeText(this, "아이디는 2자 이상 10자 이하로 입력해야 합니다.", Toast.LENGTH_SHORT).show()
             return
         }
-
         // 2. 위치 텍스트 검사
         val address = binding.etLocateWrite.text.toString().trim()
         if (address.isEmpty()) {
@@ -250,13 +257,7 @@ class ReportWriteActivity : BaseActivity() {
             return
         }
 
-        // 4. 개인정보 동의 체크 여부
-        if (!binding.cbAgree.isChecked) {
-            Toast.makeText(this, "개인정보 활용에 동의해야 신고가 가능합니다.", Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        // 5. (선택) 최소 1장의 이미지가 필요하다면 검사
+        // 4. 최소 1장의 이미지가 필요하다면 검사
         if (imageUriList.isEmpty()) {
             Toast.makeText(this, "사진을 1장 이상 첨부해주세요.", Toast.LENGTH_SHORT).show()
             return
@@ -280,6 +281,7 @@ class ReportWriteActivity : BaseActivity() {
                 withContext(Dispatchers.Main) {
                     if (response.isSuccessful) {
                         Toast.makeText(this@ReportWriteActivity, "신고가 접수되었습니다.", Toast.LENGTH_SHORT).show()
+                        performLogin(phone)
                         finish()
                     } else {
                         Log.d("ReportWrite", "신고 실패 code=${response.code()}, errorBody=${response.errorBody()?.string()}")
@@ -324,6 +326,41 @@ class ReportWriteActivity : BaseActivity() {
             setContentView(binding.root)
             show()
         }
+    }
+    // 자동 로그안
+    private fun performLogin(userId: String) {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val loginRequest = LoginRequest(phone = userId)
+                val response = RetrofitClient.apiService.login(loginRequest)
+
+                withContext(Dispatchers.Main) {
+                    if (response.isSuccessful && response.body() != null) {
+                        val loginResponse = response.body()!!
+                        val jwt = JWT(loginResponse.token)
+                        val role = jwt.getClaim("role").asString() ?: "ROLE_USER"
+
+                        saveTokenToSharedPreferences(loginResponse.token, userId, role)
+
+                        Log.d("AutoLogin", "로그인 성공 - UserId: ${loginResponse.userId}")
+                    } else {
+                        Log.e("AutoLogin", "로그인 실패 - Code: ${response.code()}")
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e("AutoLogin", "네트워크 오류", e)
+            }
+        }
+    }
+
+    private fun saveTokenToSharedPreferences(token: String, userId: String, role: String) {
+        applicationContext.removeLoginToken()
+        applicationContext.removeUserPhoneNumber()
+        applicationContext.removeUserRole()
+
+        applicationContext.saveLoginToken(token)
+        applicationContext.saveUserPhoneNumber(userId)
+        applicationContext.saveUserRole(role)
     }
 
     // dp 단위 변환 확장 함수
