@@ -162,23 +162,6 @@
                         android:layout_marginTop="60dp">
 
                         <Button
-                            android:id="@+id/btn_filter"
-                            android:layout_width="wrap_content"
-                            android:layout_height="25dp"
-                            android:background="@drawable/round_box_large"
-                            android:backgroundTint="@color/sort_gray"
-                            android:minWidth="0dp"
-                            android:minHeight="0dp"
-                            android:paddingTop="0dp"
-                            android:paddingBottom="0dp"
-                            android:paddingHorizontal="10dp"
-                            android:text="완료 건으로 나열"
-                            android:textColor="@color/black"
-                            android:textSize="11sp"
-                            android:layout_marginRight="10dp"
-                            app:backgroundTint="@null"/>
-
-                        <Button
                             android:id="@+id/btn_sort_status"
                             android:layout_width="wrap_content"
                             android:layout_height="25dp"

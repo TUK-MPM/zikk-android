@@ -31,36 +31,4 @@ object PopupUtils {
         popup.elevation = 8f
         popup.showAsDropDown(anchor)
     }
-
-    fun showFilterPopup(
-        context: Context,
-        anchor: View,
-        onFilterSelected: (filter: String?) -> Unit
-    ) {
-        val view = LayoutInflater.from(context).inflate(R.layout.state_popup_filter, null)
-        val popup = PopupWindow(view, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true)
-
-        view.findViewById<TextView>(R.id.item_all).setOnClickListener {
-            onFilterSelected(null)
-            popup.dismiss()
-        }
-
-        view.findViewById<TextView>(R.id.item_completed).setOnClickListener {
-            onFilterSelected("APPROVED")
-            popup.dismiss()
-        }
-
-        view.findViewById<TextView>(R.id.item_processing).setOnClickListener {
-            onFilterSelected("PENDING")
-            popup.dismiss()
-        }
-
-        view.findViewById<TextView>(R.id.item_rejected).setOnClickListener {
-            onFilterSelected("REJECTED")
-            popup.dismiss()
-        }
-
-        popup.elevation = 8f
-        popup.showAsDropDown(anchor)
-    }
 }
